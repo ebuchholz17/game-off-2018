@@ -1,0 +1,9 @@
+/build
+/.vs
+/ebrt.VC.db
+/ebrt.VC.VC.opendb
+/Debug
+/src/web/node_modules
+/src/web/wasm
+/Command Prompt.lnk
+/misc/shell.bat
