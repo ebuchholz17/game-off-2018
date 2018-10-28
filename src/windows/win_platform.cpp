@@ -12,6 +12,18 @@ static float targetMSPerFrame = 1000.0f / 60.0f;
 BITMAPINFO bitmapInfo = {};
 void *backBuffer = 0;
 
+void clearBuffer (unsigned int *pixels) {
+    unsigned char value;
+    for (int i = 0; i < gameHeight; ++i) {
+        value = 0;
+        for (int j = 0; j < gameWidth; ++j) {
+            //pixels[i * gameWidth + j] = value << 8;
+            //++value;
+            pixels[i * gameWidth + j] = value;
+        }
+    }
+}
+
 void initBackBuffer () {
     // Create back buffer
     bitmapInfo.bmiHeader.biSize = sizeof(bitmapInfo.bmiHeader);
@@ -28,15 +40,7 @@ void initBackBuffer () {
 
     // Clear to black
     unsigned int *pixels = (unsigned int *)backBuffer;
-    unsigned char value;
-    for (int i = 0; i < gameHeight; ++i) {
-        value = 0;
-        for (int j = 0; j < gameWidth; ++j) {
-            //pixels[i * gameWidth + j] = value << 8;
-            //++value;
-            pixels[i * gameWidth + j] = value;
-        }
-    }
+    clearBuffer(pixels);
 }
 
 void drawSceneToWindow (HWND window, HDC deviceContext) {
@@ -114,6 +118,7 @@ int WINAPI WinMain (HINSTANCE instance, HINSTANCE prevInstance, LPSTR commandLin
                     }
                 }
 
+                clearBuffer((unsigned int *)backBuffer);
                 updateGame(gameWidth, gameHeight, (unsigned int *)backBuffer);
                 drawSceneToWindow(window, deviceContext);
 

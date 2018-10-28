@@ -31,11 +31,14 @@ WebPlatform.prototype = {
         this.updateCallback = this.update.bind(this);
 
         var bufferSize = 4 * this.canvas.width * this.canvas.height;
+        var bufferSize32 = this.canvas.width * this.canvas.height;
 
         this.backBufferPointer = this.game._malloc(bufferSize);
         this.backBufferPixels = new Uint8ClampedArray(this.game.HEAPU8.buffer, this.backBufferPointer, bufferSize);
+        this.backBufferPixels32 = new Uint32Array(this.game.HEAPU8.buffer, this.backBufferPointer, bufferSize32);
         this.backBuffer = new ImageData(this.backBufferPixels, this.canvas.width, this.canvas.height);
 
+        this.resize();
         this.update();
     },
 
@@ -55,6 +58,7 @@ WebPlatform.prototype = {
         //        this.backBufferPixels[(i * this.canvas.width + j) * 4 + 3] = 0xff;
         //    }
         //}
+        this.backBufferPixels32.fill(0xff000000);
         this.game.ccall("updateGame", 
             "null", 
             ["number", "number", "number"], 
