@@ -1,19 +1,25 @@
-#include "run_around_platform.h";
+#include "run_around_platform.h"
 
-static int boxPosition = 0;
+colored_rectangle *pushRectangle (rectangle_list *rectangleList) {
+    colored_rectangle *result = 0;
+    if (rectangleList->numRectangles < rectangleList->maxRectangles) {
+        result = rectangleList->rectangles + rectangleList->numRectangles;
+        rectangleList->numRectangles++;
+    }
+    return result;
+}
 
-extern "C" void updateGame (int gameWidth, int gameHeight, unsigned int *pixels) { 
-    unsigned int value;
-    int startX = boxPosition;
-    int endX = startX + 100;
-    for (int i = 100; i < 200; ++i) {
-        value = 0xffff00ff;
-        //value = 0;
-        for (int j = startX; j < endX; ++j) {
-            //pixels[i * gameWidth + j] = value << 8;
-            //++value;
-            pixels[i * gameWidth + j] = value;
+extern "C" void updateGame (int gameWidth, int gameHeight, rectangle_list *rectangleList) { 
+    static int startX = 0;
+    startX++;
+    for (int i = 0; i < 10; ++i) {
+        colored_rectangle *rectangle = pushRectangle(rectangleList);
+        if (rectangle) {
+            rectangle->x = startX +i * 100;
+            rectangle->y = i * 100;
+            rectangle->width =  100;
+            rectangle->height = 100;
+            rectangle->color = 0xffff00ff;
         }
     }
-    if (endX < 1000) { boxPosition++; }
 }

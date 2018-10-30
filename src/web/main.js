@@ -5,8 +5,6 @@ var WebPlatform = function () {
     this.canvas = null;
     this.ctx = null;
     this.updateCallback = null;
-    this.backBuffer = null;
-    this.backBufferPixels = null;
 
     this.game = null;
 };
@@ -30,13 +28,13 @@ WebPlatform.prototype = {
         window.addEventListener("resize", this.resize.bind(this));
         this.updateCallback = this.update.bind(this);
 
-        var bufferSize = 4 * this.canvas.width * this.canvas.height;
-        var bufferSize32 = this.canvas.width * this.canvas.height;
+        var maxRectangles = 1000;
+        this.rectangleList = this.game.wrapPointer(this.game._malloc(this.game.sizeof_rectangle_list()), 
+                                                   this.game.rectangle_list);
+        this.rectangleList.set_numRectangles(0);
+        this.rectangleList.set_maxRectangles(1000);
 
-        this.backBufferPointer = this.game._malloc(bufferSize);
-        this.backBufferPixels = new Uint8ClampedArray(this.game.HEAPU8.buffer, this.backBufferPointer, bufferSize);
-        this.backBufferPixels32 = new Uint32Array(this.game.HEAPU8.buffer, this.backBufferPointer, bufferSize32);
-        this.backBuffer = new ImageData(this.backBufferPixels, this.canvas.width, this.canvas.height);
+        this.rectangleList.set_rectangles(this.game._malloc(this.rectangleList.get_maxRectangles() * this.game.sizeof_colored_rectangle()));
 
         this.resize();
         this.update();
@@ -46,27 +44,42 @@ WebPlatform.prototype = {
     },
 
     update: function () {
-        //console.log("updated");
-        //this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.fillStyle = "#000000";
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-        //for (var i = 0; i < this.canvas.height; ++i) {
-        //    for (var j = 0; j < this.canvas.width; ++j) {
-
-        //        this.backBufferPixels[(i * this.canvas.width + j) * 4] = 0x00;
-        //        this.backBufferPixels[(i * this.canvas.width + j) * 4 + 1] = 0x00;
-        //        this.backBufferPixels[(i * this.canvas.width + j) * 4 + 2] = 0x00;
-        //        this.backBufferPixels[(i * this.canvas.width + j) * 4 + 3] = 0xff;
-        //    }
-        //}
-        this.backBufferPixels32.fill(0xff000000);
+        this.rectangleList.set_numRectangles(0);
         this.game.ccall("updateGame", 
             "null", 
             ["number", "number", "number"], 
-            [this.canvas.width, this.canvas.height, this.backBufferPointer]
+            [this.canvas.width, this.canvas.height, this.game.getPointer(this.rectangleList)]
         );
-        this.ctx.putImageData(this.backBuffer, 0, 0);
+        
+        var numRects = this.rectangleList.get_numRectangles();
+        for (var i = 0; i < numRects; ++i) {
+            var coloredRectangle = this.game.wrapPointer(this.game.getPointer(this.rectangleList.get_rectangles()) +
+                                   i * this.game.sizeof_colored_rectangle(), this.game.colored_rectangle);
+            var hexColor = coloredRectangle.get_color();
+            this.ctx.fillStyle = this.hexColorToString(hexColor);
+            this.ctx.fillRect(
+                coloredRectangle.get_x(),
+                coloredRectangle.get_y(),
+                coloredRectangle.get_width(),
+                coloredRectangle.get_height()
+            );
+        }
 
         window.requestAnimationFrame(this.updateCallback);
+    },
+
+    hexColorToString: function (hexColor) {
+        var a = ((hexColor >> 24) & 0xff).toString(16);
+        var r = ((hexColor >> 16) & 0xff).toString(16);
+        if (r.length == 1) { r = "0" + r; }
+        var g = ((hexColor >> 8) & 0xff).toString(16);
+        if (g.length == 1) { g = "0" + g; }
+        var b = ((hexColor) & 0xff).toString(16);
+        if (b.length == 1) { b = "0" + b; }
+        return "#" + r + g + b;
     },
 
     resize: function () {

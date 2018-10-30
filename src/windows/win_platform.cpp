@@ -104,6 +104,11 @@ int WINAPI WinMain (HINSTANCE instance, HINSTANCE prevInstance, LPSTR commandLin
             LARGE_INTEGER lastCounter;
             QueryPerformanceCounter(&lastCounter);
 
+            rectangle_list rectangleList = {};
+            rectangleList.maxRectangles = 1000;
+            rectangleList.rectangles = 
+                (colored_rectangle *)malloc(sizeof(colored_rectangle) * rectangleList.maxRectangles);
+
             while (programRunning) {
                 MSG message;
                 while (PeekMessage(&message, 0, 0, 0, PM_REMOVE)) {
@@ -119,7 +124,31 @@ int WINAPI WinMain (HINSTANCE instance, HINSTANCE prevInstance, LPSTR commandLin
                 }
 
                 clearBuffer((unsigned int *)backBuffer);
-                updateGame(gameWidth, gameHeight, (unsigned int *)backBuffer);
+                rectangleList.numRectangles = 0;
+                updateGame(gameWidth, gameHeight, &rectangleList);
+                unsigned int *pixels = (unsigned int *)backBuffer;
+                for (int i = 0; i < rectangleList.numRectangles; ++i) {
+                    colored_rectangle *rectangle = rectangleList.rectangles + i;
+                    int startX = rectangle->x;
+                    int endX = rectangle->x + rectangle->width;
+                    int startY = rectangle->y;
+                    int endY = rectangle->y + rectangle->height;
+
+                    if (startX < 0) { startX = 0; }
+                    if (startX > gameWidth - 1) { startX = gameWidth - 1; }
+                    if (endX < 0) { endX = 0; }
+                    if (endX > gameWidth - 1) { endX = gameWidth - 1; }
+                    if (startY < 0) { startY = 0; }
+                    if (startY > gameHeight - 1) { startY = gameHeight - 1; }
+                    if (endY < 0) { endY = 0; }
+                    if (endY > gameHeight - 1) { endY = gameHeight - 1; }
+
+                    for (int x = startX; x <= endX; ++x) {
+                        for (int y = startY; y <= endY; ++y) {
+                            pixels[y * gameWidth + x] = rectangle->color;
+                        }
+                    }
+                }
                 drawSceneToWindow(window, deviceContext);
 
                 // Sleep for any leftover time

@@ -1,0 +1,15 @@
+[NoDelete]
+interface colored_rectangle {
+    attribute long x;
+    attribute long y;
+    attribute long width;
+    attribute long height;
+    attribute unsigned long color;
+};
+
+[NoDelete]
+interface rectangle_list {
+    attribute long numRectangles;
+    attribute long maxRectangles;
+    attribute colored_rectangle rectangles;
+};
