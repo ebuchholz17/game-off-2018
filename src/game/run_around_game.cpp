@@ -9,6 +9,14 @@ colored_rectangle *pushRectangle (rectangle_list *rectangleList) {
     return result;
 }
 
+extern "C" void loadAssets (asset_list *assetList) { 
+    asset_to_load *asset = assetList->assetsToLoad;
+    asset->type = ASSET_TYPE_FONT;
+    asset->font.id = 234;
+    asset->font.path = "path/to/font.tff";
+    asset->font.name = "font.tff";
+}
+
 extern "C" void updateGame (int gameWidth, int gameHeight, rectangle_list *rectangleList) { 
     static int startX = 0;
     startX++;
