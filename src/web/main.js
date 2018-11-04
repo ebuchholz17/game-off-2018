@@ -28,18 +28,6 @@ WebPlatform.prototype = {
         window.addEventListener("resize", this.resize.bind(this));
         this.updateCallback = this.update.bind(this);
 
-        this.assetList = this.game.wrapPointer(this.game._malloc(this.game.sizeof_asset_list()), 
-                                               this.game.asset_list);
-        this.assetList.set_numAssets(0);
-        this.assetList.set_maxAssets(100);
-        this.assetList.set_assetsToLoad(this.game._malloc(this.assetList.get_maxAssets() * this.game.sizeof_asset_to_load()));
-
-        this.game.ccall("loadAssets", 
-            "null", 
-            ["number"], 
-            [this.game.getPointer(this.assetList)]
-        );
-
         var maxRectangles = 1000;
         this.rectangleList = this.game.wrapPointer(this.game._malloc(this.game.sizeof_rectangle_list()), 
                                                    this.game.rectangle_list);

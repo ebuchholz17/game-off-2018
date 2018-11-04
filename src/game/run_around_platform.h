@@ -1,48 +1,30 @@
 #ifndef RUN_AROUND_PLATFORM_H
 #define RUN_AROUND_PLATFORM_H
 
-enum asset_type {
-    ASSET_TYPE_IMAGE,
-    ASSET_TYPE_FONT
+struct memory_arena {
+    char *base;
+    unsigned int size;
+    unsigned int capacity;
 };
 
-struct image_asset {
-    unsigned int id;
-    char *path;
+enum render_command_type {
+    RENDER_COMMAND_RECTANGLE
 };
 
-struct font_asset {
-    unsigned int id;
-    char *name;
-    char *path;
-};
-
-struct asset_to_load {
-    asset_type type;
-    union {
-        image_asset image;
-        font_asset font;
-    };
-};
-
-struct asset_list {
-    asset_to_load *assetsToLoad;
-    unsigned int numAssets;
-    unsigned int maxAssets;
-};
-
-struct colored_rectangle {
-    int x;
-    int y;
-    int width;
-    int height;
+struct render_rectangle_command {
+    unsigned int x;
+    unsigned int y;
+    unsigned int width;
+    unsigned int height;
     unsigned int color;
 };
 
-struct rectangle_list {
-    int numRectangles;
-    int maxRectangles;
-    colored_rectangle *rectangles;
+struct render_command_list {
+    memory_arena memory;
 };
+
+//struct game_state {
+//    memory_arena memory;
+//};
 
 #endif

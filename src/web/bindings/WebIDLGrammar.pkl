@@ -5170,7 +5170,7 @@ sg43
 I-208
 sg44
 I-208
-sg69
+sg146
 I-208
 sg46
 I-208
@@ -8730,7 +8730,7 @@ p6
 I3
 S'p_Definitions'
 p7
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p8
 I3683
 tp9
@@ -8741,7 +8741,7 @@ p11
 I0
 S'p_DefinitionsEmpty'
 p12
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p13
 I3696
 tp14
@@ -8752,7 +8752,7 @@ p16
 I1
 S'p_Definition'
 p17
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p18
 I3702
 tp19
@@ -8811,7 +8811,7 @@ p33
 I2
 S'p_CallbackOrInterfaceCallback'
 p34
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p35
 I3715
 tp36
@@ -8822,7 +8822,7 @@ p38
 I1
 S'p_CallbackOrInterfaceInterface'
 p39
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p40
 I3725
 tp41
@@ -8833,7 +8833,7 @@ p43
 I1
 S'p_CallbackRestOrInterface'
 p44
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p45
 I3731
 tp46
@@ -8852,7 +8852,7 @@ p50
 I7
 S'p_Interface'
 p51
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p52
 I3739
 tp53
@@ -8863,7 +8863,7 @@ p55
 I3
 S'p_InterfaceForwardDecl'
 p56
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p57
 I3765
 tp58
@@ -8874,7 +8874,7 @@ p60
 I7
 S'p_PartialInterface'
 p61
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p62
 I3788
 tp63
@@ -8885,7 +8885,7 @@ p65
 I2
 S'p_Inheritance'
 p66
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p67
 I3817
 tp68
@@ -8896,7 +8896,7 @@ p70
 I0
 S'p_InheritanceEmpty'
 p71
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p72
 I3823
 tp73
@@ -8907,7 +8907,7 @@ p75
 I3
 S'p_InterfaceMembers'
 p76
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p77
 I3829
 tp78
@@ -8918,7 +8918,7 @@ p80
 I0
 S'p_InterfaceMembersEmpty'
 p81
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p82
 I3840
 tp83
@@ -8929,7 +8929,7 @@ p85
 I1
 S'p_InterfaceMember'
 p86
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p87
 I3846
 tp88
@@ -8948,7 +8948,7 @@ p92
 I7
 S'p_Dictionary'
 p93
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p94
 I3853
 tp95
@@ -8959,7 +8959,7 @@ p97
 I3
 S'p_DictionaryMembers'
 p98
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p99
 I3862
 tp100
@@ -8978,7 +8978,7 @@ p104
 I4
 S'p_DictionaryMember'
 p105
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p106
 I3876
 tp107
@@ -8989,7 +8989,7 @@ p109
 I2
 S'p_DefaultValue'
 p110
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p111
 I3890
 tp112
@@ -9008,7 +9008,7 @@ p116
 I7
 S'p_Exception'
 p117
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p118
 I3900
 tp119
@@ -9019,7 +9019,7 @@ p121
 I6
 S'p_Enum'
 p122
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p123
 I3906
 tp124
@@ -9030,7 +9030,7 @@ p126
 I2
 S'p_EnumValueList'
 p127
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p128
 I3917
 tp129
@@ -9041,7 +9041,7 @@ p131
 I2
 S'p_EnumValueListComma'
 p132
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p133
 I3924
 tp134
@@ -9052,7 +9052,7 @@ p136
 I0
 S'p_EnumValueListCommaEmpty'
 p137
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p138
 I3930
 tp139
@@ -9063,7 +9063,7 @@ p141
 I2
 S'p_EnumValueListString'
 p142
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p143
 I3936
 tp144
@@ -9074,7 +9074,7 @@ p146
 I0
 S'p_EnumValueListStringEmpty'
 p147
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p148
 I3943
 tp149
@@ -9085,7 +9085,7 @@ p151
 I7
 S'p_CallbackRest'
 p152
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p153
 I3949
 tp154
@@ -9096,7 +9096,7 @@ p156
 I3
 S'p_ExceptionMembers'
 p157
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p158
 I3957
 tp159
@@ -9115,7 +9115,7 @@ p163
 I4
 S'p_Typedef'
 p164
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p165
 I3964
 tp166
@@ -9126,7 +9126,7 @@ p168
 I4
 S'p_ImplementsStatement'
 p169
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p170
 I3972
 tp171
@@ -9137,7 +9137,7 @@ p173
 I6
 S'p_Const'
 p174
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p175
 I3982
 tp176
@@ -9148,7 +9148,7 @@ p178
 I1
 S'p_ConstValueBoolean'
 p179
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p180
 I3992
 tp181
@@ -9159,7 +9159,7 @@ p183
 I1
 S'p_ConstValueInteger'
 p184
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p185
 I4000
 tp186
@@ -9170,7 +9170,7 @@ p188
 I1
 S'p_ConstValueFloat'
 p189
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p190
 I4014
 tp191
@@ -9181,7 +9181,7 @@ p193
 I1
 S'p_ConstValueString'
 p194
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p195
 I4021
 tp196
@@ -9192,7 +9192,7 @@ p198
 I1
 S'p_ConstValueNull'
 p199
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p200
 I4029
 tp201
@@ -9203,7 +9203,7 @@ p203
 I1
 S'p_BooleanLiteralTrue'
 p204
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p205
 I4035
 tp206
@@ -9214,7 +9214,7 @@ p208
 I1
 S'p_BooleanLiteralFalse'
 p209
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p210
 I4041
 tp211
@@ -9225,7 +9225,7 @@ p213
 I1
 S'p_AttributeOrOperation'
 p214
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p215
 I4047
 tp216
@@ -9244,7 +9244,7 @@ p220
 I2
 S'p_AttributeWithQualifier'
 p221
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p222
 I4054
 tp223
@@ -9255,7 +9255,7 @@ p225
 I2
 S'p_Attribute'
 p226
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p227
 I4064
 tp228
@@ -9266,7 +9266,7 @@ p230
 I5
 S'p_AttributeRest'
 p231
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p232
 I4071
 tp233
@@ -9277,7 +9277,7 @@ p235
 I1
 S'p_ReadOnly'
 p236
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p237
 I4081
 tp238
@@ -9288,7 +9288,7 @@ p240
 I0
 S'p_ReadOnlyEmpty'
 p241
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p242
 I4087
 tp243
@@ -9299,7 +9299,7 @@ p245
 I1
 S'p_Inherit'
 p246
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p247
 I4093
 tp248
@@ -9310,7 +9310,7 @@ p250
 I0
 S'p_InheritEmpty'
 p251
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p252
 I4099
 tp253
@@ -9321,7 +9321,7 @@ p255
 I2
 S'p_Operation'
 p256
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p257
 I4105
 tp258
@@ -9332,7 +9332,7 @@ p260
 I2
 S'p_Stringifier'
 p261
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p262
 I4223
 tp263
@@ -9343,7 +9343,7 @@ p265
 I2
 S'p_Jsonifier'
 p266
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p267
 I4237
 tp268
@@ -9354,7 +9354,7 @@ p270
 I1
 S'p_QualifierStatic'
 p271
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p272
 I4250
 tp273
@@ -9365,7 +9365,7 @@ p275
 I1
 S'p_QualifierStringifier'
 p276
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p277
 I4256
 tp278
@@ -9376,7 +9376,7 @@ p280
 I1
 S'p_Qualifiers'
 p281
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p282
 I4262
 tp283
@@ -9395,7 +9395,7 @@ p287
 I2
 S'p_Specials'
 p288
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p289
 I4269
 tp290
@@ -9406,7 +9406,7 @@ p292
 I0
 S'p_SpecialsEmpty'
 p293
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p294
 I4276
 tp295
@@ -9417,7 +9417,7 @@ p297
 I1
 S'p_SpecialGetter'
 p298
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p299
 I4282
 tp300
@@ -9428,7 +9428,7 @@ p302
 I1
 S'p_SpecialSetter'
 p303
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p304
 I4288
 tp305
@@ -9439,7 +9439,7 @@ p307
 I1
 S'p_SpecialCreator'
 p308
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p309
 I4294
 tp310
@@ -9450,7 +9450,7 @@ p312
 I1
 S'p_SpecialDeleter'
 p313
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p314
 I4300
 tp315
@@ -9461,7 +9461,7 @@ p317
 I1
 S'p_SpecialLegacyCaller'
 p318
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p319
 I4306
 tp320
@@ -9472,7 +9472,7 @@ p322
 I6
 S'p_OperationRest'
 p323
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p324
 I4312
 tp325
@@ -9483,7 +9483,7 @@ p327
 I1
 S'p_OptionalIdentifier'
 p328
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p329
 I4318
 tp330
@@ -9494,7 +9494,7 @@ p332
 I0
 S'p_OptionalIdentifierEmpty'
 p333
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p334
 I4324
 tp335
@@ -9505,7 +9505,7 @@ p337
 I2
 S'p_ArgumentList'
 p338
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p339
 I4330
 tp340
@@ -9516,7 +9516,7 @@ p342
 I0
 S'p_ArgumentListEmpty'
 p343
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p344
 I4337
 tp345
@@ -9527,7 +9527,7 @@ p347
 I3
 S'p_Arguments'
 p348
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p349
 I4343
 tp350
@@ -9538,7 +9538,7 @@ p352
 I0
 S'p_ArgumentsEmpty'
 p353
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p354
 I4350
 tp355
@@ -9549,7 +9549,7 @@ p357
 I6
 S'p_Argument'
 p358
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p359
 I4356
 tp360
@@ -9560,7 +9560,7 @@ p362
 I1
 S'p_ArgumentName'
 p363
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p364
 I4385
 tp365
@@ -9739,7 +9739,7 @@ p409
 I1
 S'p_Optional'
 p410
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p411
 I4412
 tp412
@@ -9750,7 +9750,7 @@ p414
 I0
 S'p_OptionalEmpty'
 p415
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p416
 I4418
 tp417
@@ -9761,7 +9761,7 @@ p419
 I1
 S'p_Ellipsis'
 p420
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p421
 I4424
 tp422
@@ -9772,7 +9772,7 @@ p424
 I0
 S'p_EllipsisEmpty'
 p425
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p426
 I4430
 tp427
@@ -9783,7 +9783,7 @@ p429
 I1
 S'p_ExceptionMember'
 p430
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p431
 I4436
 tp432
@@ -9802,7 +9802,7 @@ p436
 I3
 S'p_ExceptionField'
 p437
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p438
 I4443
 tp439
@@ -9813,7 +9813,7 @@ p441
 I4
 S'p_ExtendedAttributeList'
 p442
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p443
 I4449
 tp444
@@ -9824,7 +9824,7 @@ p446
 I0
 S'p_ExtendedAttributeListEmpty'
 p447
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p448
 I4457
 tp449
@@ -9835,7 +9835,7 @@ p451
 I1
 S'p_ExtendedAttribute'
 p452
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p453
 I4463
 tp454
@@ -9870,7 +9870,7 @@ p462
 I0
 S'p_ExtendedAttributeEmpty'
 p463
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p464
 I4472
 tp465
@@ -9881,7 +9881,7 @@ p467
 I3
 S'p_ExtendedAttributes'
 p468
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p469
 I4478
 tp470
@@ -9892,7 +9892,7 @@ p472
 I0
 S'p_ExtendedAttributesEmpty'
 p473
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p474
 I4485
 tp475
@@ -9903,7 +9903,7 @@ p477
 I1
 S'p_Other'
 p478
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p479
 I4491
 tp480
@@ -10290,7 +10290,7 @@ p576
 I1
 S'p_OtherOrComma'
 p577
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p578
 I4544
 tp579
@@ -10309,7 +10309,7 @@ p583
 I1
 S'p_TypeSingleType'
 p584
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p585
 I4551
 tp586
@@ -10320,7 +10320,7 @@ p588
 I2
 S'p_TypeUnionType'
 p589
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p590
 I4557
 tp591
@@ -10331,7 +10331,7 @@ p593
 I1
 S'p_SingleTypeNonAnyType'
 p594
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p595
 I4563
 tp596
@@ -10342,7 +10342,7 @@ p598
 I2
 S'p_SingleTypeAnyType'
 p599
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p600
 I4569
 tp601
@@ -10353,7 +10353,7 @@ p603
 I6
 S'p_UnionType'
 p604
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p605
 I4575
 tp606
@@ -10364,7 +10364,7 @@ p608
 I1
 S'p_UnionMemberTypeNonAnyType'
 p609
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p610
 I4583
 tp611
@@ -10375,7 +10375,7 @@ p613
 I3
 S'p_UnionMemberTypeArrayOfAny'
 p614
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p615
 I4589
 tp616
@@ -10386,7 +10386,7 @@ p618
 I2
 S'p_UnionMemberType'
 p619
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p620
 I4596
 tp621
@@ -10405,7 +10405,7 @@ p625
 I3
 S'p_UnionMemberTypes'
 p626
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p627
 I4603
 tp628
@@ -10416,7 +10416,7 @@ p630
 I0
 S'p_UnionMemberTypesEmpty'
 p631
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p632
 I4610
 tp633
@@ -10427,7 +10427,7 @@ p635
 I2
 S'p_NonAnyType'
 p636
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p637
 I4616
 tp638
@@ -10454,7 +10454,7 @@ p644
 I5
 S'p_NonAnyTypeSequenceType'
 p645
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p646
 I4631
 tp647
@@ -10465,7 +10465,7 @@ p649
 I2
 S'p_NonAnyTypeScopedName'
 p650
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p651
 I4641
 tp652
@@ -10476,7 +10476,7 @@ p654
 I2
 S'p_NonAnyTypeDate'
 p655
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p656
 I4664
 tp657
@@ -10487,7 +10487,7 @@ p659
 I2
 S'p_ConstType'
 p660
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p661
 I4671
 tp662
@@ -10498,7 +10498,7 @@ p664
 I2
 S'p_ConstTypeIdentifier'
 p665
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p666
 I4680
 tp667
@@ -10509,7 +10509,7 @@ p669
 I1
 S'p_PrimitiveOrStringTypeUint'
 p670
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p671
 I4691
 tp672
@@ -10520,7 +10520,7 @@ p674
 I1
 S'p_PrimitiveOrStringTypeBoolean'
 p675
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p676
 I4697
 tp677
@@ -10531,7 +10531,7 @@ p679
 I1
 S'p_PrimitiveOrStringTypeByte'
 p680
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p681
 I4703
 tp682
@@ -10542,7 +10542,7 @@ p684
 I1
 S'p_PrimitiveOrStringTypeOctet'
 p685
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p686
 I4709
 tp687
@@ -10553,7 +10553,7 @@ p689
 I1
 S'p_PrimitiveOrStringTypeFloat'
 p690
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p691
 I4715
 tp692
@@ -10564,7 +10564,7 @@ p694
 I2
 S'p_PrimitiveOrStringTypeUnrestictedFloat'
 p695
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p696
 I4721
 tp697
@@ -10575,7 +10575,7 @@ p699
 I1
 S'p_PrimitiveOrStringTypeDouble'
 p700
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p701
 I4727
 tp702
@@ -10586,7 +10586,7 @@ p704
 I2
 S'p_PrimitiveOrStringTypeUnrestictedDouble'
 p705
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p706
 I4733
 tp707
@@ -10597,7 +10597,7 @@ p709
 I1
 S'p_PrimitiveOrStringTypeDOMString'
 p710
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p711
 I4739
 tp712
@@ -10608,7 +10608,7 @@ p714
 I1
 S'p_PrimitiveOrStringTypeBytestring'
 p715
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p716
 I4745
 tp717
@@ -10619,7 +10619,7 @@ p719
 I2
 S'p_UnsignedIntegerTypeUnsigned'
 p720
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p721
 I4751
 tp722
@@ -10630,7 +10630,7 @@ p724
 I1
 S'p_UnsignedIntegerType'
 p725
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p726
 I4758
 tp727
@@ -10641,7 +10641,7 @@ p729
 I1
 S'p_IntegerTypeShort'
 p730
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p731
 I4764
 tp732
@@ -10652,7 +10652,7 @@ p734
 I2
 S'p_IntegerTypeLong'
 p735
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p736
 I4770
 tp737
@@ -10663,7 +10663,7 @@ p739
 I1
 S'p_OptionalLong'
 p740
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p741
 I4779
 tp742
@@ -10674,7 +10674,7 @@ p744
 I0
 S'p_OptionalLongEmpty'
 p745
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p746
 I4785
 tp747
@@ -10685,7 +10685,7 @@ p749
 I3
 S'p_TypeSuffixBrackets'
 p750
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p751
 I4791
 tp752
@@ -10696,7 +10696,7 @@ p754
 I2
 S'p_TypeSuffixQMark'
 p755
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p756
 I4798
 tp757
@@ -10707,7 +10707,7 @@ p759
 I0
 S'p_TypeSuffixEmpty'
 p760
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p761
 I4805
 tp762
@@ -10718,7 +10718,7 @@ p764
 I3
 S'p_TypeSuffixStartingWithArray'
 p765
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p766
 I4811
 tp767
@@ -10729,7 +10729,7 @@ p769
 I0
 S'p_TypeSuffixStartingWithArrayEmpty'
 p770
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p771
 I4818
 tp772
@@ -10740,7 +10740,7 @@ p774
 I1
 S'p_Null'
 p775
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p776
 I4824
 tp777
@@ -10759,7 +10759,7 @@ p781
 I1
 S'p_ReturnTypeType'
 p782
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p783
 I4834
 tp784
@@ -10770,7 +10770,7 @@ p786
 I1
 S'p_ReturnTypeVoid'
 p787
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p788
 I4840
 tp789
@@ -10781,7 +10781,7 @@ p791
 I1
 S'p_ScopedName'
 p792
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p793
 I4846
 tp794
@@ -10800,7 +10800,7 @@ p798
 I3
 S'p_AbsoluteScopedName'
 p799
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p800
 I4853
 tp801
@@ -10811,7 +10811,7 @@ p803
 I2
 S'p_RelativeScopedName'
 p804
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p805
 I4860
 tp806
@@ -10822,7 +10822,7 @@ p808
 I3
 S'p_ScopedNameParts'
 p809
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p810
 I4868
 tp811
@@ -10833,7 +10833,7 @@ p813
 I0
 S'p_ScopedNamePartsEmpty'
 p814
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p815
 I4875
 tp816
@@ -10844,7 +10844,7 @@ p818
 I1
 S'p_ExtendedAttributeNoArgs'
 p819
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p820
 I4881
 tp821
@@ -10855,7 +10855,7 @@ p823
 I4
 S'p_ExtendedAttributeArgList'
 p824
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p825
 I4887
 tp826
@@ -10866,7 +10866,7 @@ p828
 I3
 S'p_ExtendedAttributeIdent'
 p829
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p830
 I4893
 tp831
@@ -10885,7 +10885,7 @@ p835
 I6
 S'p_ExtendedAttributeNamedArgList'
 p836
-S'C:\\Users\\Erik\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
+S'D:\\Libraries\\Documents\\Programming\\emsdk\\emscripten\\1.38.14\\third_party\\WebIDL.py'
 p837
 I4900
 tp838
