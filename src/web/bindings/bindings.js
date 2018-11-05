@@ -168,109 +168,163 @@ function ensureFloat64(value) {
 }
 
 
-// rectangle_list
-/** @suppress {undefinedVars, duplicate} */function rectangle_list() { throw "cannot construct a rectangle_list, no constructor in IDL" }
-rectangle_list.prototype = Object.create(WrapperObject.prototype);
-rectangle_list.prototype.constructor = rectangle_list;
-rectangle_list.prototype.__class__ = rectangle_list;
-rectangle_list.__cache__ = {};
-Module['rectangle_list'] = rectangle_list;
+// render_rectangle_command
+/** @suppress {undefinedVars, duplicate} */function render_rectangle_command() { throw "cannot construct a render_rectangle_command, no constructor in IDL" }
+render_rectangle_command.prototype = Object.create(WrapperObject.prototype);
+render_rectangle_command.prototype.constructor = render_rectangle_command;
+render_rectangle_command.prototype.__class__ = render_rectangle_command;
+render_rectangle_command.__cache__ = {};
+Module['render_rectangle_command'] = render_rectangle_command;
 
-  rectangle_list.prototype['get_numRectangles'] = rectangle_list.prototype.get_numRectangles = /** @suppress {undefinedVars, duplicate} */function() {
+  render_rectangle_command.prototype['get_x'] = render_rectangle_command.prototype.get_x = /** @suppress {undefinedVars, duplicate} */function() {
   var self = this.ptr;
-  return _emscripten_bind_rectangle_list_get_numRectangles_0(self);
+  return _emscripten_bind_render_rectangle_command_get_x_0(self);
 };
-    rectangle_list.prototype['set_numRectangles'] = rectangle_list.prototype.set_numRectangles = /** @suppress {undefinedVars, duplicate} */function(arg0) {
-  var self = this.ptr;
-  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
-  _emscripten_bind_rectangle_list_set_numRectangles_1(self, arg0);
-};
-    Object.defineProperty(rectangle_list.prototype, 'numRectangles', { get: rectangle_list.prototype.get_numRectangles, set: rectangle_list.prototype.set_numRectangles }) 
-  rectangle_list.prototype['get_maxRectangles'] = rectangle_list.prototype.get_maxRectangles = /** @suppress {undefinedVars, duplicate} */function() {
-  var self = this.ptr;
-  return _emscripten_bind_rectangle_list_get_maxRectangles_0(self);
-};
-    rectangle_list.prototype['set_maxRectangles'] = rectangle_list.prototype.set_maxRectangles = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+    render_rectangle_command.prototype['set_x'] = render_rectangle_command.prototype.set_x = /** @suppress {undefinedVars, duplicate} */function(arg0) {
   var self = this.ptr;
   if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
-  _emscripten_bind_rectangle_list_set_maxRectangles_1(self, arg0);
+  _emscripten_bind_render_rectangle_command_set_x_1(self, arg0);
 };
-    Object.defineProperty(rectangle_list.prototype, 'maxRectangles', { get: rectangle_list.prototype.get_maxRectangles, set: rectangle_list.prototype.set_maxRectangles }) 
-  rectangle_list.prototype['get_rectangles'] = rectangle_list.prototype.get_rectangles = /** @suppress {undefinedVars, duplicate} */function() {
+    Object.defineProperty(render_rectangle_command.prototype, 'x', { get: render_rectangle_command.prototype.get_x, set: render_rectangle_command.prototype.set_x }) 
+  render_rectangle_command.prototype['get_y'] = render_rectangle_command.prototype.get_y = /** @suppress {undefinedVars, duplicate} */function() {
   var self = this.ptr;
-  return wrapPointer(_emscripten_bind_rectangle_list_get_rectangles_0(self), colored_rectangle);
+  return _emscripten_bind_render_rectangle_command_get_y_0(self);
 };
-    rectangle_list.prototype['set_rectangles'] = rectangle_list.prototype.set_rectangles = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+    render_rectangle_command.prototype['set_y'] = render_rectangle_command.prototype.set_y = /** @suppress {undefinedVars, duplicate} */function(arg0) {
   var self = this.ptr;
   if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
-  _emscripten_bind_rectangle_list_set_rectangles_1(self, arg0);
+  _emscripten_bind_render_rectangle_command_set_y_1(self, arg0);
 };
-    Object.defineProperty(rectangle_list.prototype, 'rectangles', { get: rectangle_list.prototype.get_rectangles, set: rectangle_list.prototype.set_rectangles }) 
-  rectangle_list.prototype['__destroy__'] = rectangle_list.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
+    Object.defineProperty(render_rectangle_command.prototype, 'y', { get: render_rectangle_command.prototype.get_y, set: render_rectangle_command.prototype.set_y }) 
+  render_rectangle_command.prototype['get_width'] = render_rectangle_command.prototype.get_width = /** @suppress {undefinedVars, duplicate} */function() {
   var self = this.ptr;
-  _emscripten_bind_rectangle_list___destroy___0(self);
+  return _emscripten_bind_render_rectangle_command_get_width_0(self);
 };
-// colored_rectangle
-/** @suppress {undefinedVars, duplicate} */function colored_rectangle() { throw "cannot construct a colored_rectangle, no constructor in IDL" }
-colored_rectangle.prototype = Object.create(WrapperObject.prototype);
-colored_rectangle.prototype.constructor = colored_rectangle;
-colored_rectangle.prototype.__class__ = colored_rectangle;
-colored_rectangle.__cache__ = {};
-Module['colored_rectangle'] = colored_rectangle;
+    render_rectangle_command.prototype['set_width'] = render_rectangle_command.prototype.set_width = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_render_rectangle_command_set_width_1(self, arg0);
+};
+    Object.defineProperty(render_rectangle_command.prototype, 'width', { get: render_rectangle_command.prototype.get_width, set: render_rectangle_command.prototype.set_width }) 
+  render_rectangle_command.prototype['get_height'] = render_rectangle_command.prototype.get_height = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_render_rectangle_command_get_height_0(self);
+};
+    render_rectangle_command.prototype['set_height'] = render_rectangle_command.prototype.set_height = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_render_rectangle_command_set_height_1(self, arg0);
+};
+    Object.defineProperty(render_rectangle_command.prototype, 'height', { get: render_rectangle_command.prototype.get_height, set: render_rectangle_command.prototype.set_height }) 
+  render_rectangle_command.prototype['get_color'] = render_rectangle_command.prototype.get_color = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_render_rectangle_command_get_color_0(self);
+};
+    render_rectangle_command.prototype['set_color'] = render_rectangle_command.prototype.set_color = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_render_rectangle_command_set_color_1(self, arg0);
+};
+    Object.defineProperty(render_rectangle_command.prototype, 'color', { get: render_rectangle_command.prototype.get_color, set: render_rectangle_command.prototype.set_color }) 
+  render_rectangle_command.prototype['__destroy__'] = render_rectangle_command.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  _emscripten_bind_render_rectangle_command___destroy___0(self);
+};
+// memory_arena
+/** @suppress {undefinedVars, duplicate} */function memory_arena() { throw "cannot construct a memory_arena, no constructor in IDL" }
+memory_arena.prototype = Object.create(WrapperObject.prototype);
+memory_arena.prototype.constructor = memory_arena;
+memory_arena.prototype.__class__ = memory_arena;
+memory_arena.__cache__ = {};
+Module['memory_arena'] = memory_arena;
 
-  colored_rectangle.prototype['get_x'] = colored_rectangle.prototype.get_x = /** @suppress {undefinedVars, duplicate} */function() {
+  memory_arena.prototype['get_base'] = memory_arena.prototype.get_base = /** @suppress {undefinedVars, duplicate} */function() {
   var self = this.ptr;
-  return _emscripten_bind_colored_rectangle_get_x_0(self);
+  return wrapPointer(_emscripten_bind_memory_arena_get_base_0(self), VoidPtr);
 };
-    colored_rectangle.prototype['set_x'] = colored_rectangle.prototype.set_x = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+    memory_arena.prototype['set_base'] = memory_arena.prototype.set_base = /** @suppress {undefinedVars, duplicate} */function(arg0) {
   var self = this.ptr;
   if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
-  _emscripten_bind_colored_rectangle_set_x_1(self, arg0);
+  _emscripten_bind_memory_arena_set_base_1(self, arg0);
 };
-    Object.defineProperty(colored_rectangle.prototype, 'x', { get: colored_rectangle.prototype.get_x, set: colored_rectangle.prototype.set_x }) 
-  colored_rectangle.prototype['get_y'] = colored_rectangle.prototype.get_y = /** @suppress {undefinedVars, duplicate} */function() {
+    Object.defineProperty(memory_arena.prototype, 'base', { get: memory_arena.prototype.get_base, set: memory_arena.prototype.set_base }) 
+  memory_arena.prototype['get_size'] = memory_arena.prototype.get_size = /** @suppress {undefinedVars, duplicate} */function() {
   var self = this.ptr;
-  return _emscripten_bind_colored_rectangle_get_y_0(self);
+  return _emscripten_bind_memory_arena_get_size_0(self);
 };
-    colored_rectangle.prototype['set_y'] = colored_rectangle.prototype.set_y = /** @suppress {undefinedVars, duplicate} */function(arg0) {
-  var self = this.ptr;
-  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
-  _emscripten_bind_colored_rectangle_set_y_1(self, arg0);
-};
-    Object.defineProperty(colored_rectangle.prototype, 'y', { get: colored_rectangle.prototype.get_y, set: colored_rectangle.prototype.set_y }) 
-  colored_rectangle.prototype['get_width'] = colored_rectangle.prototype.get_width = /** @suppress {undefinedVars, duplicate} */function() {
-  var self = this.ptr;
-  return _emscripten_bind_colored_rectangle_get_width_0(self);
-};
-    colored_rectangle.prototype['set_width'] = colored_rectangle.prototype.set_width = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+    memory_arena.prototype['set_size'] = memory_arena.prototype.set_size = /** @suppress {undefinedVars, duplicate} */function(arg0) {
   var self = this.ptr;
   if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
-  _emscripten_bind_colored_rectangle_set_width_1(self, arg0);
+  _emscripten_bind_memory_arena_set_size_1(self, arg0);
 };
-    Object.defineProperty(colored_rectangle.prototype, 'width', { get: colored_rectangle.prototype.get_width, set: colored_rectangle.prototype.set_width }) 
-  colored_rectangle.prototype['get_height'] = colored_rectangle.prototype.get_height = /** @suppress {undefinedVars, duplicate} */function() {
+    Object.defineProperty(memory_arena.prototype, 'size', { get: memory_arena.prototype.get_size, set: memory_arena.prototype.set_size }) 
+  memory_arena.prototype['get_capacity'] = memory_arena.prototype.get_capacity = /** @suppress {undefinedVars, duplicate} */function() {
   var self = this.ptr;
-  return _emscripten_bind_colored_rectangle_get_height_0(self);
+  return _emscripten_bind_memory_arena_get_capacity_0(self);
 };
-    colored_rectangle.prototype['set_height'] = colored_rectangle.prototype.set_height = /** @suppress {undefinedVars, duplicate} */function(arg0) {
-  var self = this.ptr;
-  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
-  _emscripten_bind_colored_rectangle_set_height_1(self, arg0);
-};
-    Object.defineProperty(colored_rectangle.prototype, 'height', { get: colored_rectangle.prototype.get_height, set: colored_rectangle.prototype.set_height }) 
-  colored_rectangle.prototype['get_color'] = colored_rectangle.prototype.get_color = /** @suppress {undefinedVars, duplicate} */function() {
-  var self = this.ptr;
-  return _emscripten_bind_colored_rectangle_get_color_0(self);
-};
-    colored_rectangle.prototype['set_color'] = colored_rectangle.prototype.set_color = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+    memory_arena.prototype['set_capacity'] = memory_arena.prototype.set_capacity = /** @suppress {undefinedVars, duplicate} */function(arg0) {
   var self = this.ptr;
   if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
-  _emscripten_bind_colored_rectangle_set_color_1(self, arg0);
+  _emscripten_bind_memory_arena_set_capacity_1(self, arg0);
 };
-    Object.defineProperty(colored_rectangle.prototype, 'color', { get: colored_rectangle.prototype.get_color, set: colored_rectangle.prototype.set_color }) 
-  colored_rectangle.prototype['__destroy__'] = colored_rectangle.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
+    Object.defineProperty(memory_arena.prototype, 'capacity', { get: memory_arena.prototype.get_capacity, set: memory_arena.prototype.set_capacity }) 
+  memory_arena.prototype['__destroy__'] = memory_arena.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
   var self = this.ptr;
-  _emscripten_bind_colored_rectangle___destroy___0(self);
+  _emscripten_bind_memory_arena___destroy___0(self);
+};
+// render_command_header
+/** @suppress {undefinedVars, duplicate} */function render_command_header() { throw "cannot construct a render_command_header, no constructor in IDL" }
+render_command_header.prototype = Object.create(WrapperObject.prototype);
+render_command_header.prototype.constructor = render_command_header;
+render_command_header.prototype.__class__ = render_command_header;
+render_command_header.__cache__ = {};
+Module['render_command_header'] = render_command_header;
+
+  render_command_header.prototype['get_type'] = render_command_header.prototype.get_type = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_render_command_header_get_type_0(self);
+};
+    render_command_header.prototype['set_type'] = render_command_header.prototype.set_type = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_render_command_header_set_type_1(self, arg0);
+};
+    Object.defineProperty(render_command_header.prototype, 'type', { get: render_command_header.prototype.get_type, set: render_command_header.prototype.set_type }) 
+  render_command_header.prototype['__destroy__'] = render_command_header.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  _emscripten_bind_render_command_header___destroy___0(self);
+};
+// render_horizontal_line_command
+/** @suppress {undefinedVars, duplicate} */function render_horizontal_line_command() { throw "cannot construct a render_horizontal_line_command, no constructor in IDL" }
+render_horizontal_line_command.prototype = Object.create(WrapperObject.prototype);
+render_horizontal_line_command.prototype.constructor = render_horizontal_line_command;
+render_horizontal_line_command.prototype.__class__ = render_horizontal_line_command;
+render_horizontal_line_command.__cache__ = {};
+Module['render_horizontal_line_command'] = render_horizontal_line_command;
+
+  render_horizontal_line_command.prototype['get_color'] = render_horizontal_line_command.prototype.get_color = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_render_horizontal_line_command_get_color_0(self);
+};
+    render_horizontal_line_command.prototype['set_color'] = render_horizontal_line_command.prototype.set_color = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_render_horizontal_line_command_set_color_1(self, arg0);
+};
+    Object.defineProperty(render_horizontal_line_command.prototype, 'color', { get: render_horizontal_line_command.prototype.get_color, set: render_horizontal_line_command.prototype.set_color }) 
+  render_horizontal_line_command.prototype['get_lineNum'] = render_horizontal_line_command.prototype.get_lineNum = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_render_horizontal_line_command_get_lineNum_0(self);
+};
+    render_horizontal_line_command.prototype['set_lineNum'] = render_horizontal_line_command.prototype.set_lineNum = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_render_horizontal_line_command_set_lineNum_1(self, arg0);
+};
+    Object.defineProperty(render_horizontal_line_command.prototype, 'lineNum', { get: render_horizontal_line_command.prototype.get_lineNum, set: render_horizontal_line_command.prototype.set_lineNum }) 
+  render_horizontal_line_command.prototype['__destroy__'] = render_horizontal_line_command.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  _emscripten_bind_render_horizontal_line_command___destroy___0(self);
 };
 // VoidPtr
 /** @suppress {undefinedVars, duplicate} */function VoidPtr() { throw "cannot construct a VoidPtr, no constructor in IDL" }
@@ -284,9 +338,38 @@ Module['VoidPtr'] = VoidPtr;
   var self = this.ptr;
   _emscripten_bind_VoidPtr___destroy___0(self);
 };
+// render_command_list
+/** @suppress {undefinedVars, duplicate} */function render_command_list() { throw "cannot construct a render_command_list, no constructor in IDL" }
+render_command_list.prototype = Object.create(WrapperObject.prototype);
+render_command_list.prototype.constructor = render_command_list;
+render_command_list.prototype.__class__ = render_command_list;
+render_command_list.__cache__ = {};
+Module['render_command_list'] = render_command_list;
+
+  render_command_list.prototype['get_memory'] = render_command_list.prototype.get_memory = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return wrapPointer(_emscripten_bind_render_command_list_get_memory_0(self), memory_arena);
+};
+    render_command_list.prototype['set_memory'] = render_command_list.prototype.set_memory = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_render_command_list_set_memory_1(self, arg0);
+};
+    Object.defineProperty(render_command_list.prototype, 'memory', { get: render_command_list.prototype.get_memory, set: render_command_list.prototype.set_memory }) 
+  render_command_list.prototype['__destroy__'] = render_command_list.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  _emscripten_bind_render_command_list___destroy___0(self);
+};
 (function() {
   function setupEnums() {
     
+
+    // render_command_type
+
+    Module['RENDER_COMMAND_RECTANGLE'] = _emscripten_enum_render_command_type_RENDER_COMMAND_RECTANGLE();
+
+    Module['RENDER_COMMAND_HORIZONTAL_LINE'] = _emscripten_enum_render_command_type_RENDER_COMMAND_HORIZONTAL_LINE();
+
   }
   if (Module['calledRun']) setupEnums();
   else addOnPreMain(setupEnums);

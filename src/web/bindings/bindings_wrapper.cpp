@@ -8,15 +8,27 @@
 
 using namespace emscripten;
 
-int sizeof_rectangle_list () {
-    return sizeof(rectangle_list);
+int sizeof_memory_arena () {
+    return sizeof(memory_arena);
 }  
-int sizeof_colored_rectangle () {
-    return sizeof(colored_rectangle);   
-}
+int sizeof_render_command_header () {
+    return sizeof(render_command_header);
+}  
+int sizeof_render_rectangle_command () {
+    return sizeof(render_rectangle_command);
+}  
+int sizeof_render_horizontal_line_command () {
+    return sizeof(render_horizontal_line_command);
+}  
+int sizeof_render_command_list () {
+    return sizeof(render_command_list);
+}  
 
 EMSCRIPTEN_BINDINGS(bindings) {
-    function ("sizeof_rectangle_list", &sizeof_rectangle_list);
-    function ("sizeof_colored_rectangle", &sizeof_colored_rectangle);
+    function ("sizeof_memory_arena", &sizeof_memory_arena);
+    function ("sizeof_render_command_header", &sizeof_render_command_header);
+    function ("sizeof_render_rectangle_command", &sizeof_render_rectangle_command);
+    function ("sizeof_render_horizontal_line_command", &sizeof_render_horizontal_line_command);
+    function ("sizeof_render_command_list", &sizeof_render_command_list);
 }
 

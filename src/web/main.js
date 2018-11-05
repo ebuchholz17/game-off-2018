@@ -28,12 +28,13 @@ WebPlatform.prototype = {
         window.addEventListener("resize", this.resize.bind(this));
         this.updateCallback = this.update.bind(this);
 
-        var maxRectangles = 1000;
-        this.rectangleList = this.game.wrapPointer(this.game._malloc(this.game.sizeof_rectangle_list()), 
-                                                   this.game.rectangle_list);
-        this.rectangleList.set_numRectangles(0);
-        this.rectangleList.set_maxRectangles(1000);
-        this.rectangleList.set_rectangles(this.game._malloc(this.rectangleList.get_maxRectangles() * this.game.sizeof_colored_rectangle()));
+
+        this.renderCommands = this.game.wrapPointer(this.game._malloc(this.game.sizeof_render_command_list()), 
+                                                   this.game.render_command_list);
+        var renderMemory = 1 * 1024 * 1024;
+        this.renderCommands.get_memory().set_base(this.game._malloc(renderMemory));
+        this.renderCommands.get_memory().set_size(0);
+        this.renderCommands.get_memory().set_capacity(renderMemory);
 
         this.resize();
         this.update();
@@ -42,31 +43,61 @@ WebPlatform.prototype = {
     initBackBuffer: function () {
     },
 
+    drawRectangle: function (rectCommand) {
+        this.ctx.fillStyle = this.hexColorToString(rectCommand.get_color());
+        this.ctx.fillRect(
+            rectCommand.get_x(),
+            rectCommand.get_y(),
+            rectCommand.get_width(),
+            rectCommand.get_height()
+        );
+    },
+    drawLine: function (lineCommand) {
+        this.ctx.strokeStyle = this.hexColorToString(lineCommand.get_color());
+        var lineNum = lineCommand.get_lineNum();
+        this.ctx.beginPath();
+        this.ctx.moveTo(0, lineNum);
+        this.ctx.lineTo(this.canvas.width - 1, lineNum);
+        this.ctx.stroke();
+    },
+
     update: function () {
         this.ctx.fillStyle = "#000000";
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-        this.rectangleList.set_numRectangles(0);
+        this.renderCommands.get_memory().set_size(0);
         this.game.ccall("updateGame", 
             "null", 
-            ["number", "number", "number"], 
-            [this.canvas.width, this.canvas.height, this.game.getPointer(this.rectangleList)]
+            ["number"], 
+            [this.game.getPointer(this.renderCommands)]
         );
         
-        var numRects = this.rectangleList.get_numRectangles();
-        for (var i = 0; i < numRects; ++i) {
-            var coloredRectangle = this.game.wrapPointer(this.game.getPointer(this.rectangleList.get_rectangles()) +
-                                   i * this.game.sizeof_colored_rectangle(), this.game.colored_rectangle);
-            var hexColor = coloredRectangle.get_color();
-            this.ctx.fillStyle = this.hexColorToString(hexColor);
-            this.ctx.fillRect(
-                coloredRectangle.get_x(),
-                coloredRectangle.get_y(),
-                coloredRectangle.get_width(),
-                coloredRectangle.get_height()
-            );
+        var renderCommandOffset = 0;
+        var renderCommandMemorySize = this.renderCommands.get_memory().get_size();
+        var renderMemoryPointer = this.game.getPointer(this.renderCommands.get_memory().get_base());
+        while (renderCommandOffset < renderCommandMemorySize) {
+            var header = this.game.wrapPointer(renderMemoryPointer + renderCommandOffset, 
+                                               this.game.render_command_header);
+            renderCommandOffset += this.game.sizeof_render_command_header();
+            switch (header.get_type()) {
+                default:
+                    break;
+                case this.game.RENDER_COMMAND_RECTANGLE:
+                {
+                    var rectCommand = this.game.wrapPointer(renderMemoryPointer + renderCommandOffset, 
+                                                            this.game.render_rectangle_command);
+                    renderCommandOffset += this.game.sizeof_render_rectangle_command();
+                    this.drawRectangle(rectCommand);
+                } break;
+                case this.game.RENDER_COMMAND_HORIZONTAL_LINE:
+                {
+                    var lineCommand = this.game.wrapPointer(renderMemoryPointer + renderCommandOffset, 
+                                                            this.game.render_horizontal_line_command);
+                    renderCommandOffset += this.game.sizeof_render_horizontal_line_command();
+                    this.drawLine(lineCommand);
+                } break;
+            }
         }
-
         window.requestAnimationFrame(this.updateCallback);
     },
 

@@ -67,6 +67,41 @@ LRESULT CALLBACK windowCallback (HWND window, unsigned int message, WPARAM wPara
     return result;
 }
 
+void drawLine (render_horizontal_line_command *lineCommand) {
+    unsigned int *pixels = (unsigned int *)backBuffer;
+
+    char lineNum = lineCommand->lineNum;
+    if (lineNum > 0 && lineNum < gameHeight) {
+        for (int x = 0; x < gameWidth; ++x) {
+            pixels[lineNum * gameWidth + x] = lineCommand->color;
+        }
+    }
+}
+
+void drawRectangle (render_rectangle_command *rectCommand) {
+    unsigned int *pixels = (unsigned int *)backBuffer;
+
+    int startX = rectCommand->x;
+    int endX = rectCommand->x + rectCommand->width;
+    int startY = rectCommand->y;
+    int endY = rectCommand->y + rectCommand->height;
+
+    if (startX < 0) { startX = 0; }
+    if (startX > gameWidth - 1) { startX = gameWidth - 1; }
+    if (endX < 0) { endX = 0; }
+    if (endX > gameWidth - 1) { endX = gameWidth - 1; }
+    if (startY < 0) { startY = 0; }
+    if (startY > gameHeight - 1) { startY = gameHeight - 1; }
+    if (endY < 0) { endY = 0; }
+    if (endY > gameHeight - 1) { endY = gameHeight - 1; }
+
+    for (int x = startX; x <= endX; ++x) {
+        for (int y = startY; y <= endY; ++y) {
+            pixels[y * gameWidth + x] = rectCommand->color;
+        }
+    }
+}
+
 int WINAPI WinMain (HINSTANCE instance, HINSTANCE prevInstance, LPSTR commandLine, int showCode) {
     LARGE_INTEGER perfCountFrequencyResult;
     QueryPerformanceFrequency(&perfCountFrequencyResult);
@@ -103,7 +138,7 @@ int WINAPI WinMain (HINSTANCE instance, HINSTANCE prevInstance, LPSTR commandLin
 
             render_command_list renderCommands = {};
             int memoryCapacity = 1 * 1024 * 1024;
-            renderCommands.memory.base = (char *)malloc(memoryCapacity);
+            renderCommands.memory.base = malloc(memoryCapacity);
             renderCommands.memory.size = 0;
             renderCommands.memory.capacity = memoryCapacity;
 
@@ -124,8 +159,38 @@ int WINAPI WinMain (HINSTANCE instance, HINSTANCE prevInstance, LPSTR commandLin
                     }
                 }
 
+                renderCommands.memory.size = 0;
                 clearBuffer((unsigned int *)backBuffer);
-                //updateGame(gameWidth, gameHeight, &rectangleList);
+                updateGame(&renderCommands);
+
+                unsigned int renderCommandOffset = 0;
+                while (renderCommandOffset < renderCommands.memory.size) {
+                    render_command_header *header = 
+                        (render_command_header *)((char *)renderCommands.memory.base + 
+                                                 renderCommandOffset);
+                    renderCommandOffset += sizeof(render_command_header);
+                    switch(header->type) {
+                        default:
+                            // error
+                            break;
+                        case RENDER_COMMAND_RECTANGLE: 
+                        {
+                            render_rectangle_command *rectCommand = 
+                                (render_rectangle_command *)((char *)renderCommands.memory.base + 
+                                                            renderCommandOffset);
+                            drawRectangle(rectCommand);
+                            renderCommandOffset += sizeof(render_rectangle_command);
+                        } break;
+                        case RENDER_COMMAND_HORIZONTAL_LINE: 
+                        {
+                            render_horizontal_line_command *lineCommand = 
+                                (render_horizontal_line_command *)((char *)renderCommands.memory.base + 
+                                                                   renderCommandOffset);
+                            drawLine(lineCommand);
+                            renderCommandOffset += sizeof(render_horizontal_line_command);
+                        } break;
+                    }
+                }
 
                 drawSceneToWindow(window, deviceContext);
 
