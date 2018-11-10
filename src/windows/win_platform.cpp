@@ -1,7 +1,10 @@
 #include <windows.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "../game/run_around_game.cpp"
+
+#include "opengl_renderer.cpp"
 
 static bool programRunning = false;
 
@@ -9,48 +12,8 @@ static int gameWidth = 1280;
 static int gameHeight = 720;
 static float targetMSPerFrame = 1000.0f / 60.0f;
 
-BITMAPINFO bitmapInfo = {};
-void *backBuffer = 0;
-
-void clearBuffer (unsigned int *pixels) {
-    unsigned char value;
-    for (int i = 0; i < gameHeight; ++i) {
-        value = 0;
-        for (int j = 0; j < gameWidth; ++j) {
-            //pixels[i * gameWidth + j] = value << 8;
-            //++value;
-            pixels[i * gameWidth + j] = value;
-        }
-    }
-}
-
-void initBackBuffer () {
-    // Create back buffer
-    bitmapInfo.bmiHeader.biSize = sizeof(bitmapInfo.bmiHeader);
-    bitmapInfo.bmiHeader.biWidth = gameWidth;
-    bitmapInfo.bmiHeader.biHeight = -gameHeight; // Make the bitmap start from the top left corner
-    bitmapInfo.bmiHeader.biPlanes = 1;
-    bitmapInfo.bmiHeader.biBitCount = 32;
-    bitmapInfo.bmiHeader.biCompression = BI_RGB;
-
-    backBuffer = malloc(4 * gameWidth * gameHeight);
-    if (backBuffer == 0) {
-        printf("Failed to get memory for back buffer.\n");
-    }
-
-    // Clear to black
-    unsigned int *pixels = (unsigned int *)backBuffer;
-    clearBuffer(pixels);
-}
-
-void drawSceneToWindow (HWND window, HDC deviceContext) {
-    RECT windowDimensions;
-    GetWindowRect(window, &windowDimensions);
-    int windowWidth = windowDimensions.right - windowDimensions.left;
-    int windowHeight = windowDimensions.bottom - windowDimensions.top;
-
-    StretchDIBits(deviceContext, 0 , 0, windowWidth, windowHeight, 0, 0, gameWidth, gameHeight, backBuffer, 
-                  &bitmapInfo, DIB_RGB_COLORS, SRCCOPY);
+void DEBUGPrintString (char *string) {
+    OutputDebugStringA(string);
 }
 
 LRESULT CALLBACK windowCallback (HWND window, unsigned int message, WPARAM wParam, LPARAM lParam) {
@@ -65,41 +28,6 @@ LRESULT CALLBACK windowCallback (HWND window, unsigned int message, WPARAM wPara
         break;
     }
     return result;
-}
-
-void drawLine (render_horizontal_line_command *lineCommand) {
-    unsigned int *pixels = (unsigned int *)backBuffer;
-
-    char lineNum = lineCommand->lineNum;
-    if (lineNum > 0 && lineNum < gameHeight) {
-        for (int x = 0; x < gameWidth; ++x) {
-            pixels[lineNum * gameWidth + x] = lineCommand->color;
-        }
-    }
-}
-
-void drawRectangle (render_rectangle_command *rectCommand) {
-    unsigned int *pixels = (unsigned int *)backBuffer;
-
-    int startX = rectCommand->x;
-    int endX = rectCommand->x + rectCommand->width;
-    int startY = rectCommand->y;
-    int endY = rectCommand->y + rectCommand->height;
-
-    if (startX < 0) { startX = 0; }
-    if (startX > gameWidth - 1) { startX = gameWidth - 1; }
-    if (endX < 0) { endX = 0; }
-    if (endX > gameWidth - 1) { endX = gameWidth - 1; }
-    if (startY < 0) { startY = 0; }
-    if (startY > gameHeight - 1) { startY = gameHeight - 1; }
-    if (endY < 0) { endY = 0; }
-    if (endY > gameHeight - 1) { endY = gameHeight - 1; }
-
-    for (int x = startX; x <= endX; ++x) {
-        for (int y = startY; y <= endY; ++y) {
-            pixels[y * gameWidth + x] = rectCommand->color;
-        }
-    }
 }
 
 int WINAPI WinMain (HINSTANCE instance, HINSTANCE prevInstance, LPSTR commandLine, int showCode) {
@@ -134,7 +62,46 @@ int WINAPI WinMain (HINSTANCE instance, HINSTANCE prevInstance, LPSTR commandLin
             programRunning = true;
             HDC deviceContext = GetDC(window);
 
-            initBackBuffer();
+            renderer_memory rendererMemory;
+            // TODO(ebuchholz): wonder how much memory the renderer needs
+            rendererMemory.memoryCapacity = 10 * 1024 * 1024;
+            rendererMemory.memory = malloc(rendererMemory.memoryCapacity);
+            rendererMemory.debugPrintString = &DEBUGPrintString;
+
+            initOpenGL(window, &rendererMemory);
+
+            // Load assets
+            asset_list assetList = {};
+            assetList.numAssetsToLoad = 0;
+            assetList.maxAssetsToLoad = 100;
+            assetList.assetsToLoad = 
+                (asset_to_load *)malloc(assetList.maxAssetsToLoad * sizeof(asset_to_load));
+
+            getGameAssetList(&assetList);
+
+            memory_arena workingAssetMemory = {};
+            workingAssetMemory.capacity = 10 * 1024 * 1024; // 10MB limit for working with asset files?
+            workingAssetMemory.base = malloc(workingAssetMemory.capacity);
+
+            for (int i = 0; i < assetList.numAssetsToLoad; ++i) {
+                asset_to_load *assetToLoad = assetList.assetsToLoad + i;
+                workingAssetMemory.size = 0;
+                switch (assetToLoad->type){
+                    case ASSET_TYPE_OBJ: 
+                    {
+                        FILE *objFile = fopen(assetToLoad->path, "r");
+                        fseek(f, 0, SEEK_END);
+                        int fileSize = ftell(f);
+                        rewind(f);
+
+                        char *fileData = malloc(size + 1);
+                        fread(fileData, size, 1, f);
+                        fclose(f);
+
+                        parseGameAsset(fileData, ASSET_TYPE_OBJ, gameMemory, workingAssetMemory);
+                    } break;
+                }
+            }
 
             render_command_list renderCommands = {};
             int memoryCapacity = 1 * 1024 * 1024;
@@ -160,7 +127,7 @@ int WINAPI WinMain (HINSTANCE instance, HINSTANCE prevInstance, LPSTR commandLin
                 }
 
                 renderCommands.memory.size = 0;
-                clearBuffer((unsigned int *)backBuffer);
+
                 updateGame(&renderCommands);
 
                 unsigned int renderCommandOffset = 0;
@@ -178,7 +145,7 @@ int WINAPI WinMain (HINSTANCE instance, HINSTANCE prevInstance, LPSTR commandLin
                             render_rectangle_command *rectCommand = 
                                 (render_rectangle_command *)((char *)renderCommands.memory.base + 
                                                             renderCommandOffset);
-                            drawRectangle(rectCommand);
+                            //drawRectangle(rectCommand);
                             renderCommandOffset += sizeof(render_rectangle_command);
                         } break;
                         case RENDER_COMMAND_HORIZONTAL_LINE: 
@@ -186,13 +153,13 @@ int WINAPI WinMain (HINSTANCE instance, HINSTANCE prevInstance, LPSTR commandLin
                             render_horizontal_line_command *lineCommand = 
                                 (render_horizontal_line_command *)((char *)renderCommands.memory.base + 
                                                                    renderCommandOffset);
-                            drawLine(lineCommand);
+                            //drawLine(lineCommand);
                             renderCommandOffset += sizeof(render_horizontal_line_command);
                         } break;
                     }
                 }
 
-                drawSceneToWindow(window, deviceContext);
+                renderFrame(&rendererMemory, &renderCommands);
 
                 // Sleep for any leftover time
                 LARGE_INTEGER workCounter;

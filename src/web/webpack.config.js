@@ -17,6 +17,10 @@ module.exports = {
             {
                 test: /game\.js$/,
                 loader: "exports-loader"
+            },
+            {
+                test: /\.glsl$/,
+                loader: "raw-loader"
             }
         ]
     },

@@ -1,6 +1,6 @@
-#include "run_around_platform.h"
+#include "run_round_game.h"
 
-void *pushRenderCommand (render_command_list *renderCommands, 
+static void *pushRenderCommand (render_command_list *renderCommands, 
                          render_command_type type, 
                          unsigned int size) 
 {
@@ -17,6 +17,41 @@ void *pushRenderCommand (render_command_list *renderCommands,
         // Out of memory error?
     }
     return renderCommand;
+}
+
+void
+
+// TODO(ebuchholz): Maybe pack everything into a single file and load that?
+extern "C" void getGameAssetList (asset_list *assetList) {
+
+}
+
+extern "C" void parseGameAsset (void *assetData, asset_type type, 
+                                memory_arena *gameMemory, memory_arena *workingMemory) 
+{
+    game_state *gameState = (game_state *)gameMemory;
+    if (!gameState->assetsInitialized) {
+        gameState->assetsInitialized = true;
+
+        gameState->assets = {};
+        game_assets *assets = &gameState->assets;
+
+        assets->assetMemory = {};
+        assets->assetMemory->size = 0;
+        assets->assetMemory->capacity = 1 * 1024 * 1024; // 1MB of asset data???
+        assets->assetMemory->base = // get some memory from game memory
+        assets->numMeshes = 0;
+    }
+
+    // parse data
+    // create/copy stuff into game memory
+    // place whatever theplatform needs at the beginningof working memory
+    switch (type) {
+        case ASSET_TYPE_OBJ:
+        {
+
+        } break;
+    }
 }
 
 extern "C" void updateGame (render_command_list *renderCommands) { 

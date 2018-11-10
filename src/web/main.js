@@ -1,12 +1,13 @@
 var Game = require("./wasm/game.js");
+var WebGLRenderer = require("./WebGLRenderer");
 
 var WebPlatform = function () {
     this.viewport = null;
     this.canvas = null;
-    this.ctx = null;
     this.updateCallback = null;
 
     this.game = null;
+    this.renderer = null;
 };
 
 WebPlatform.prototype = {
@@ -23,11 +24,9 @@ WebPlatform.prototype = {
 
         this.canvas.width = 1280;
         this.canvas.height = 720;
-        this.ctx = this.canvas.getContext("2d");
 
         window.addEventListener("resize", this.resize.bind(this));
         this.updateCallback = this.update.bind(this);
-
 
         this.renderCommands = this.game.wrapPointer(this.game._malloc(this.game.sizeof_render_command_list()), 
                                                    this.game.render_command_list);
@@ -36,6 +35,9 @@ WebPlatform.prototype = {
         this.renderCommands.get_memory().set_size(0);
         this.renderCommands.get_memory().set_capacity(renderMemory);
 
+        this.renderer = new WebGLRenderer();
+        this.renderer.initWebGL(this.canvas);
+
         this.resize();
         this.update();
     },
@@ -43,27 +45,7 @@ WebPlatform.prototype = {
     initBackBuffer: function () {
     },
 
-    drawRectangle: function (rectCommand) {
-        this.ctx.fillStyle = this.hexColorToString(rectCommand.get_color());
-        this.ctx.fillRect(
-            rectCommand.get_x(),
-            rectCommand.get_y(),
-            rectCommand.get_width(),
-            rectCommand.get_height()
-        );
-    },
-    drawLine: function (lineCommand) {
-        this.ctx.strokeStyle = this.hexColorToString(lineCommand.get_color());
-        var lineNum = lineCommand.get_lineNum();
-        this.ctx.beginPath();
-        this.ctx.moveTo(0, lineNum);
-        this.ctx.lineTo(this.canvas.width - 1, lineNum);
-        this.ctx.stroke();
-    },
-
     update: function () {
-        this.ctx.fillStyle = "#000000";
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
         this.renderCommands.get_memory().set_size(0);
         this.game.ccall("updateGame", 
@@ -87,17 +69,20 @@ WebPlatform.prototype = {
                     var rectCommand = this.game.wrapPointer(renderMemoryPointer + renderCommandOffset, 
                                                             this.game.render_rectangle_command);
                     renderCommandOffset += this.game.sizeof_render_rectangle_command();
-                    this.drawRectangle(rectCommand);
+                    //this.drawRectangle(rectCommand);
                 } break;
                 case this.game.RENDER_COMMAND_HORIZONTAL_LINE:
                 {
                     var lineCommand = this.game.wrapPointer(renderMemoryPointer + renderCommandOffset, 
                                                             this.game.render_horizontal_line_command);
                     renderCommandOffset += this.game.sizeof_render_horizontal_line_command();
-                    this.drawLine(lineCommand);
+                    //this.drawLine(lineCommand);
                 } break;
             }
         }
+
+        this.renderer.renderFrame(this.renderCommands);
+
         window.requestAnimationFrame(this.updateCallback);
     },
 
