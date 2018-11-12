@@ -26,16 +26,23 @@ struct asset_list {
     asset_to_load *assetsToLoad;
 };
 
+// Makes it easier to wrap up in WebIDL
+struct float_mesh_attribute {
+    float *values;
+    int count;
+};
+
+struct int_mesh_attribute {
+    int *values;
+    int count;
+};
+
 struct loaded_mesh_asset {
     int key;
-    float *positions;
-    int numPositions;
-    float *uvs;
-    int numUVs;
-    float *normals;
-    int numNormals;
-    int *indices;
-    int numIndices;
+    float_mesh_attribute positions;
+    float_mesh_attribute texCoords;
+    float_mesh_attribute normals;
+    int_mesh_attribute indices;
 };
 
 enum render_command_type {

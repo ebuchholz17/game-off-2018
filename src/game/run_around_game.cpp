@@ -135,7 +135,7 @@ static void parseOBJ (void *objData, game_assets *assets, int key, memory_arena 
 
         char *wordStart = start;
         char *wordEnd = wordStart;
-        while (*wordEnd != ' ' && *wordEnd != '\n') { ++wordEnd; }
+        while (*wordEnd != ' ' && *wordEnd != '\n' && *wordEnd!= 0) { ++wordEnd; }
         int length = (int)(wordEnd - wordStart);
 
         if (stringsAreEqual(length, wordStart, "v")) {
@@ -164,15 +164,15 @@ static void parseOBJ (void *objData, game_assets *assets, int key, memory_arena 
     float (*tempTexCoords)[2] = (float (*)[2])allocateMemorySize(workingMemory, sizeof(float) * 2 * numTexCoords);
     float (*tempNormals)[3] = (float (*)[3])allocateMemorySize(workingMemory, sizeof(float) * 3 * numNormals);
 
-    loadedMesh->numPositions = 3 * 3 * numTriangles;
-    loadedMesh->numUVs = 2 * 3 * numTriangles;
-    loadedMesh->numNormals = 3 * 3 * numTriangles;
-    loadedMesh->numIndices =  3 * numTriangles;
+    loadedMesh->positions.count = 3 * 3 * numTriangles;
+    loadedMesh->texCoords.count = 2 * 3 * numTriangles;
+    loadedMesh->normals.count = 3 * 3 * numTriangles;
+    loadedMesh->indices.count =  3 * numTriangles;
 
-    loadedMesh->positions = (float *)allocateMemorySize(workingMemory, sizeof(float) * loadedMesh->numPositions);
-    loadedMesh->uvs = (float *)allocateMemorySize(workingMemory, sizeof(float) * loadedMesh->numUVs);
-    loadedMesh->normals = (float *)allocateMemorySize(workingMemory, sizeof(float) * loadedMesh->numNormals);
-    loadedMesh->indices = (int *)allocateMemorySize(workingMemory, sizeof(int) * loadedMesh->numIndices);
+    loadedMesh->positions.values = (float *)allocateMemorySize(workingMemory, sizeof(float) * loadedMesh->positions.count);
+    loadedMesh->texCoords.values = (float *)allocateMemorySize(workingMemory, sizeof(float) * loadedMesh->texCoords.count);
+    loadedMesh->normals.values = (float *)allocateMemorySize(workingMemory, sizeof(float) * loadedMesh->normals.count);
+    loadedMesh->indices.values = (int *)allocateMemorySize(workingMemory, sizeof(int) * loadedMesh->indices.count);
 
     start = (char *)objData;
     int tempPositionIndex = 0;
@@ -188,24 +188,24 @@ static void parseOBJ (void *objData, game_assets *assets, int key, memory_arena 
 
         char *wordStart = start;
         char *wordEnd = wordStart;
-        while (*wordEnd != ' ' && *wordEnd != '\n') { ++wordEnd; }
+        while (*wordEnd != ' ' && *wordEnd != '\n' && *wordEnd!= 0) { ++wordEnd; }
         int length = (int)(wordEnd - wordStart);
 
         if (stringsAreEqual(length, wordStart, "v")) {
             float (*tempPosition)[3] = &tempPositions[tempPositionIndex];
             wordEnd++;
             wordStart = wordEnd;
-            while (*wordEnd != ' ' && *wordEnd != '\n') { ++wordEnd; }
+            while (*wordEnd != ' ' && *wordEnd != '\n' && *wordEnd!= 0) { ++wordEnd; }
             (*tempPosition)[0] = stringToFloat(wordStart, wordEnd - 1);
 
             wordEnd++;
             wordStart = wordEnd;
-            while (*wordEnd != ' ' && *wordEnd != '\n') { ++wordEnd; }
+            while (*wordEnd != ' ' && *wordEnd != '\n' && *wordEnd!= 0) { ++wordEnd; }
             (*tempPosition)[1] = stringToFloat(wordStart, wordEnd - 1);
 
             wordEnd++;
             wordStart = wordEnd;
-            while (*wordEnd != ' ' && *wordEnd != '\n') { ++wordEnd; }
+            while (*wordEnd != ' ' && *wordEnd != '\n' && *wordEnd!= 0) { ++wordEnd; }
             (*tempPosition)[2] = stringToFloat(wordStart, wordEnd - 1);
 
             tempPositionIndex++;
@@ -214,12 +214,12 @@ static void parseOBJ (void *objData, game_assets *assets, int key, memory_arena 
             float (*tempTexCoord)[2] = &tempTexCoords[tempTexCoordIndex];
             wordEnd++;
             wordStart = wordEnd;
-            while (*wordEnd != ' ' && *wordEnd != '\n') { ++wordEnd; }
+            while (*wordEnd != ' ' && *wordEnd != '\n' && *wordEnd!= 0) { ++wordEnd; }
             (*tempTexCoord)[0] = stringToFloat(wordStart, wordEnd - 1);
 
             wordEnd++;
             wordStart = wordEnd;
-            while (*wordEnd != ' ' && *wordEnd != '\n') { ++wordEnd; }
+            while (*wordEnd != ' ' && *wordEnd != '\n' && *wordEnd!= 0) { ++wordEnd; }
             (*tempTexCoord)[1] = stringToFloat(wordStart, wordEnd - 1);
 
             tempTexCoordIndex++;
@@ -228,45 +228,46 @@ static void parseOBJ (void *objData, game_assets *assets, int key, memory_arena 
             float (*tempNormal)[3] = &tempNormals[tempNormalIndex];
             wordEnd++;
             wordStart = wordEnd;
-            while (*wordEnd != ' ' && *wordEnd != '\n') { ++wordEnd; }
+            while (*wordEnd != ' ' && *wordEnd != '\n' && *wordEnd!= 0) { ++wordEnd; }
             (*tempNormal)[0] = stringToFloat(wordStart, wordEnd - 1);
 
             wordEnd++;
             wordStart = wordEnd;
-            while (*wordEnd != ' ' && *wordEnd != '\n') { ++wordEnd; }
+            while (*wordEnd != ' ' && *wordEnd != '\n' && *wordEnd!= 0) { ++wordEnd; }
             (*tempNormal)[1] = stringToFloat(wordStart, wordEnd - 1);
 
             wordEnd++;
             wordStart = wordEnd;
-            while (*wordEnd != ' ' && *wordEnd != '\n') { ++wordEnd; }
+            while (*wordEnd != ' ' && *wordEnd != '\n' && *wordEnd!= 0) { ++wordEnd; }
             (*tempNormal)[2] = stringToFloat(wordStart, wordEnd - 1);
 
             tempNormalIndex++;
         }
         else if (stringsAreEqual(length, wordStart, "f")) {
+            // TODO(ebuchholz): handle the case where text coords and/or normals are missing
             for (int i = 0; i < 3; ++i) {
                 wordEnd++;
                 wordStart = wordEnd;
-                while (*wordEnd != ' ' && *wordEnd != '\n') { ++wordEnd; }
+                while (*wordEnd != ' ' && *wordEnd != '\n' && *wordEnd!= 0) { ++wordEnd; }
 
                 char *indexStart = wordStart;
                 char *indexEnd = indexStart;
-                while (*indexEnd != ' ' && *indexEnd != '\n' && *indexEnd != '/') { ++indexEnd; }
+                while (*indexEnd != ' ' && *indexEnd != '\n' && *indexEnd != '/' && *wordEnd!= 0) { ++indexEnd; }
                 if (indexStart != indexEnd) {
                     int index = stringToInt(indexStart, indexEnd - 1) - 1;
-                    float *positionsPointer = loadedMesh->positions + (positionIndex * 3);
+                    float *positionsPointer = loadedMesh->positions.values + (positionIndex * 3);
                     positionsPointer[0] = tempPositions[index][0];
                     positionsPointer[1] = tempPositions[index][1];
-                    positionsPointer[2] = tempPositions[index][2] + 0.5f;
+                    positionsPointer[2] = tempPositions[index][2];
                     ++positionIndex;
                 }
                 indexEnd++;
                 indexStart = indexEnd;
 
-                while (*indexEnd != ' ' && *indexEnd != '\n' && *indexEnd != '/') { ++indexEnd; }
+                while (*indexEnd != ' ' && *indexEnd != '\n' && *indexEnd != '/' && *wordEnd!= 0) { ++indexEnd; }
                 if (indexStart != indexEnd) {
                     int index = stringToInt(indexStart, indexEnd - 1) - 1;
-                    float *texCoordsPointer = loadedMesh->uvs + (uvIndex * 2);
+                    float *texCoordsPointer = loadedMesh->texCoords.values + (uvIndex * 2);
                     texCoordsPointer[0] = tempTexCoords[index][0];
                     texCoordsPointer[1] = tempTexCoords[index][1];
                     uvIndex++;
@@ -274,17 +275,17 @@ static void parseOBJ (void *objData, game_assets *assets, int key, memory_arena 
                 indexEnd++;
                 indexStart = indexEnd;
 
-                while (*indexEnd != ' ' && *indexEnd != '\n' && *indexEnd != '/') { ++indexEnd; }
+                while (*indexEnd != ' ' && *indexEnd != '\n' && *indexEnd != '/' && *wordEnd!= 0) { ++indexEnd; }
                 if (indexStart != indexEnd) {
                     int index = stringToInt(indexStart, indexEnd - 1) - 1;
-                    float *normalsPointer = loadedMesh->normals + (normalIndex * 3);
+                    float *normalsPointer = loadedMesh->normals.values + (normalIndex * 3);
                     normalsPointer[0] = tempNormals[index][0];
                     normalsPointer[1] = tempNormals[index][1];
                     normalsPointer[2] = tempNormals[index][2];
                     ++normalIndex;
                 }
 
-                loadedMesh->indices[indexIndex] = indexIndex;
+                loadedMesh->indices.values[indexIndex] = indexIndex;
                 ++indexIndex;
             }
         }
@@ -297,6 +298,11 @@ static void parseOBJ (void *objData, game_assets *assets, int key, memory_arena 
             start++;
         }
     }
+    //for (int i = 0; i < (int)numTriangles; ++i) {
+    //    int temp = loadedMesh->indices.values[i*3+1];
+    //    loadedMesh->indices.values[i*3+1] = loadedMesh->indices.values[i*3+2];
+    //    loadedMesh->indices.values[i*3+2] = temp;
+    //}
 
     float t = stringToFloat("234234.343");
 
@@ -313,7 +319,7 @@ static void pushAsset (asset_list *assetList, char *path, asset_type type, int k
 
 // TODO(ebuchholz): Maybe pack everything into a single file and load that?
 extern "C" void getGameAssetList (asset_list *assetList) {
-    pushAsset(assetList, "assets/meshes/tree.obj", ASSET_TYPE_OBJ, MESH_KEY_SPHERE);
+    pushAsset(assetList, "assets/meshes/geosphere.obj", ASSET_TYPE_OBJ, MESH_KEY_SPHERE);
 }
 
 extern "C" void parseGameAsset (void *assetData, asset_type type, int key,
@@ -336,8 +342,7 @@ extern "C" void parseGameAsset (void *assetData, asset_type type, int key,
         assets->assetMemory.capacity = 1 * 1024 * 1024; // 1MB of asset data???
         assets->assetMemory.base = allocateMemorySize(&gameState->memory, assets->assetMemory.capacity); 
         assets->numMeshes = 0;
-    }
-
+    } 
     // parse data
     // create/copy stuff into game memory
     // place whatever theplatform needs at the beginningof working memory

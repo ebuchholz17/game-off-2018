@@ -100,11 +100,11 @@ void loadRendererMesh (loaded_mesh_asset *loadedMesh) {
     // QQQ actually store the mesh key+buffers
     glGenBuffers(1, &positionBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
-    glBufferData(GL_ARRAY_BUFFER, loadedMesh->numPositions, loadedMesh->positions, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, loadedMesh->positions.count * sizeof(float), loadedMesh->positions.values, GL_STATIC_DRAW);
 
     glGenBuffers(1, &indexBuffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, loadedMesh->numIndices, loadedMesh->indices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, loadedMesh->indices.count * sizeof(int), loadedMesh->indices.values, GL_STATIC_DRAW);
 }
 
 static void createShaderProgram(openGL_renderer *renderer, shader_type type,
@@ -228,7 +228,7 @@ void renderFrame (renderer_memory *memory, render_command_list *renderCommands) 
     openGL_renderer *renderer = (openGL_renderer *)memory->memory;
 
     glViewport(0, 0, 1280, 720);
-    glEnable(GL_DEPTH_TEST);
+    //glEnable(GL_DEPTH_TEST);
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

@@ -104,15 +104,12 @@ int WINAPI WinMain (HINSTANCE instance, HINSTANCE prevInstance, LPSTR commandLin
 
                         fseek(objFile, 0, SEEK_END);
                         int fileSize = ftell(objFile);
-                        rewind(objFile);
+                        fseek(objFile, 0, SEEK_SET);
 
                         char *fileData = (char *)malloc(fileSize + 1);
                         size_t totalRead = fread(fileData, fileSize, 1, objFile);
-						int error = feof(objFile);
-						if (error) {
-							printf("error\n");
-
-						}
+                        fileData[fileSize] = 0;
+                        
                         fclose(objFile);
 
                         parseGameAsset(fileData, ASSET_TYPE_OBJ, assetToLoad->key, &gameMemory, &workingAssetMemory);
@@ -120,6 +117,8 @@ int WINAPI WinMain (HINSTANCE instance, HINSTANCE prevInstance, LPSTR commandLin
                     } break;
                 }
             }
+
+            free(workingAssetMemory.base);
 
             render_command_list renderCommands = {};
             int memoryCapacity = 1 * 1024 * 1024;
