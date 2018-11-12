@@ -29,9 +29,13 @@ struct asset_list {
 struct loaded_mesh_asset {
     int key;
     float *positions;
+    int numPositions;
     float *uvs;
+    int numUVs;
     float *normals;
+    int numNormals;
     int *indices;
+    int numIndices;
 };
 
 enum render_command_type {
@@ -62,7 +66,8 @@ struct render_command_list {
 };
 
 struct game_memory {
-    memory_arena memory;
+    void *memory;
+    unsigned int memoryCapacity;
 };
 
 

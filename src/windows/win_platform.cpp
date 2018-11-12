@@ -70,6 +70,15 @@ int WINAPI WinMain (HINSTANCE instance, HINSTANCE prevInstance, LPSTR commandLin
 
             initOpenGL(window, &rendererMemory);
 
+            // Game memory (game state, etc.)
+            game_memory gameMemory = {};
+            gameMemory.memoryCapacity = 10 * 1024 * 1024; // 10MB arbitrarily decided
+            gameMemory.memory = malloc(gameMemory.memoryCapacity);
+
+            for (unsigned int i = 0; i < gameMemory.memoryCapacity; ++i) {
+                *((char *)gameMemory.memory + i) = 0;
+            }
+
             // Load assets
             asset_list assetList = {};
             assetList.numAssetsToLoad = 0;
@@ -89,16 +98,25 @@ int WINAPI WinMain (HINSTANCE instance, HINSTANCE prevInstance, LPSTR commandLin
                 switch (assetToLoad->type){
                     case ASSET_TYPE_OBJ: 
                     {
-                        FILE *objFile = fopen(assetToLoad->path, "r");
-                        fseek(f, 0, SEEK_END);
-                        int fileSize = ftell(f);
-                        rewind(f);
+                        FILE *objFile; 
+                        fopen_s(&objFile, assetToLoad->path, "r");
+                        assert(objFile); // TODO(ebuchholz): better error check?
 
-                        char *fileData = malloc(size + 1);
-                        fread(fileData, size, 1, f);
-                        fclose(f);
+                        fseek(objFile, 0, SEEK_END);
+                        int fileSize = ftell(objFile);
+                        rewind(objFile);
 
-                        parseGameAsset(fileData, ASSET_TYPE_OBJ, gameMemory, workingAssetMemory);
+                        char *fileData = (char *)malloc(fileSize + 1);
+                        size_t totalRead = fread(fileData, fileSize, 1, objFile);
+						int error = feof(objFile);
+						if (error) {
+							printf("error\n");
+
+						}
+                        fclose(objFile);
+
+                        parseGameAsset(fileData, ASSET_TYPE_OBJ, assetToLoad->key, &gameMemory, &workingAssetMemory);
+                        loadRendererMesh((loaded_mesh_asset *)workingAssetMemory.base);
                     } break;
                 }
             }

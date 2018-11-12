@@ -5,18 +5,8 @@
 
 // TODO(ebuchholz): figure out how to pack this thing up
 static GLuint positionBuffer;
-static GLuint colorBuffer;
+//static GLuint colorBuffer;
 static GLuint indexBuffer;
-
-static bool stringsAreEqual(int length, char *a, char *b) {
-    char *bIndex = b;
-    for (int i = 0; i < length; ++i, ++bIndex) {
-        if (*bIndex == 0 || a[i] != *bIndex) {
-            return false;
-        }
-    }
-    return (*bIndex == 0);
-}
 
 static int loadWGLExtensions (HDC deviceContext) {
     wglGetExtensionsStringARB = (wgl_get_extensions_string_arb *)wglGetProcAddress("wglGetExtensionsStringARB");
@@ -106,6 +96,17 @@ static void loadShader(GLuint *shaderHandle, int shaderType, char *shaderSource,
     }
 }
 
+void loadRendererMesh (loaded_mesh_asset *loadedMesh) {
+    // QQQ actually store the mesh key+buffers
+    glGenBuffers(1, &positionBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
+    glBufferData(GL_ARRAY_BUFFER, loadedMesh->numPositions, loadedMesh->positions, GL_STATIC_DRAW);
+
+    glGenBuffers(1, &indexBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, loadedMesh->numIndices, loadedMesh->indices, GL_STATIC_DRAW);
+}
+
 static void createShaderProgram(openGL_renderer *renderer, shader_type type,
                                 char *vertexSource, char *fragmentSource, 
                                 renderer_memory *memory) 
@@ -187,38 +188,38 @@ int initOpenGL (HWND window, renderer_memory *memory) {
                         defaultVertexShaderSource, defaultFragmentShaderSource, memory);
 
     // TODO(ebuchholz): Load buffers as part of startup asset loading process
-    float positions[6] = {};
-    positions[0] = 0.0f;
-    positions[1] = 0.33f;
-    positions[2] = -0.5f;
-    positions[3] = -0.33f;
-    positions[4] = 0.5f;
-    positions[5] = -0.33f;
-    glGenBuffers(1, &positionBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW);
+    //float positions[6] = {};
+    //positions[0] = 0.0f;
+    //positions[1] = 0.33f;
+    //positions[2] = -0.5f;
+    //positions[3] = -0.33f;
+    //positions[4] = 0.5f;
+    //positions[5] = -0.33f;
+    //glGenBuffers(1, &positionBuffer);
+    //glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
+    //glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW);
 
-    float colors[9] = {};
-    colors[0] = 1.0f;
-    colors[1] = 0.0f;
-    colors[2] = 0.0f;
-    colors[3] = 0.0f;
-    colors[4] = 1.0f;
-    colors[5] = 0.0f;
-    colors[6] = 0.0f;
-    colors[7] = 0.0f;
-    colors[8] = 1.0f;
-    glGenBuffers(1, &colorBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
+    //float colors[9] = {};
+    //colors[0] = 1.0f;
+    //colors[1] = 0.0f;
+    //colors[2] = 0.0f;
+    //colors[3] = 0.0f;
+    //colors[4] = 1.0f;
+    //colors[5] = 0.0f;
+    //colors[6] = 0.0f;
+    //colors[7] = 0.0f;
+    //colors[8] = 1.0f;
+    //glGenBuffers(1, &colorBuffer);
+    //glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
+    //glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
 
-    unsigned int indices[3] = {};
-    indices[0] = 0;
-    indices[1] = 1;
-    indices[2] = 2;
-    glGenBuffers(1, &indexBuffer);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    //unsigned int indices[3] = {};
+    //indices[0] = 0;
+    //indices[1] = 1;
+    //indices[2] = 2;
+    //glGenBuffers(1, &indexBuffer);
+    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     return 0;
 }
@@ -237,16 +238,16 @@ void renderFrame (renderer_memory *memory, render_command_list *renderCommands) 
     glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
     GLint positionLocation = glGetAttribLocation(program, "position");
     glEnableVertexAttribArray(positionLocation);
-    glVertexAttribPointer(positionLocation, 2, GL_FLOAT, FALSE, 0, 0);
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, FALSE, 0, 0);
 
-    glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
-    GLint colorLocation = glGetAttribLocation(program, "color");
-    glEnableVertexAttribArray(colorLocation);
-    glVertexAttribPointer(colorLocation, 3, GL_FLOAT, FALSE, 0, 0);
+    //glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
+    //GLint colorLocation = glGetAttribLocation(program, "color");
+    //glEnableVertexAttribArray(colorLocation);
+    //glVertexAttribPointer(colorLocation, 3, GL_FLOAT, FALSE, 0, 0);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 
-    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, 540, GL_UNSIGNED_INT, 0);
 
     SwapBuffers(renderer->deviceContext);
 }

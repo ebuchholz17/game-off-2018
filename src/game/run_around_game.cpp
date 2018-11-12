@@ -1,4 +1,4 @@
-#include "run_round_game.h"
+#include "run_around_game.h"
 
 static void *pushRenderCommand (render_command_list *renderCommands, 
                          render_command_type type, 
@@ -19,27 +19,322 @@ static void *pushRenderCommand (render_command_list *renderCommands,
     return renderCommand;
 }
 
-void
+static void *allocateMemorySize (memory_arena *memory, unsigned int size) {
+    assert(memory->size + size < memory->capacity);
+    void *result = (char *)memory->base + memory->size;
+    memory->size += size;
+    return result;
+}
 
-// TODO(ebuchholz): Maybe pack everything into a single file and load that?
-extern "C" void getGameAssetList (asset_list *assetList) {
+static void readLine (char *data, char **start, char **end) {
+    *start = data;
+    int index = 0;
+    while (data[index] != 0 && data[index] != '\n') {
+        ++index;
+    }
+    *end = data + index;
+}
+
+static int stringToInt (char *start, char *end) {
+    int result = 0;
+    bool negative = false;
+    if (*start == '-') {
+        negative = true;
+        ++start;
+    }
+    while (start <= end) {
+        char digit = *start;
+        result *= 10;
+        result += (int)(digit - '0');
+        ++start;
+    }
+    if (negative) {
+        result = -result;
+    }
+    return result;
+}
+
+// TODO(ebuchholz): just use atof or something
+// TODO(ebuchholz): make sure the string is a valid float
+static float stringToFloat (char *start, char *end) {
+    float result = 0.0;
+    float integerPart = 0.0;
+    float fractionalPart = 0.0;
+    bool negative = false;
+    if (*start == '-') {
+        negative = true;
+        ++start;
+    }
+    while (start <= end) {
+        char digit = *start;
+        if (*start == '.') {
+            break;
+        }
+        integerPart *= 10.0f;
+        float number = (float)((int)(digit - '0'));
+        integerPart += number;
+        ++start;
+    }
+    if (negative) {
+        integerPart = -integerPart;
+    }
+    while (end > start) {
+        char digit = *end;
+        fractionalPart /= 10.0f;
+        float number = (float)((int)(digit - '0'));
+        fractionalPart += number;
+        --end;
+    }
+    fractionalPart /= 10.0f;
+    if (negative) {
+        fractionalPart = -fractionalPart;
+    }
+    return integerPart + fractionalPart;
+}
+
+static float stringToFloat (char *string) {
+    char *end = string;
+    while (*end != 0) {
+        ++end;
+    }
+    --end;
+    return stringToFloat(string, end);
+}
+
+// TODO(ebuchholz): move somewhere else
+static bool stringsAreEqual (int length, char *a, char *b) {
+    char *bIndex = b;
+    for (int i = 0; i < length; ++i, ++bIndex) {
+        if (*bIndex == 0 || a[i] != *bIndex) {
+            return false;
+        }
+    }
+    return (*bIndex == 0);
+}
+
+static void parseOBJ (void *objData, game_assets *assets, int key, memory_arena *workingMemory) {
+    int numMeshes = assets->numMeshes;
+    assert(numMeshes < MAX_NUM_MESHES);
+
+    mesh_asset *meshAsset = (mesh_asset *)allocateMemorySize(&assets->assetMemory, sizeof(mesh_asset *));
+    assets->meshes[numMeshes] = meshAsset;
+    assets->numMeshes++;
+
+    loaded_mesh_asset *loadedMesh = (loaded_mesh_asset *)allocateMemorySize(workingMemory, sizeof(loaded_mesh_asset));
+
+    char *start, *end;
+    start = (char *)objData;
+
+    unsigned int numPositions = 0;
+    unsigned int numNormals = 0;
+    unsigned int numTexCoords = 0;
+    unsigned int numTriangles = 0;
+
+    while (true) {
+        readLine(start, &start, &end);
+
+        char *wordStart = start;
+        char *wordEnd = wordStart;
+        while (*wordEnd != ' ' && *wordEnd != '\n') { ++wordEnd; }
+        int length = (int)(wordEnd - wordStart);
+
+        if (stringsAreEqual(length, wordStart, "v")) {
+            ++numPositions;
+        }
+        else if (stringsAreEqual(length, wordStart, "vt")) {
+            ++numTexCoords;
+        }
+        else if (stringsAreEqual(length, wordStart, "vn")) {
+            ++numNormals;
+        }
+        else if (stringsAreEqual(length, wordStart, "f")) {
+            ++numTriangles;
+        }
+
+        start = end;
+        if (*start == 0) {
+            break;
+        }
+        else {
+            start++;
+        }
+    }
+
+    float (*tempPositions)[3] = (float (*)[3])allocateMemorySize(workingMemory, sizeof(float) * 3 * numPositions);
+    float (*tempTexCoords)[2] = (float (*)[2])allocateMemorySize(workingMemory, sizeof(float) * 2 * numTexCoords);
+    float (*tempNormals)[3] = (float (*)[3])allocateMemorySize(workingMemory, sizeof(float) * 3 * numNormals);
+
+    loadedMesh->numPositions = 3 * 3 * numTriangles;
+    loadedMesh->numUVs = 2 * 3 * numTriangles;
+    loadedMesh->numNormals = 3 * 3 * numTriangles;
+    loadedMesh->numIndices =  3 * numTriangles;
+
+    loadedMesh->positions = (float *)allocateMemorySize(workingMemory, sizeof(float) * loadedMesh->numPositions);
+    loadedMesh->uvs = (float *)allocateMemorySize(workingMemory, sizeof(float) * loadedMesh->numUVs);
+    loadedMesh->normals = (float *)allocateMemorySize(workingMemory, sizeof(float) * loadedMesh->numNormals);
+    loadedMesh->indices = (int *)allocateMemorySize(workingMemory, sizeof(int) * loadedMesh->numIndices);
+
+    start = (char *)objData;
+    int tempPositionIndex = 0;
+    int tempTexCoordIndex = 0;
+    int tempNormalIndex = 0;
+
+    int positionIndex = 0;
+    int uvIndex = 0;
+    int normalIndex = 0;
+    int indexIndex = 0;
+    while (true) {
+        readLine(start, &start, &end);
+
+        char *wordStart = start;
+        char *wordEnd = wordStart;
+        while (*wordEnd != ' ' && *wordEnd != '\n') { ++wordEnd; }
+        int length = (int)(wordEnd - wordStart);
+
+        if (stringsAreEqual(length, wordStart, "v")) {
+            float (*tempPosition)[3] = &tempPositions[tempPositionIndex];
+            wordEnd++;
+            wordStart = wordEnd;
+            while (*wordEnd != ' ' && *wordEnd != '\n') { ++wordEnd; }
+            (*tempPosition)[0] = stringToFloat(wordStart, wordEnd - 1);
+
+            wordEnd++;
+            wordStart = wordEnd;
+            while (*wordEnd != ' ' && *wordEnd != '\n') { ++wordEnd; }
+            (*tempPosition)[1] = stringToFloat(wordStart, wordEnd - 1);
+
+            wordEnd++;
+            wordStart = wordEnd;
+            while (*wordEnd != ' ' && *wordEnd != '\n') { ++wordEnd; }
+            (*tempPosition)[2] = stringToFloat(wordStart, wordEnd - 1);
+
+            tempPositionIndex++;
+        }
+        else if (stringsAreEqual(length, wordStart, "vt")) {
+            float (*tempTexCoord)[2] = &tempTexCoords[tempTexCoordIndex];
+            wordEnd++;
+            wordStart = wordEnd;
+            while (*wordEnd != ' ' && *wordEnd != '\n') { ++wordEnd; }
+            (*tempTexCoord)[0] = stringToFloat(wordStart, wordEnd - 1);
+
+            wordEnd++;
+            wordStart = wordEnd;
+            while (*wordEnd != ' ' && *wordEnd != '\n') { ++wordEnd; }
+            (*tempTexCoord)[1] = stringToFloat(wordStart, wordEnd - 1);
+
+            tempTexCoordIndex++;
+        }
+        else if (stringsAreEqual(length, wordStart, "vn")) {
+            float (*tempNormal)[3] = &tempNormals[tempNormalIndex];
+            wordEnd++;
+            wordStart = wordEnd;
+            while (*wordEnd != ' ' && *wordEnd != '\n') { ++wordEnd; }
+            (*tempNormal)[0] = stringToFloat(wordStart, wordEnd - 1);
+
+            wordEnd++;
+            wordStart = wordEnd;
+            while (*wordEnd != ' ' && *wordEnd != '\n') { ++wordEnd; }
+            (*tempNormal)[1] = stringToFloat(wordStart, wordEnd - 1);
+
+            wordEnd++;
+            wordStart = wordEnd;
+            while (*wordEnd != ' ' && *wordEnd != '\n') { ++wordEnd; }
+            (*tempNormal)[2] = stringToFloat(wordStart, wordEnd - 1);
+
+            tempNormalIndex++;
+        }
+        else if (stringsAreEqual(length, wordStart, "f")) {
+            for (int i = 0; i < 3; ++i) {
+                wordEnd++;
+                wordStart = wordEnd;
+                while (*wordEnd != ' ' && *wordEnd != '\n') { ++wordEnd; }
+
+                char *indexStart = wordStart;
+                char *indexEnd = indexStart;
+                while (*indexEnd != ' ' && *indexEnd != '\n' && *indexEnd != '/') { ++indexEnd; }
+                if (indexStart != indexEnd) {
+                    int index = stringToInt(indexStart, indexEnd - 1) - 1;
+                    float *positionsPointer = loadedMesh->positions + (positionIndex * 3);
+                    positionsPointer[0] = tempPositions[index][0];
+                    positionsPointer[1] = tempPositions[index][1];
+                    positionsPointer[2] = tempPositions[index][2] + 0.5f;
+                    ++positionIndex;
+                }
+                indexEnd++;
+                indexStart = indexEnd;
+
+                while (*indexEnd != ' ' && *indexEnd != '\n' && *indexEnd != '/') { ++indexEnd; }
+                if (indexStart != indexEnd) {
+                    int index = stringToInt(indexStart, indexEnd - 1) - 1;
+                    float *texCoordsPointer = loadedMesh->uvs + (uvIndex * 2);
+                    texCoordsPointer[0] = tempTexCoords[index][0];
+                    texCoordsPointer[1] = tempTexCoords[index][1];
+                    uvIndex++;
+                }
+                indexEnd++;
+                indexStart = indexEnd;
+
+                while (*indexEnd != ' ' && *indexEnd != '\n' && *indexEnd != '/') { ++indexEnd; }
+                if (indexStart != indexEnd) {
+                    int index = stringToInt(indexStart, indexEnd - 1) - 1;
+                    float *normalsPointer = loadedMesh->normals + (normalIndex * 3);
+                    normalsPointer[0] = tempNormals[index][0];
+                    normalsPointer[1] = tempNormals[index][1];
+                    normalsPointer[2] = tempNormals[index][2];
+                    ++normalIndex;
+                }
+
+                loadedMesh->indices[indexIndex] = indexIndex;
+                ++indexIndex;
+            }
+        }
+
+        start = end;
+        if (*start == 0) {
+            break;
+        }
+        else {
+            start++;
+        }
+    }
+
+    float t = stringToFloat("234234.343");
 
 }
 
-extern "C" void parseGameAsset (void *assetData, asset_type type, 
-                                memory_arena *gameMemory, memory_arena *workingMemory) 
+static void pushAsset (asset_list *assetList, char *path, asset_type type, int key) {
+    assert(assetList->numAssetsToLoad < assetList->maxAssetsToLoad);
+    asset_to_load *assetToLoad = assetList->assetsToLoad + assetList->numAssetsToLoad;
+    assetList->numAssetsToLoad++;
+    assetToLoad->path = path;
+    assetToLoad->type = type;
+    assetToLoad->key = key;
+}
+
+// TODO(ebuchholz): Maybe pack everything into a single file and load that?
+extern "C" void getGameAssetList (asset_list *assetList) {
+    pushAsset(assetList, "assets/meshes/tree.obj", ASSET_TYPE_OBJ, MESH_KEY_SPHERE);
+}
+
+extern "C" void parseGameAsset (void *assetData, asset_type type, int key,
+                                game_memory *gameMemory, memory_arena *workingMemory) 
 {
-    game_state *gameState = (game_state *)gameMemory;
+    game_state *gameState = (game_state *)gameMemory->memory;
     if (!gameState->assetsInitialized) {
         gameState->assetsInitialized = true;
 
+        gameState->memory = {};
+
+        gameState->memory.size = 0;
+        gameState->memory.capacity = gameMemory->memoryCapacity - sizeof(game_state);
+        gameState->memory.base = (char *)gameMemory->memory + sizeof(game_state);
+
         gameState->assets = {};
         game_assets *assets = &gameState->assets;
-
         assets->assetMemory = {};
-        assets->assetMemory->size = 0;
-        assets->assetMemory->capacity = 1 * 1024 * 1024; // 1MB of asset data???
-        assets->assetMemory->base = // get some memory from game memory
+        assets->assetMemory.size = 0;
+        assets->assetMemory.capacity = 1 * 1024 * 1024; // 1MB of asset data???
+        assets->assetMemory.base = allocateMemorySize(&gameState->memory, assets->assetMemory.capacity); 
         assets->numMeshes = 0;
     }
 
@@ -47,10 +342,12 @@ extern "C" void parseGameAsset (void *assetData, asset_type type,
     // create/copy stuff into game memory
     // place whatever theplatform needs at the beginningof working memory
     switch (type) {
-        case ASSET_TYPE_OBJ:
-        {
-
-        } break;
+    default:
+        assert(false); // must provide a valid type
+        break;
+    case ASSET_TYPE_OBJ:
+        parseOBJ(assetData, &gameState->assets, key, workingMemory);
+        break;
     }
 }
 
