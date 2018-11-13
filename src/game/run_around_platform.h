@@ -27,13 +27,15 @@ struct asset_list {
 };
 
 // Makes it easier to wrap up in WebIDL
+// NOTE(ebuchholz): emscripten+idl can't handle pointers to primitives, so these have to be void
+// pointers
 struct float_mesh_attribute {
-    float *values;
+    void *values;
     int count;
 };
 
 struct int_mesh_attribute {
-    int *values;
+    void *values;
     int count;
 };
 

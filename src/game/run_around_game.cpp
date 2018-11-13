@@ -169,10 +169,10 @@ static void parseOBJ (void *objData, game_assets *assets, int key, memory_arena 
     loadedMesh->normals.count = 3 * 3 * numTriangles;
     loadedMesh->indices.count =  3 * numTriangles;
 
-    loadedMesh->positions.values = (float *)allocateMemorySize(workingMemory, sizeof(float) * loadedMesh->positions.count);
-    loadedMesh->texCoords.values = (float *)allocateMemorySize(workingMemory, sizeof(float) * loadedMesh->texCoords.count);
-    loadedMesh->normals.values = (float *)allocateMemorySize(workingMemory, sizeof(float) * loadedMesh->normals.count);
-    loadedMesh->indices.values = (int *)allocateMemorySize(workingMemory, sizeof(int) * loadedMesh->indices.count);
+    loadedMesh->positions.values = allocateMemorySize(workingMemory, sizeof(float) * loadedMesh->positions.count);
+    loadedMesh->texCoords.values = allocateMemorySize(workingMemory, sizeof(float) * loadedMesh->texCoords.count);
+    loadedMesh->normals.values = allocateMemorySize(workingMemory, sizeof(float) * loadedMesh->normals.count);
+    loadedMesh->indices.values = allocateMemorySize(workingMemory, sizeof(int) * loadedMesh->indices.count);
 
     start = (char *)objData;
     int tempPositionIndex = 0;
@@ -255,7 +255,7 @@ static void parseOBJ (void *objData, game_assets *assets, int key, memory_arena 
                 while (*indexEnd != ' ' && *indexEnd != '\n' && *indexEnd != '/' && *wordEnd!= 0) { ++indexEnd; }
                 if (indexStart != indexEnd) {
                     int index = stringToInt(indexStart, indexEnd - 1) - 1;
-                    float *positionsPointer = loadedMesh->positions.values + (positionIndex * 3);
+                    float *positionsPointer = (float *)loadedMesh->positions.values + (positionIndex * 3);
                     positionsPointer[0] = tempPositions[index][0];
                     positionsPointer[1] = tempPositions[index][1];
                     positionsPointer[2] = tempPositions[index][2];
@@ -267,7 +267,7 @@ static void parseOBJ (void *objData, game_assets *assets, int key, memory_arena 
                 while (*indexEnd != ' ' && *indexEnd != '\n' && *indexEnd != '/' && *wordEnd!= 0) { ++indexEnd; }
                 if (indexStart != indexEnd) {
                     int index = stringToInt(indexStart, indexEnd - 1) - 1;
-                    float *texCoordsPointer = loadedMesh->texCoords.values + (uvIndex * 2);
+                    float *texCoordsPointer = (float *)loadedMesh->texCoords.values + (uvIndex * 2);
                     texCoordsPointer[0] = tempTexCoords[index][0];
                     texCoordsPointer[1] = tempTexCoords[index][1];
                     uvIndex++;
@@ -278,14 +278,14 @@ static void parseOBJ (void *objData, game_assets *assets, int key, memory_arena 
                 while (*indexEnd != ' ' && *indexEnd != '\n' && *indexEnd != '/' && *wordEnd!= 0) { ++indexEnd; }
                 if (indexStart != indexEnd) {
                     int index = stringToInt(indexStart, indexEnd - 1) - 1;
-                    float *normalsPointer = loadedMesh->normals.values + (normalIndex * 3);
+                    float *normalsPointer = (float *)loadedMesh->normals.values + (normalIndex * 3);
                     normalsPointer[0] = tempNormals[index][0];
                     normalsPointer[1] = tempNormals[index][1];
                     normalsPointer[2] = tempNormals[index][2];
                     ++normalIndex;
                 }
 
-                loadedMesh->indices.values[indexIndex] = indexIndex;
+                ((int *)(loadedMesh->indices.values))[indexIndex] = indexIndex;
                 ++indexIndex;
             }
         }

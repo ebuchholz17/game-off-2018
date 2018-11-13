@@ -1,12 +1,46 @@
-enum render_command_type {
-    "RENDER_COMMAND_RECTANGLE",
-    "RENDER_COMMAND_HORIZONTAL_LINE"
+enum asset_type {
+    "ASSET_TYPE_OBJ"
+};
+
+interface asset_to_load {
+    attribute DOMString path;
+    attribute asset_type type;
+    attribute long key;
+};
+
+interface asset_list {
+    attribute long numAssetsToLoad;
+    attribute long maxAssetsToLoad;
+    attribute asset_to_load assetsToLoad;
+};
+
+interface float_mesh_attribute {
+    attribute VoidPtr values;
+    attribute long count;
+};
+
+interface int_mesh_attribute {
+    attribute VoidPtr values;
+    attribute long count;
+};
+
+interface loaded_mesh_asset {
+    attribute long key;
+    [Value] attribute float_mesh_attribute positions;
+    [Value] attribute float_mesh_attribute texCoords;
+    [Value] attribute float_mesh_attribute normals;
+    [Value] attribute int_mesh_attribute indices;
 };
 
 interface memory_arena {
     attribute VoidPtr base;
     attribute unsigned long size;
     attribute unsigned long capacity;
+};
+
+enum render_command_type {
+    "RENDER_COMMAND_RECTANGLE",
+    "RENDER_COMMAND_HORIZONTAL_LINE"
 };
 
 interface render_command_header{
@@ -28,4 +62,9 @@ interface render_horizontal_line_command {
 
 interface render_command_list {
     [Value] attribute memory_arena memory;
+};
+
+interface game_memory {
+    attribute VoidPtr memory;
+    attribute unsigned long memoryCapacity;
 };

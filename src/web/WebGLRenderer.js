@@ -29,6 +29,7 @@ WebGLRenderer.prototype = {
     initWebGL: function (canvas) {
         this.canvas = canvas;
         gl = canvas.getContext("webgl");
+        var success = gl.getExtension("OES_element_index_uint"); // TODO(ebuchholz): check
         this.compileAndLinkShader(defaultVertexShaderSource, defaultFragmentShaderSource, ShaderTypes.DEFAULT);
 
         // TODO(ebuchholz): make part of asset loading process
@@ -100,6 +101,22 @@ WebGLRenderer.prototype = {
         this.shaders.push(shader);
     },
 
+    loadMesh: function (game, loadedMesh) {
+        positionBuffer = gl.createBuffer();
+        var floatBuffer = new Float32Array(game.buffer,
+                                           loadedMesh.positions.values.ptr, 
+                                           loadedMesh.positions.count);
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, floatBuffer, gl.STATIC_DRAW);
+
+        indexBuffer = gl.createBuffer();
+        var uintBuffer = new Uint32Array(game.buffer,
+                                         loadedMesh.indices.values.ptr, 
+                                         loadedMesh.indices.count);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, uintBuffer, gl.STATIC_DRAW);
+    },
+
     renderFrame: function () {
         gl.enable(gl.CULL_FACE);
         gl.enable(gl.DEPTH_TEST);
@@ -113,16 +130,16 @@ WebGLRenderer.prototype = {
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
         var positionLocation = gl.getAttribLocation(program, "position");
         gl.enableVertexAttribArray(positionLocation);
-        gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+        gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
 
-        gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-        var colorLocation = gl.getAttribLocation(program, "color");
-        gl.enableVertexAttribArray(colorLocation);
-        gl.vertexAttribPointer(colorLocation, 3, gl.FLOAT, false, 0, 0);
+        //gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+        //var colorLocation = gl.getAttribLocation(program, "color");
+        //gl.enableVertexAttribArray(colorLocation);
+        //gl.vertexAttribPointer(colorLocation, 3, gl.FLOAT, false, 0, 0);
 
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
 
-        gl.drawElements(gl.TRIANGLES, 3, gl.UNSIGNED_SHORT, 0);
+        gl.drawElements(gl.TRIANGLES, 540, gl.UNSIGNED_INT, 0);
     }
 
 };

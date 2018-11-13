@@ -230,6 +230,100 @@ Module['render_rectangle_command'] = render_rectangle_command;
   var self = this.ptr;
   _emscripten_bind_render_rectangle_command___destroy___0(self);
 };
+// loaded_mesh_asset
+/** @suppress {undefinedVars, duplicate} */function loaded_mesh_asset() { throw "cannot construct a loaded_mesh_asset, no constructor in IDL" }
+loaded_mesh_asset.prototype = Object.create(WrapperObject.prototype);
+loaded_mesh_asset.prototype.constructor = loaded_mesh_asset;
+loaded_mesh_asset.prototype.__class__ = loaded_mesh_asset;
+loaded_mesh_asset.__cache__ = {};
+Module['loaded_mesh_asset'] = loaded_mesh_asset;
+
+  loaded_mesh_asset.prototype['get_key'] = loaded_mesh_asset.prototype.get_key = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_loaded_mesh_asset_get_key_0(self);
+};
+    loaded_mesh_asset.prototype['set_key'] = loaded_mesh_asset.prototype.set_key = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_loaded_mesh_asset_set_key_1(self, arg0);
+};
+    Object.defineProperty(loaded_mesh_asset.prototype, 'key', { get: loaded_mesh_asset.prototype.get_key, set: loaded_mesh_asset.prototype.set_key }) 
+  loaded_mesh_asset.prototype['get_positions'] = loaded_mesh_asset.prototype.get_positions = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return wrapPointer(_emscripten_bind_loaded_mesh_asset_get_positions_0(self), float_mesh_attribute);
+};
+    loaded_mesh_asset.prototype['set_positions'] = loaded_mesh_asset.prototype.set_positions = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_loaded_mesh_asset_set_positions_1(self, arg0);
+};
+    Object.defineProperty(loaded_mesh_asset.prototype, 'positions', { get: loaded_mesh_asset.prototype.get_positions, set: loaded_mesh_asset.prototype.set_positions }) 
+  loaded_mesh_asset.prototype['get_texCoords'] = loaded_mesh_asset.prototype.get_texCoords = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return wrapPointer(_emscripten_bind_loaded_mesh_asset_get_texCoords_0(self), float_mesh_attribute);
+};
+    loaded_mesh_asset.prototype['set_texCoords'] = loaded_mesh_asset.prototype.set_texCoords = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_loaded_mesh_asset_set_texCoords_1(self, arg0);
+};
+    Object.defineProperty(loaded_mesh_asset.prototype, 'texCoords', { get: loaded_mesh_asset.prototype.get_texCoords, set: loaded_mesh_asset.prototype.set_texCoords }) 
+  loaded_mesh_asset.prototype['get_normals'] = loaded_mesh_asset.prototype.get_normals = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return wrapPointer(_emscripten_bind_loaded_mesh_asset_get_normals_0(self), float_mesh_attribute);
+};
+    loaded_mesh_asset.prototype['set_normals'] = loaded_mesh_asset.prototype.set_normals = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_loaded_mesh_asset_set_normals_1(self, arg0);
+};
+    Object.defineProperty(loaded_mesh_asset.prototype, 'normals', { get: loaded_mesh_asset.prototype.get_normals, set: loaded_mesh_asset.prototype.set_normals }) 
+  loaded_mesh_asset.prototype['get_indices'] = loaded_mesh_asset.prototype.get_indices = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return wrapPointer(_emscripten_bind_loaded_mesh_asset_get_indices_0(self), int_mesh_attribute);
+};
+    loaded_mesh_asset.prototype['set_indices'] = loaded_mesh_asset.prototype.set_indices = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_loaded_mesh_asset_set_indices_1(self, arg0);
+};
+    Object.defineProperty(loaded_mesh_asset.prototype, 'indices', { get: loaded_mesh_asset.prototype.get_indices, set: loaded_mesh_asset.prototype.set_indices }) 
+  loaded_mesh_asset.prototype['__destroy__'] = loaded_mesh_asset.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  _emscripten_bind_loaded_mesh_asset___destroy___0(self);
+};
+// game_memory
+/** @suppress {undefinedVars, duplicate} */function game_memory() { throw "cannot construct a game_memory, no constructor in IDL" }
+game_memory.prototype = Object.create(WrapperObject.prototype);
+game_memory.prototype.constructor = game_memory;
+game_memory.prototype.__class__ = game_memory;
+game_memory.__cache__ = {};
+Module['game_memory'] = game_memory;
+
+  game_memory.prototype['get_memory'] = game_memory.prototype.get_memory = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return wrapPointer(_emscripten_bind_game_memory_get_memory_0(self), VoidPtr);
+};
+    game_memory.prototype['set_memory'] = game_memory.prototype.set_memory = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_game_memory_set_memory_1(self, arg0);
+};
+    Object.defineProperty(game_memory.prototype, 'memory', { get: game_memory.prototype.get_memory, set: game_memory.prototype.set_memory }) 
+  game_memory.prototype['get_memoryCapacity'] = game_memory.prototype.get_memoryCapacity = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_game_memory_get_memoryCapacity_0(self);
+};
+    game_memory.prototype['set_memoryCapacity'] = game_memory.prototype.set_memoryCapacity = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_game_memory_set_memoryCapacity_1(self, arg0);
+};
+    Object.defineProperty(game_memory.prototype, 'memoryCapacity', { get: game_memory.prototype.get_memoryCapacity, set: game_memory.prototype.set_memoryCapacity }) 
+  game_memory.prototype['__destroy__'] = game_memory.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  _emscripten_bind_game_memory___destroy___0(self);
+};
 // memory_arena
 /** @suppress {undefinedVars, duplicate} */function memory_arena() { throw "cannot construct a memory_arena, no constructor in IDL" }
 memory_arena.prototype = Object.create(WrapperObject.prototype);
@@ -326,17 +420,37 @@ Module['render_horizontal_line_command'] = render_horizontal_line_command;
   var self = this.ptr;
   _emscripten_bind_render_horizontal_line_command___destroy___0(self);
 };
-// VoidPtr
-/** @suppress {undefinedVars, duplicate} */function VoidPtr() { throw "cannot construct a VoidPtr, no constructor in IDL" }
-VoidPtr.prototype = Object.create(WrapperObject.prototype);
-VoidPtr.prototype.constructor = VoidPtr;
-VoidPtr.prototype.__class__ = VoidPtr;
-VoidPtr.__cache__ = {};
-Module['VoidPtr'] = VoidPtr;
+// float_mesh_attribute
+/** @suppress {undefinedVars, duplicate} */function float_mesh_attribute() { throw "cannot construct a float_mesh_attribute, no constructor in IDL" }
+float_mesh_attribute.prototype = Object.create(WrapperObject.prototype);
+float_mesh_attribute.prototype.constructor = float_mesh_attribute;
+float_mesh_attribute.prototype.__class__ = float_mesh_attribute;
+float_mesh_attribute.__cache__ = {};
+Module['float_mesh_attribute'] = float_mesh_attribute;
 
-  VoidPtr.prototype['__destroy__'] = VoidPtr.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
+  float_mesh_attribute.prototype['get_values'] = float_mesh_attribute.prototype.get_values = /** @suppress {undefinedVars, duplicate} */function() {
   var self = this.ptr;
-  _emscripten_bind_VoidPtr___destroy___0(self);
+  return wrapPointer(_emscripten_bind_float_mesh_attribute_get_values_0(self), VoidPtr);
+};
+    float_mesh_attribute.prototype['set_values'] = float_mesh_attribute.prototype.set_values = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_float_mesh_attribute_set_values_1(self, arg0);
+};
+    Object.defineProperty(float_mesh_attribute.prototype, 'values', { get: float_mesh_attribute.prototype.get_values, set: float_mesh_attribute.prototype.set_values }) 
+  float_mesh_attribute.prototype['get_count'] = float_mesh_attribute.prototype.get_count = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_float_mesh_attribute_get_count_0(self);
+};
+    float_mesh_attribute.prototype['set_count'] = float_mesh_attribute.prototype.set_count = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_float_mesh_attribute_set_count_1(self, arg0);
+};
+    Object.defineProperty(float_mesh_attribute.prototype, 'count', { get: float_mesh_attribute.prototype.get_count, set: float_mesh_attribute.prototype.set_count }) 
+  float_mesh_attribute.prototype['__destroy__'] = float_mesh_attribute.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  _emscripten_bind_float_mesh_attribute___destroy___0(self);
 };
 // render_command_list
 /** @suppress {undefinedVars, duplicate} */function render_command_list() { throw "cannot construct a render_command_list, no constructor in IDL" }
@@ -360,8 +474,144 @@ Module['render_command_list'] = render_command_list;
   var self = this.ptr;
   _emscripten_bind_render_command_list___destroy___0(self);
 };
+// asset_list
+/** @suppress {undefinedVars, duplicate} */function asset_list() { throw "cannot construct a asset_list, no constructor in IDL" }
+asset_list.prototype = Object.create(WrapperObject.prototype);
+asset_list.prototype.constructor = asset_list;
+asset_list.prototype.__class__ = asset_list;
+asset_list.__cache__ = {};
+Module['asset_list'] = asset_list;
+
+  asset_list.prototype['get_numAssetsToLoad'] = asset_list.prototype.get_numAssetsToLoad = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_asset_list_get_numAssetsToLoad_0(self);
+};
+    asset_list.prototype['set_numAssetsToLoad'] = asset_list.prototype.set_numAssetsToLoad = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_asset_list_set_numAssetsToLoad_1(self, arg0);
+};
+    Object.defineProperty(asset_list.prototype, 'numAssetsToLoad', { get: asset_list.prototype.get_numAssetsToLoad, set: asset_list.prototype.set_numAssetsToLoad }) 
+  asset_list.prototype['get_maxAssetsToLoad'] = asset_list.prototype.get_maxAssetsToLoad = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_asset_list_get_maxAssetsToLoad_0(self);
+};
+    asset_list.prototype['set_maxAssetsToLoad'] = asset_list.prototype.set_maxAssetsToLoad = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_asset_list_set_maxAssetsToLoad_1(self, arg0);
+};
+    Object.defineProperty(asset_list.prototype, 'maxAssetsToLoad', { get: asset_list.prototype.get_maxAssetsToLoad, set: asset_list.prototype.set_maxAssetsToLoad }) 
+  asset_list.prototype['get_assetsToLoad'] = asset_list.prototype.get_assetsToLoad = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return wrapPointer(_emscripten_bind_asset_list_get_assetsToLoad_0(self), asset_to_load);
+};
+    asset_list.prototype['set_assetsToLoad'] = asset_list.prototype.set_assetsToLoad = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_asset_list_set_assetsToLoad_1(self, arg0);
+};
+    Object.defineProperty(asset_list.prototype, 'assetsToLoad', { get: asset_list.prototype.get_assetsToLoad, set: asset_list.prototype.set_assetsToLoad }) 
+  asset_list.prototype['__destroy__'] = asset_list.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  _emscripten_bind_asset_list___destroy___0(self);
+};
+// asset_to_load
+/** @suppress {undefinedVars, duplicate} */function asset_to_load() { throw "cannot construct a asset_to_load, no constructor in IDL" }
+asset_to_load.prototype = Object.create(WrapperObject.prototype);
+asset_to_load.prototype.constructor = asset_to_load;
+asset_to_load.prototype.__class__ = asset_to_load;
+asset_to_load.__cache__ = {};
+Module['asset_to_load'] = asset_to_load;
+
+  asset_to_load.prototype['get_path'] = asset_to_load.prototype.get_path = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return Pointer_stringify(_emscripten_bind_asset_to_load_get_path_0(self));
+};
+    asset_to_load.prototype['set_path'] = asset_to_load.prototype.set_path = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  ensureCache.prepare();
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  else arg0 = ensureString(arg0);
+  _emscripten_bind_asset_to_load_set_path_1(self, arg0);
+};
+    Object.defineProperty(asset_to_load.prototype, 'path', { get: asset_to_load.prototype.get_path, set: asset_to_load.prototype.set_path }) 
+  asset_to_load.prototype['get_type'] = asset_to_load.prototype.get_type = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_asset_to_load_get_type_0(self);
+};
+    asset_to_load.prototype['set_type'] = asset_to_load.prototype.set_type = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_asset_to_load_set_type_1(self, arg0);
+};
+    Object.defineProperty(asset_to_load.prototype, 'type', { get: asset_to_load.prototype.get_type, set: asset_to_load.prototype.set_type }) 
+  asset_to_load.prototype['get_key'] = asset_to_load.prototype.get_key = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_asset_to_load_get_key_0(self);
+};
+    asset_to_load.prototype['set_key'] = asset_to_load.prototype.set_key = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_asset_to_load_set_key_1(self, arg0);
+};
+    Object.defineProperty(asset_to_load.prototype, 'key', { get: asset_to_load.prototype.get_key, set: asset_to_load.prototype.set_key }) 
+  asset_to_load.prototype['__destroy__'] = asset_to_load.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  _emscripten_bind_asset_to_load___destroy___0(self);
+};
+// VoidPtr
+/** @suppress {undefinedVars, duplicate} */function VoidPtr() { throw "cannot construct a VoidPtr, no constructor in IDL" }
+VoidPtr.prototype = Object.create(WrapperObject.prototype);
+VoidPtr.prototype.constructor = VoidPtr;
+VoidPtr.prototype.__class__ = VoidPtr;
+VoidPtr.__cache__ = {};
+Module['VoidPtr'] = VoidPtr;
+
+  VoidPtr.prototype['__destroy__'] = VoidPtr.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  _emscripten_bind_VoidPtr___destroy___0(self);
+};
+// int_mesh_attribute
+/** @suppress {undefinedVars, duplicate} */function int_mesh_attribute() { throw "cannot construct a int_mesh_attribute, no constructor in IDL" }
+int_mesh_attribute.prototype = Object.create(WrapperObject.prototype);
+int_mesh_attribute.prototype.constructor = int_mesh_attribute;
+int_mesh_attribute.prototype.__class__ = int_mesh_attribute;
+int_mesh_attribute.__cache__ = {};
+Module['int_mesh_attribute'] = int_mesh_attribute;
+
+  int_mesh_attribute.prototype['get_values'] = int_mesh_attribute.prototype.get_values = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return wrapPointer(_emscripten_bind_int_mesh_attribute_get_values_0(self), VoidPtr);
+};
+    int_mesh_attribute.prototype['set_values'] = int_mesh_attribute.prototype.set_values = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_int_mesh_attribute_set_values_1(self, arg0);
+};
+    Object.defineProperty(int_mesh_attribute.prototype, 'values', { get: int_mesh_attribute.prototype.get_values, set: int_mesh_attribute.prototype.set_values }) 
+  int_mesh_attribute.prototype['get_count'] = int_mesh_attribute.prototype.get_count = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_int_mesh_attribute_get_count_0(self);
+};
+    int_mesh_attribute.prototype['set_count'] = int_mesh_attribute.prototype.set_count = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_int_mesh_attribute_set_count_1(self, arg0);
+};
+    Object.defineProperty(int_mesh_attribute.prototype, 'count', { get: int_mesh_attribute.prototype.get_count, set: int_mesh_attribute.prototype.set_count }) 
+  int_mesh_attribute.prototype['__destroy__'] = int_mesh_attribute.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  _emscripten_bind_int_mesh_attribute___destroy___0(self);
+};
 (function() {
   function setupEnums() {
+    
+
+    // asset_type
+
+    Module['ASSET_TYPE_OBJ'] = _emscripten_enum_asset_type_ASSET_TYPE_OBJ();
+
     
 
     // render_command_type

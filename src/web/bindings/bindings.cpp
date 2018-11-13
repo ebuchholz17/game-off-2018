@@ -58,6 +58,74 @@ void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_rectangle_command___destroy___0
   delete self;
 }
 
+// loaded_mesh_asset
+
+int EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_mesh_asset_get_key_0(loaded_mesh_asset* self) {
+  return self->key;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_mesh_asset_set_key_1(loaded_mesh_asset* self, int arg0) {
+  self->key = arg0;
+}
+
+float_mesh_attribute* EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_mesh_asset_get_positions_0(loaded_mesh_asset* self) {
+  return &self->positions;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_mesh_asset_set_positions_1(loaded_mesh_asset* self, float_mesh_attribute* arg0) {
+  self->positions = *arg0;
+}
+
+float_mesh_attribute* EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_mesh_asset_get_texCoords_0(loaded_mesh_asset* self) {
+  return &self->texCoords;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_mesh_asset_set_texCoords_1(loaded_mesh_asset* self, float_mesh_attribute* arg0) {
+  self->texCoords = *arg0;
+}
+
+float_mesh_attribute* EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_mesh_asset_get_normals_0(loaded_mesh_asset* self) {
+  return &self->normals;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_mesh_asset_set_normals_1(loaded_mesh_asset* self, float_mesh_attribute* arg0) {
+  self->normals = *arg0;
+}
+
+int_mesh_attribute* EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_mesh_asset_get_indices_0(loaded_mesh_asset* self) {
+  return &self->indices;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_mesh_asset_set_indices_1(loaded_mesh_asset* self, int_mesh_attribute* arg0) {
+  self->indices = *arg0;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_mesh_asset___destroy___0(loaded_mesh_asset* self) {
+  delete self;
+}
+
+// game_memory
+
+void* EMSCRIPTEN_KEEPALIVE emscripten_bind_game_memory_get_memory_0(game_memory* self) {
+  return self->memory;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_game_memory_set_memory_1(game_memory* self, void* arg0) {
+  self->memory = arg0;
+}
+
+unsigned int EMSCRIPTEN_KEEPALIVE emscripten_bind_game_memory_get_memoryCapacity_0(game_memory* self) {
+  return self->memoryCapacity;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_game_memory_set_memoryCapacity_1(game_memory* self, unsigned int arg0) {
+  self->memoryCapacity = arg0;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_game_memory___destroy___0(game_memory* self) {
+  delete self;
+}
+
 // memory_arena
 
 void* EMSCRIPTEN_KEEPALIVE emscripten_bind_memory_arena_get_base_0(memory_arena* self) {
@@ -124,9 +192,25 @@ void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_horizontal_line_command___destr
   delete self;
 }
 
-// VoidPtr
+// float_mesh_attribute
 
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_VoidPtr___destroy___0(void** self) {
+void* EMSCRIPTEN_KEEPALIVE emscripten_bind_float_mesh_attribute_get_values_0(float_mesh_attribute* self) {
+  return self->values;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_float_mesh_attribute_set_values_1(float_mesh_attribute* self, void* arg0) {
+  self->values = arg0;
+}
+
+int EMSCRIPTEN_KEEPALIVE emscripten_bind_float_mesh_attribute_get_count_0(float_mesh_attribute* self) {
+  return self->count;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_float_mesh_attribute_set_count_1(float_mesh_attribute* self, int arg0) {
+  self->count = arg0;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_float_mesh_attribute___destroy___0(float_mesh_attribute* self) {
   delete self;
 }
 
@@ -142,6 +226,99 @@ void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_list_set_memory_1(rende
 
 void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_list___destroy___0(render_command_list* self) {
   delete self;
+}
+
+// asset_list
+
+int EMSCRIPTEN_KEEPALIVE emscripten_bind_asset_list_get_numAssetsToLoad_0(asset_list* self) {
+  return self->numAssetsToLoad;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_asset_list_set_numAssetsToLoad_1(asset_list* self, int arg0) {
+  self->numAssetsToLoad = arg0;
+}
+
+int EMSCRIPTEN_KEEPALIVE emscripten_bind_asset_list_get_maxAssetsToLoad_0(asset_list* self) {
+  return self->maxAssetsToLoad;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_asset_list_set_maxAssetsToLoad_1(asset_list* self, int arg0) {
+  self->maxAssetsToLoad = arg0;
+}
+
+asset_to_load* EMSCRIPTEN_KEEPALIVE emscripten_bind_asset_list_get_assetsToLoad_0(asset_list* self) {
+  return self->assetsToLoad;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_asset_list_set_assetsToLoad_1(asset_list* self, asset_to_load* arg0) {
+  self->assetsToLoad = arg0;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_asset_list___destroy___0(asset_list* self) {
+  delete self;
+}
+
+// asset_to_load
+
+char* EMSCRIPTEN_KEEPALIVE emscripten_bind_asset_to_load_get_path_0(asset_to_load* self) {
+  return self->path;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_asset_to_load_set_path_1(asset_to_load* self, char* arg0) {
+  self->path = arg0;
+}
+
+asset_type EMSCRIPTEN_KEEPALIVE emscripten_bind_asset_to_load_get_type_0(asset_to_load* self) {
+  return self->type;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_asset_to_load_set_type_1(asset_to_load* self, asset_type arg0) {
+  self->type = arg0;
+}
+
+int EMSCRIPTEN_KEEPALIVE emscripten_bind_asset_to_load_get_key_0(asset_to_load* self) {
+  return self->key;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_asset_to_load_set_key_1(asset_to_load* self, int arg0) {
+  self->key = arg0;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_asset_to_load___destroy___0(asset_to_load* self) {
+  delete self;
+}
+
+// VoidPtr
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_VoidPtr___destroy___0(void** self) {
+  delete self;
+}
+
+// int_mesh_attribute
+
+void* EMSCRIPTEN_KEEPALIVE emscripten_bind_int_mesh_attribute_get_values_0(int_mesh_attribute* self) {
+  return self->values;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_int_mesh_attribute_set_values_1(int_mesh_attribute* self, void* arg0) {
+  self->values = arg0;
+}
+
+int EMSCRIPTEN_KEEPALIVE emscripten_bind_int_mesh_attribute_get_count_0(int_mesh_attribute* self) {
+  return self->count;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_int_mesh_attribute_set_count_1(int_mesh_attribute* self, int arg0) {
+  self->count = arg0;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_int_mesh_attribute___destroy___0(int_mesh_attribute* self) {
+  delete self;
+}
+
+// asset_type
+asset_type EMSCRIPTEN_KEEPALIVE emscripten_enum_asset_type_ASSET_TYPE_OBJ() {
+  return ASSET_TYPE_OBJ;
 }
 
 // render_command_type
