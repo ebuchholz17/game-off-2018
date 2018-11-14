@@ -168,68 +168,6 @@ function ensureFloat64(value) {
 }
 
 
-// render_rectangle_command
-/** @suppress {undefinedVars, duplicate} */function render_rectangle_command() { throw "cannot construct a render_rectangle_command, no constructor in IDL" }
-render_rectangle_command.prototype = Object.create(WrapperObject.prototype);
-render_rectangle_command.prototype.constructor = render_rectangle_command;
-render_rectangle_command.prototype.__class__ = render_rectangle_command;
-render_rectangle_command.__cache__ = {};
-Module['render_rectangle_command'] = render_rectangle_command;
-
-  render_rectangle_command.prototype['get_x'] = render_rectangle_command.prototype.get_x = /** @suppress {undefinedVars, duplicate} */function() {
-  var self = this.ptr;
-  return _emscripten_bind_render_rectangle_command_get_x_0(self);
-};
-    render_rectangle_command.prototype['set_x'] = render_rectangle_command.prototype.set_x = /** @suppress {undefinedVars, duplicate} */function(arg0) {
-  var self = this.ptr;
-  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
-  _emscripten_bind_render_rectangle_command_set_x_1(self, arg0);
-};
-    Object.defineProperty(render_rectangle_command.prototype, 'x', { get: render_rectangle_command.prototype.get_x, set: render_rectangle_command.prototype.set_x }) 
-  render_rectangle_command.prototype['get_y'] = render_rectangle_command.prototype.get_y = /** @suppress {undefinedVars, duplicate} */function() {
-  var self = this.ptr;
-  return _emscripten_bind_render_rectangle_command_get_y_0(self);
-};
-    render_rectangle_command.prototype['set_y'] = render_rectangle_command.prototype.set_y = /** @suppress {undefinedVars, duplicate} */function(arg0) {
-  var self = this.ptr;
-  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
-  _emscripten_bind_render_rectangle_command_set_y_1(self, arg0);
-};
-    Object.defineProperty(render_rectangle_command.prototype, 'y', { get: render_rectangle_command.prototype.get_y, set: render_rectangle_command.prototype.set_y }) 
-  render_rectangle_command.prototype['get_width'] = render_rectangle_command.prototype.get_width = /** @suppress {undefinedVars, duplicate} */function() {
-  var self = this.ptr;
-  return _emscripten_bind_render_rectangle_command_get_width_0(self);
-};
-    render_rectangle_command.prototype['set_width'] = render_rectangle_command.prototype.set_width = /** @suppress {undefinedVars, duplicate} */function(arg0) {
-  var self = this.ptr;
-  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
-  _emscripten_bind_render_rectangle_command_set_width_1(self, arg0);
-};
-    Object.defineProperty(render_rectangle_command.prototype, 'width', { get: render_rectangle_command.prototype.get_width, set: render_rectangle_command.prototype.set_width }) 
-  render_rectangle_command.prototype['get_height'] = render_rectangle_command.prototype.get_height = /** @suppress {undefinedVars, duplicate} */function() {
-  var self = this.ptr;
-  return _emscripten_bind_render_rectangle_command_get_height_0(self);
-};
-    render_rectangle_command.prototype['set_height'] = render_rectangle_command.prototype.set_height = /** @suppress {undefinedVars, duplicate} */function(arg0) {
-  var self = this.ptr;
-  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
-  _emscripten_bind_render_rectangle_command_set_height_1(self, arg0);
-};
-    Object.defineProperty(render_rectangle_command.prototype, 'height', { get: render_rectangle_command.prototype.get_height, set: render_rectangle_command.prototype.set_height }) 
-  render_rectangle_command.prototype['get_color'] = render_rectangle_command.prototype.get_color = /** @suppress {undefinedVars, duplicate} */function() {
-  var self = this.ptr;
-  return _emscripten_bind_render_rectangle_command_get_color_0(self);
-};
-    render_rectangle_command.prototype['set_color'] = render_rectangle_command.prototype.set_color = /** @suppress {undefinedVars, duplicate} */function(arg0) {
-  var self = this.ptr;
-  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
-  _emscripten_bind_render_rectangle_command_set_color_1(self, arg0);
-};
-    Object.defineProperty(render_rectangle_command.prototype, 'color', { get: render_rectangle_command.prototype.get_color, set: render_rectangle_command.prototype.set_color }) 
-  render_rectangle_command.prototype['__destroy__'] = render_rectangle_command.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
-  var self = this.ptr;
-  _emscripten_bind_render_rectangle_command___destroy___0(self);
-};
 // loaded_mesh_asset
 /** @suppress {undefinedVars, duplicate} */function loaded_mesh_asset() { throw "cannot construct a loaded_mesh_asset, no constructor in IDL" }
 loaded_mesh_asset.prototype = Object.create(WrapperObject.prototype);
@@ -388,38 +326,6 @@ Module['render_command_header'] = render_command_header;
   var self = this.ptr;
   _emscripten_bind_render_command_header___destroy___0(self);
 };
-// render_horizontal_line_command
-/** @suppress {undefinedVars, duplicate} */function render_horizontal_line_command() { throw "cannot construct a render_horizontal_line_command, no constructor in IDL" }
-render_horizontal_line_command.prototype = Object.create(WrapperObject.prototype);
-render_horizontal_line_command.prototype.constructor = render_horizontal_line_command;
-render_horizontal_line_command.prototype.__class__ = render_horizontal_line_command;
-render_horizontal_line_command.__cache__ = {};
-Module['render_horizontal_line_command'] = render_horizontal_line_command;
-
-  render_horizontal_line_command.prototype['get_color'] = render_horizontal_line_command.prototype.get_color = /** @suppress {undefinedVars, duplicate} */function() {
-  var self = this.ptr;
-  return _emscripten_bind_render_horizontal_line_command_get_color_0(self);
-};
-    render_horizontal_line_command.prototype['set_color'] = render_horizontal_line_command.prototype.set_color = /** @suppress {undefinedVars, duplicate} */function(arg0) {
-  var self = this.ptr;
-  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
-  _emscripten_bind_render_horizontal_line_command_set_color_1(self, arg0);
-};
-    Object.defineProperty(render_horizontal_line_command.prototype, 'color', { get: render_horizontal_line_command.prototype.get_color, set: render_horizontal_line_command.prototype.set_color }) 
-  render_horizontal_line_command.prototype['get_lineNum'] = render_horizontal_line_command.prototype.get_lineNum = /** @suppress {undefinedVars, duplicate} */function() {
-  var self = this.ptr;
-  return _emscripten_bind_render_horizontal_line_command_get_lineNum_0(self);
-};
-    render_horizontal_line_command.prototype['set_lineNum'] = render_horizontal_line_command.prototype.set_lineNum = /** @suppress {undefinedVars, duplicate} */function(arg0) {
-  var self = this.ptr;
-  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
-  _emscripten_bind_render_horizontal_line_command_set_lineNum_1(self, arg0);
-};
-    Object.defineProperty(render_horizontal_line_command.prototype, 'lineNum', { get: render_horizontal_line_command.prototype.get_lineNum, set: render_horizontal_line_command.prototype.set_lineNum }) 
-  render_horizontal_line_command.prototype['__destroy__'] = render_horizontal_line_command.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
-  var self = this.ptr;
-  _emscripten_bind_render_horizontal_line_command___destroy___0(self);
-};
 // float_mesh_attribute
 /** @suppress {undefinedVars, duplicate} */function float_mesh_attribute() { throw "cannot construct a float_mesh_attribute, no constructor in IDL" }
 float_mesh_attribute.prototype = Object.create(WrapperObject.prototype);
@@ -473,6 +379,28 @@ Module['render_command_list'] = render_command_list;
   render_command_list.prototype['__destroy__'] = render_command_list.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
   var self = this.ptr;
   _emscripten_bind_render_command_list___destroy___0(self);
+};
+// render_mesh_command
+/** @suppress {undefinedVars, duplicate} */function render_mesh_command() { throw "cannot construct a render_mesh_command, no constructor in IDL" }
+render_mesh_command.prototype = Object.create(WrapperObject.prototype);
+render_mesh_command.prototype.constructor = render_mesh_command;
+render_mesh_command.prototype.__class__ = render_mesh_command;
+render_mesh_command.__cache__ = {};
+Module['render_mesh_command'] = render_mesh_command;
+
+  render_mesh_command.prototype['get_key'] = render_mesh_command.prototype.get_key = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_render_mesh_command_get_key_0(self);
+};
+    render_mesh_command.prototype['set_key'] = render_mesh_command.prototype.set_key = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_render_mesh_command_set_key_1(self, arg0);
+};
+    Object.defineProperty(render_mesh_command.prototype, 'key', { get: render_mesh_command.prototype.get_key, set: render_mesh_command.prototype.set_key }) 
+  render_mesh_command.prototype['__destroy__'] = render_mesh_command.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  _emscripten_bind_render_mesh_command___destroy___0(self);
 };
 // asset_list
 /** @suppress {undefinedVars, duplicate} */function asset_list() { throw "cannot construct a asset_list, no constructor in IDL" }
@@ -616,9 +544,7 @@ Module['int_mesh_attribute'] = int_mesh_attribute;
 
     // render_command_type
 
-    Module['RENDER_COMMAND_RECTANGLE'] = _emscripten_enum_render_command_type_RENDER_COMMAND_RECTANGLE();
-
-    Module['RENDER_COMMAND_HORIZONTAL_LINE'] = _emscripten_enum_render_command_type_RENDER_COMMAND_HORIZONTAL_LINE();
+    Module['RENDER_COMMAND_MESH'] = _emscripten_enum_render_command_type_RENDER_COMMAND_MESH();
 
   }
   if (Module['calledRun']) setupEnums();

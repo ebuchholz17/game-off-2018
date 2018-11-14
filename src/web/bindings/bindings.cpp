@@ -12,52 +12,6 @@ void array_bounds_check(const int array_size, const int array_idx) {
   }
 }
 
-// render_rectangle_command
-
-unsigned int EMSCRIPTEN_KEEPALIVE emscripten_bind_render_rectangle_command_get_x_0(render_rectangle_command* self) {
-  return self->x;
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_rectangle_command_set_x_1(render_rectangle_command* self, unsigned int arg0) {
-  self->x = arg0;
-}
-
-unsigned int EMSCRIPTEN_KEEPALIVE emscripten_bind_render_rectangle_command_get_y_0(render_rectangle_command* self) {
-  return self->y;
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_rectangle_command_set_y_1(render_rectangle_command* self, unsigned int arg0) {
-  self->y = arg0;
-}
-
-unsigned int EMSCRIPTEN_KEEPALIVE emscripten_bind_render_rectangle_command_get_width_0(render_rectangle_command* self) {
-  return self->width;
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_rectangle_command_set_width_1(render_rectangle_command* self, unsigned int arg0) {
-  self->width = arg0;
-}
-
-unsigned int EMSCRIPTEN_KEEPALIVE emscripten_bind_render_rectangle_command_get_height_0(render_rectangle_command* self) {
-  return self->height;
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_rectangle_command_set_height_1(render_rectangle_command* self, unsigned int arg0) {
-  self->height = arg0;
-}
-
-unsigned int EMSCRIPTEN_KEEPALIVE emscripten_bind_render_rectangle_command_get_color_0(render_rectangle_command* self) {
-  return self->color;
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_rectangle_command_set_color_1(render_rectangle_command* self, unsigned int arg0) {
-  self->color = arg0;
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_rectangle_command___destroy___0(render_rectangle_command* self) {
-  delete self;
-}
-
 // loaded_mesh_asset
 
 int EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_mesh_asset_get_key_0(loaded_mesh_asset* self) {
@@ -170,28 +124,6 @@ void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_header___destroy___0(re
   delete self;
 }
 
-// render_horizontal_line_command
-
-unsigned int EMSCRIPTEN_KEEPALIVE emscripten_bind_render_horizontal_line_command_get_color_0(render_horizontal_line_command* self) {
-  return self->color;
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_horizontal_line_command_set_color_1(render_horizontal_line_command* self, unsigned int arg0) {
-  self->color = arg0;
-}
-
-char EMSCRIPTEN_KEEPALIVE emscripten_bind_render_horizontal_line_command_get_lineNum_0(render_horizontal_line_command* self) {
-  return self->lineNum;
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_horizontal_line_command_set_lineNum_1(render_horizontal_line_command* self, char arg0) {
-  self->lineNum = arg0;
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_horizontal_line_command___destroy___0(render_horizontal_line_command* self) {
-  delete self;
-}
-
 // float_mesh_attribute
 
 void* EMSCRIPTEN_KEEPALIVE emscripten_bind_float_mesh_attribute_get_values_0(float_mesh_attribute* self) {
@@ -225,6 +157,20 @@ void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_list_set_memory_1(rende
 }
 
 void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_list___destroy___0(render_command_list* self) {
+  delete self;
+}
+
+// render_mesh_command
+
+int EMSCRIPTEN_KEEPALIVE emscripten_bind_render_mesh_command_get_key_0(render_mesh_command* self) {
+  return self->key;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_mesh_command_set_key_1(render_mesh_command* self, int arg0) {
+  self->key = arg0;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_mesh_command___destroy___0(render_mesh_command* self) {
   delete self;
 }
 
@@ -322,11 +268,8 @@ asset_type EMSCRIPTEN_KEEPALIVE emscripten_enum_asset_type_ASSET_TYPE_OBJ() {
 }
 
 // render_command_type
-render_command_type EMSCRIPTEN_KEEPALIVE emscripten_enum_render_command_type_RENDER_COMMAND_RECTANGLE() {
-  return RENDER_COMMAND_RECTANGLE;
-}
-render_command_type EMSCRIPTEN_KEEPALIVE emscripten_enum_render_command_type_RENDER_COMMAND_HORIZONTAL_LINE() {
-  return RENDER_COMMAND_HORIZONTAL_LINE;
+render_command_type EMSCRIPTEN_KEEPALIVE emscripten_enum_render_command_type_RENDER_COMMAND_MESH() {
+  return RENDER_COMMAND_MESH;
 }
 
 }

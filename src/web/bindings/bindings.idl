@@ -1,3 +1,9 @@
+interface memory_arena {
+    attribute VoidPtr base;
+    attribute unsigned long size;
+    attribute unsigned long capacity;
+};
+
 enum asset_type {
     "ASSET_TYPE_OBJ"
 };
@@ -32,32 +38,16 @@ interface loaded_mesh_asset {
     [Value] attribute int_mesh_attribute indices;
 };
 
-interface memory_arena {
-    attribute VoidPtr base;
-    attribute unsigned long size;
-    attribute unsigned long capacity;
-};
-
 enum render_command_type {
-    "RENDER_COMMAND_RECTANGLE",
-    "RENDER_COMMAND_HORIZONTAL_LINE"
+    "RENDER_COMMAND_MESH"
 };
 
 interface render_command_header{
     attribute render_command_type type;
 };
 
-interface render_rectangle_command {
-    attribute unsigned long x;
-    attribute unsigned long y;
-    attribute unsigned long width;
-    attribute unsigned long height;
-    attribute unsigned long color;
-};
-
-interface render_horizontal_line_command {
-    attribute unsigned long color;
-    attribute byte lineNum; // only first 256 lines
+interface render_mesh_command {
+    attribute long key;
 };
 
 interface render_command_list {

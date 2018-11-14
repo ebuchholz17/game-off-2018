@@ -4,7 +4,8 @@
 #include "run_around_platform.h"
 
 enum mesh_key {
-    MESH_KEY_SPHERE
+    MESH_KEY_SPHERE,
+    MESH_KEY_TREE
 };
 
 struct mesh_asset {

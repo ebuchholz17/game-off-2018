@@ -8,8 +8,8 @@
 
 static bool programRunning = false;
 
-static int gameWidth = 1280;
-static int gameHeight = 720;
+static int gameWidth = 960;
+static int gameHeight = 540;
 static float targetMSPerFrame = 1000.0f / 60.0f;
 
 void DEBUGPrintString (char *string) {
@@ -44,15 +44,24 @@ int WINAPI WinMain (HINSTANCE instance, HINSTANCE prevInstance, LPSTR commandLin
 
     if (RegisterClassA(&windowClass)) {
 
+        RECT targetWindowSize;
+        targetWindowSize.left = 0;
+        targetWindowSize.top = 0;
+        targetWindowSize.right = gameWidth;
+        targetWindowSize.bottom = gameHeight;
+
+        DWORD windowStyle = WS_OVERLAPPEDWINDOW | WS_VISIBLE; 
+        AdjustWindowRectEx(&targetWindowSize, windowStyle, false, 0);
+
         HWND window = CreateWindowExA(
             0, //WS_EX_TOPMOST,
             windowClass.lpszClassName, 
             "Run Around Game", 
-            WS_OVERLAPPEDWINDOW | WS_VISIBLE, 
+            windowStyle,
             CW_USEDEFAULT, 
             CW_USEDEFAULT, 
-            gameWidth, 
-            gameHeight, 
+            targetWindowSize.right - targetWindowSize.left, 
+            targetWindowSize.bottom - targetWindowSize.top, 
             0, 
             0,
             instance, 
@@ -113,7 +122,9 @@ int WINAPI WinMain (HINSTANCE instance, HINSTANCE prevInstance, LPSTR commandLin
                         fclose(objFile);
 
                         parseGameAsset(fileData, ASSET_TYPE_OBJ, assetToLoad->key, &gameMemory, &workingAssetMemory);
-                        loadRendererMesh((loaded_mesh_asset *)workingAssetMemory.base);
+                        free(fileData);
+
+                        loadRendererMesh(&rendererMemory, (loaded_mesh_asset *)workingAssetMemory.base);
                     } break;
                 }
             }
@@ -144,38 +155,7 @@ int WINAPI WinMain (HINSTANCE instance, HINSTANCE prevInstance, LPSTR commandLin
                 }
 
                 renderCommands.memory.size = 0;
-
                 updateGame(&renderCommands);
-
-                unsigned int renderCommandOffset = 0;
-                while (renderCommandOffset < renderCommands.memory.size) {
-                    render_command_header *header = 
-                        (render_command_header *)((char *)renderCommands.memory.base + 
-                                                 renderCommandOffset);
-                    renderCommandOffset += sizeof(render_command_header);
-                    switch(header->type) {
-                        default:
-                            // error
-                            break;
-                        case RENDER_COMMAND_RECTANGLE: 
-                        {
-                            render_rectangle_command *rectCommand = 
-                                (render_rectangle_command *)((char *)renderCommands.memory.base + 
-                                                            renderCommandOffset);
-                            //drawRectangle(rectCommand);
-                            renderCommandOffset += sizeof(render_rectangle_command);
-                        } break;
-                        case RENDER_COMMAND_HORIZONTAL_LINE: 
-                        {
-                            render_horizontal_line_command *lineCommand = 
-                                (render_horizontal_line_command *)((char *)renderCommands.memory.base + 
-                                                                   renderCommandOffset);
-                            //drawLine(lineCommand);
-                            renderCommandOffset += sizeof(render_horizontal_line_command);
-                        } break;
-                    }
-                }
-
                 renderFrame(&rendererMemory, &renderCommands);
 
                 // Sleep for any leftover time

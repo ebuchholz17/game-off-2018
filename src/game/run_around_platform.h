@@ -48,27 +48,16 @@ struct loaded_mesh_asset {
 };
 
 enum render_command_type {
-    RENDER_COMMAND_RECTANGLE,
-    RENDER_COMMAND_HORIZONTAL_LINE
+    RENDER_COMMAND_MESH
 };
 
 struct render_command_header{
     render_command_type type;
 };
 
-struct render_rectangle_command {
-    unsigned int x;
-    unsigned int y;
-    unsigned int width;
-    unsigned int height;
-    unsigned int color;
+struct render_mesh_command {
+    int key;
 };
-
-struct render_horizontal_line_command {
-    unsigned int color;
-    char lineNum; // only first 256 lines
-};
-
 
 struct render_command_list {
     memory_arena memory;

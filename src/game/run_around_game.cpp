@@ -121,6 +121,7 @@ static void parseOBJ (void *objData, game_assets *assets, int key, memory_arena 
     assets->numMeshes++;
 
     loaded_mesh_asset *loadedMesh = (loaded_mesh_asset *)allocateMemorySize(workingMemory, sizeof(loaded_mesh_asset));
+    loadedMesh->key = key;
 
     char *start, *end;
     start = (char *)objData;
@@ -299,9 +300,9 @@ static void parseOBJ (void *objData, game_assets *assets, int key, memory_arena 
         }
     }
     //for (int i = 0; i < (int)numTriangles; ++i) {
-    //    int temp = loadedMesh->indices.values[i*3+1];
-    //    loadedMesh->indices.values[i*3+1] = loadedMesh->indices.values[i*3+2];
-    //    loadedMesh->indices.values[i*3+2] = temp;
+    //    int temp = ((int *)loadedMesh->indices.values)[i*3+1];
+    //    ((int *)loadedMesh->indices.values)[i*3+1] = ((int *)loadedMesh->indices.values)[i*3+2];
+    //    ((int *)loadedMesh->indices.values)[i*3+2] = temp;
     //}
 
     float t = stringToFloat("234234.343");
@@ -320,6 +321,7 @@ static void pushAsset (asset_list *assetList, char *path, asset_type type, int k
 // TODO(ebuchholz): Maybe pack everything into a single file and load that?
 extern "C" void getGameAssetList (asset_list *assetList) {
     pushAsset(assetList, "assets/meshes/geosphere.obj", ASSET_TYPE_OBJ, MESH_KEY_SPHERE);
+    pushAsset(assetList, "assets/meshes/simplebunny.obj", ASSET_TYPE_OBJ, MESH_KEY_TREE);
 }
 
 extern "C" void parseGameAsset (void *assetData, asset_type type, int key,
@@ -357,27 +359,14 @@ extern "C" void parseGameAsset (void *assetData, asset_type type, int key,
 }
 
 extern "C" void updateGame (render_command_list *renderCommands) { 
-    static int counter = 0;
-    counter++;
-    for (int i = 0; i < 10; ++i) {
-        if (i % 2 == 0) {
-            render_rectangle_command *rectangleCommand = 
-                (render_rectangle_command *)pushRenderCommand(renderCommands, 
-                                                              RENDER_COMMAND_RECTANGLE, 
-                                                              sizeof(render_rectangle_command));
-            rectangleCommand->x = i * 100 + counter;
-            rectangleCommand->y = i * 100 + counter;
-            rectangleCommand->width = 100;
-            rectangleCommand->height = 100;
-            rectangleCommand->color = 0xffffff00;
-        }
-        else {
-            render_horizontal_line_command *lineCommand = 
-                (render_horizontal_line_command *)pushRenderCommand(renderCommands, 
-                                                          RENDER_COMMAND_HORIZONTAL_LINE, 
-                                                          sizeof(render_horizontal_line_command));
-            lineCommand->lineNum = (char)((i+counter) * 2);
-            lineCommand->color = 0xff00ffff;
-        }
-    }
+    render_mesh_command *meshCommand = 
+        (render_mesh_command *)pushRenderCommand(renderCommands,
+                                                 RENDER_COMMAND_MESH,
+                                                 sizeof(render_mesh_command));
+    meshCommand->key = MESH_KEY_SPHERE;
+
+    meshCommand = (render_mesh_command *)pushRenderCommand(renderCommands,
+                                                           RENDER_COMMAND_MESH,
+                                                           sizeof(render_mesh_command));
+    meshCommand->key = MESH_KEY_TREE;
 }

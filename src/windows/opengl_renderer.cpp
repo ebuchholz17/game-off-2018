@@ -3,11 +3,6 @@
 #include "opengl_renderer.h"
 #include "glsl_shaders.h"
 
-// TODO(ebuchholz): figure out how to pack this thing up
-static GLuint positionBuffer;
-//static GLuint colorBuffer;
-static GLuint indexBuffer;
-
 static int loadWGLExtensions (HDC deviceContext) {
     wglGetExtensionsStringARB = (wgl_get_extensions_string_arb *)wglGetProcAddress("wglGetExtensionsStringARB");
     // TODO(ebuchholz): Check for error
@@ -96,15 +91,30 @@ static void loadShader(GLuint *shaderHandle, int shaderType, char *shaderSource,
     }
 }
 
-void loadRendererMesh (loaded_mesh_asset *loadedMesh) {
-    // QQQ actually store the mesh key+buffers
-    glGenBuffers(1, &positionBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
+void loadRendererMesh (renderer_memory *memory, loaded_mesh_asset *loadedMesh) {
+    openGL_renderer *renderer = (openGL_renderer *)memory->memory;
+    assert(renderer->numMeshes < MAX_OPENGL_MESHES);
+    // TODO(ebuchholz): triple check that the keys will line up this way
+    openGL_mesh *mesh = &renderer->meshes[loadedMesh->key];
+    renderer->numMeshes++;
+
+    glGenBuffers(1, &mesh->positionBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, mesh->positionBuffer);
     glBufferData(GL_ARRAY_BUFFER, loadedMesh->positions.count * sizeof(float), loadedMesh->positions.values, GL_STATIC_DRAW);
 
-    glGenBuffers(1, &indexBuffer);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+    glGenBuffers(1, &mesh->texCoordBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, mesh->texCoordBuffer);
+    glBufferData(GL_ARRAY_BUFFER, loadedMesh->texCoords.count * sizeof(float), loadedMesh->texCoords.values, GL_STATIC_DRAW);
+
+    glGenBuffers(1, &mesh->normalBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, mesh->normalBuffer);
+    glBufferData(GL_ARRAY_BUFFER, loadedMesh->normals.count * sizeof(float), loadedMesh->normals.values, GL_STATIC_DRAW);
+
+    glGenBuffers(1, &mesh->indexBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->indexBuffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, loadedMesh->indices.count * sizeof(int), loadedMesh->indices.values, GL_STATIC_DRAW);
+
+    mesh->numIndices = loadedMesh->indices.count;
 }
 
 static void createShaderProgram(openGL_renderer *renderer, shader_type type,
@@ -186,68 +196,64 @@ int initOpenGL (HWND window, renderer_memory *memory) {
 
     createShaderProgram(renderer, SHADER_TYPE_DEFAULT,
                         defaultVertexShaderSource, defaultFragmentShaderSource, memory);
-
-    // TODO(ebuchholz): Load buffers as part of startup asset loading process
-    //float positions[6] = {};
-    //positions[0] = 0.0f;
-    //positions[1] = 0.33f;
-    //positions[2] = -0.5f;
-    //positions[3] = -0.33f;
-    //positions[4] = 0.5f;
-    //positions[5] = -0.33f;
-    //glGenBuffers(1, &positionBuffer);
-    //glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
-    //glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW);
-
-    //float colors[9] = {};
-    //colors[0] = 1.0f;
-    //colors[1] = 0.0f;
-    //colors[2] = 0.0f;
-    //colors[3] = 0.0f;
-    //colors[4] = 1.0f;
-    //colors[5] = 0.0f;
-    //colors[6] = 0.0f;
-    //colors[7] = 0.0f;
-    //colors[8] = 1.0f;
-    //glGenBuffers(1, &colorBuffer);
-    //glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
-    //glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
-
-    //unsigned int indices[3] = {};
-    //indices[0] = 0;
-    //indices[1] = 1;
-    //indices[2] = 2;
-    //glGenBuffers(1, &indexBuffer);
-    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
     return 0;
+}
+
+void drawMesh (openGL_renderer *renderer, GLuint program, render_mesh_command *meshCommand) {
+    openGL_mesh *mesh = &renderer->meshes[meshCommand->key];
+
+    glBindBuffer(GL_ARRAY_BUFFER, mesh->positionBuffer);
+    GLint positionLocation = glGetAttribLocation(program, "position");
+    glEnableVertexAttribArray(positionLocation);
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, FALSE, 0, 0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, mesh->texCoordBuffer);
+    GLint texCoordLocation = glGetAttribLocation(program, "texCoord");
+    glEnableVertexAttribArray(texCoordLocation);
+    glVertexAttribPointer(texCoordLocation, 2, GL_FLOAT, FALSE, 0, 0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, mesh->normalBuffer);
+    GLint normalLocation = glGetAttribLocation(program, "normal");
+    glEnableVertexAttribArray(normalLocation);
+    glVertexAttribPointer(normalLocation, 3, GL_FLOAT, FALSE, 0, 0);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->indexBuffer);
+
+    glDrawElements(GL_TRIANGLES, mesh->numIndices, GL_UNSIGNED_INT, 0);
 }
 
 void renderFrame (renderer_memory *memory, render_command_list *renderCommands) {
     openGL_renderer *renderer = (openGL_renderer *)memory->memory;
 
-    glViewport(0, 0, 1280, 720);
-    //glEnable(GL_DEPTH_TEST);
-    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glViewport(0, 0, 960, 540);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     GLuint program = renderer->shaders[SHADER_TYPE_DEFAULT].program;
     glUseProgram(program);
 
-    glBindBuffer(GL_ARRAY_BUFFER, positionBuffer);
-    GLint positionLocation = glGetAttribLocation(program, "position");
-    glEnableVertexAttribArray(positionLocation);
-    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, FALSE, 0, 0);
-
-    //glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
-    //GLint colorLocation = glGetAttribLocation(program, "color");
-    //glEnableVertexAttribArray(colorLocation);
-    //glVertexAttribPointer(colorLocation, 3, GL_FLOAT, FALSE, 0, 0);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-
-    glDrawElements(GL_TRIANGLES, 540, GL_UNSIGNED_INT, 0);
+    unsigned int renderCommandOffset = 0;
+    while (renderCommandOffset < renderCommands->memory.size) {
+        render_command_header *header = 
+            (render_command_header *)((char *)renderCommands->memory.base + 
+                                     renderCommandOffset);
+        renderCommandOffset += sizeof(render_command_header);
+        switch(header->type) {
+            default:
+                // error
+                break;
+            case RENDER_COMMAND_MESH: 
+            {
+                render_mesh_command *meshCommand = 
+                    (render_mesh_command *)((char *)renderCommands->memory.base + 
+                                                renderCommandOffset);
+                drawMesh(renderer, program, meshCommand);
+                renderCommandOffset += sizeof(render_mesh_command);
+            } break;
+        }
+    }
 
     SwapBuffers(renderer->deviceContext);
 }

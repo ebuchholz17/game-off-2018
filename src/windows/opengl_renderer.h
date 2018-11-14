@@ -183,10 +183,25 @@ struct shader_program {
     GLuint program;
 };
 
+struct openGL_mesh {
+    int key;
+    GLuint positionBuffer;
+    GLuint texCoordBuffer;
+    GLuint normalBuffer;
+    GLuint indexBuffer;
+    int numIndices;
+};
+
+#define MAX_OPENGL_MESHES 100
+
 struct openGL_renderer {
     HGLRC context;
     HDC deviceContext;
+
     shader_program shaders[1];
+
+    int numMeshes;
+    openGL_mesh meshes[MAX_OPENGL_MESHES];
 };
 
 #endif

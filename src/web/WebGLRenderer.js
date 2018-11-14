@@ -5,9 +5,14 @@ var defaultFragmentShaderSource = require("./shaders/defaultFragmentShader.glsl"
 
 var gl = null;
 
-var positionBuffer;
-var colorBuffer;
-var indexBuffer;
+var WebGLMesh = function () {
+    this.key = -1;
+    this.positionBuffer = -1;
+    this.texCoordBuffer = -1;
+    this.normalBuffer= -1;
+    this.indexBuffer= -1;
+    this.numIndices = -1;
+};
 
 var ShaderProgram = function () {
     this.type = -1;
@@ -22,6 +27,7 @@ var ShaderTypes = {
 
 var WebGLRenderer = function () {
     this.shaders = [];
+    this.meshes = [];
 };
 
 WebGLRenderer.prototype = {
@@ -31,40 +37,6 @@ WebGLRenderer.prototype = {
         gl = canvas.getContext("webgl");
         var success = gl.getExtension("OES_element_index_uint"); // TODO(ebuchholz): check
         this.compileAndLinkShader(defaultVertexShaderSource, defaultFragmentShaderSource, ShaderTypes.DEFAULT);
-
-        // TODO(ebuchholz): make part of asset loading process
-        var positions = [];
-        positions[0] = 0.0;
-        positions[1] = 0.33;
-        positions[2] = -0.5;
-        positions[3] = -0.33;
-        positions[4] = 0.5;
-        positions[5] = -0.33;
-        positionBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
-
-        var colors = [];
-        colors[0] = 1.0;
-        colors[1] = 0.0;
-        colors[2] = 0.0;
-        colors[3] = 0.0;
-        colors[4] = 1.0;
-        colors[5] = 0.0;
-        colors[6] = 0.0;
-        colors[7] = 0.0;
-        colors[8] = 1.0;
-        colorBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
-
-        var indices = [];
-        indices[0] = 0;
-        indices[1] = 1;
-        indices[2] = 2;
-        indexBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
     },
 
     compileAndLinkShader: function (vertexShaderText, fragmentShaderText, type) {
@@ -102,44 +74,93 @@ WebGLRenderer.prototype = {
     },
 
     loadMesh: function (game, loadedMesh) {
-        positionBuffer = gl.createBuffer();
+        var mesh = new WebGLMesh();
+        mesh.key = loadedMesh.key;
+        this.meshes[mesh.key] = mesh;
+
+        mesh.positionBuffer = gl.createBuffer();
         var floatBuffer = new Float32Array(game.buffer,
                                            loadedMesh.positions.values.ptr, 
                                            loadedMesh.positions.count);
-        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+        gl.bindBuffer(gl.ARRAY_BUFFER, mesh.positionBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, floatBuffer, gl.STATIC_DRAW);
 
-        indexBuffer = gl.createBuffer();
+        mesh.texCoordBuffer = gl.createBuffer();
+        floatBuffer = new Float32Array(game.buffer,
+                                       loadedMesh.texCoords.values.ptr, 
+                                       loadedMesh.texCoords.count);
+        gl.bindBuffer(gl.ARRAY_BUFFER, mesh.texCoordBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, floatBuffer, gl.STATIC_DRAW);
+
+        mesh.normalBuffer = gl.createBuffer();
+        floatBuffer = new Float32Array(game.buffer,
+                                       loadedMesh.normals.values.ptr, 
+                                       loadedMesh.normals.count);
+        gl.bindBuffer(gl.ARRAY_BUFFER, mesh.normalBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, floatBuffer, gl.STATIC_DRAW);
+
+        mesh.indexBuffer = gl.createBuffer();
         var uintBuffer = new Uint32Array(game.buffer,
                                          loadedMesh.indices.values.ptr, 
                                          loadedMesh.indices.count);
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, mesh.indexBuffer);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, uintBuffer, gl.STATIC_DRAW);
+
+        mesh.numIndices = loadedMesh.indices.count;
     },
 
-    renderFrame: function () {
-        gl.enable(gl.CULL_FACE);
-        gl.enable(gl.DEPTH_TEST);
+    drawMesh: function (meshCommand, program) {
+        var mesh = this.meshes[meshCommand.key];
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, mesh.positionBuffer);
+        var positionLocation = gl.getAttribLocation(program, "position");
+        gl.enableVertexAttribArray(positionLocation);
+        gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, mesh.texCoordBuffer);
+        var texCoordLocation = gl.getAttribLocation(program, "texCoord");
+        gl.enableVertexAttribArray(texCoordLocation);
+        gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, mesh.normalBuffer);
+        var normalLocation = gl.getAttribLocation(program, "normal");
+        gl.enableVertexAttribArray(normalLocation);
+        gl.vertexAttribPointer(normalLocation, 3, gl.FLOAT, false, 0, 0);
+
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, mesh.indexBuffer);
+
+        gl.drawElements(gl.TRIANGLES, mesh.numIndices, gl.UNSIGNED_INT, 0);
+    },
+
+    renderFrame: function (game, renderCommands) {
         gl.viewport(0, 0, this.canvas.width, this.canvas.height);
+        gl.enable(gl.DEPTH_TEST);
+        gl.enable(gl.CULL_FACE);
         gl.clearColor(0.0, 0.0, 0.0, 1.0);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
         var program = this.shaders[ShaderTypes.DEFAULT].program;
         gl.useProgram(program);
 
-        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-        var positionLocation = gl.getAttribLocation(program, "position");
-        gl.enableVertexAttribArray(positionLocation);
-        gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
-
-        //gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-        //var colorLocation = gl.getAttribLocation(program, "color");
-        //gl.enableVertexAttribArray(colorLocation);
-        //gl.vertexAttribPointer(colorLocation, 3, gl.FLOAT, false, 0, 0);
-
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
-
-        gl.drawElements(gl.TRIANGLES, 540, gl.UNSIGNED_INT, 0);
+        var renderCommandOffset = 0;
+        var renderCommandMemorySize = renderCommands.memory.size;
+        var renderMemoryPointer = game.getPointer(renderCommands.memory.base);
+        while (renderCommandOffset < renderCommandMemorySize) {
+            var header = game.wrapPointer(renderMemoryPointer + renderCommandOffset, 
+                                               game.render_command_header);
+            renderCommandOffset += game.sizeof_render_command_header();
+            switch (header.type) {
+                default:
+                    break;
+                case game.RENDER_COMMAND_MESH:
+                {
+                    var meshCommand = game.wrapPointer(renderMemoryPointer + renderCommandOffset, 
+                                                            game.render_mesh_command);
+                    renderCommandOffset += game.sizeof_render_mesh_command();
+                    this.drawMesh(meshCommand, program);
+                } break;
+            }
+        }
     }
 
 };
