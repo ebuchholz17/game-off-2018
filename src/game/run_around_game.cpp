@@ -367,6 +367,12 @@ void debugCameraMovement (vector3 *debugCameraPos, quaternion *debugCameraRotati
 {
     const float CAMERA_SPEED = 3.0f;
     const float CAMERA_TURN_SPEED = 1.0f;
+
+    // TODO(ebuchholz): put either in input or game stat
+    static int lastPointerX = 0;
+    static int lastPointerY = 0;
+
+    // Position
     vector3 moveVector = {};
     if (input->forwardButton) {
         moveVector.z -= CAMERA_SPEED * DELTA_TIME;
@@ -386,6 +392,8 @@ void debugCameraMovement (vector3 *debugCameraPos, quaternion *debugCameraRotati
     if (input->downButton) {
         debugCameraPos->y -= CAMERA_SPEED * DELTA_TIME;
     }
+
+    // Rotation
     if (input->turnUpButton) {
         *debugCameraRotation = (*debugCameraRotation) * quaternionFromAxisAngle(Vector3(1, 0, 0), +CAMERA_TURN_SPEED * DELTA_TIME);
     }
@@ -398,6 +406,24 @@ void debugCameraMovement (vector3 *debugCameraPos, quaternion *debugCameraRotati
     if (input->turnRightButton) {
         *debugCameraRotation = quaternionFromAxisAngle(Vector3(0, 1, 0), -CAMERA_TURN_SPEED * DELTA_TIME) * (*debugCameraRotation);
     }
+    if (input->pointerJustDown) {
+        lastPointerX = input->pointerX;
+        lastPointerY = input->pointerY;
+    }
+    if (input->pointerDown) {
+        int pointerDX = input->pointerX - lastPointerX;
+        int pointerDY = input->pointerY - lastPointerY;
+
+        float yaw = (float)pointerDX * 0.25f;
+        float pitch = (float)pointerDY * 0.25f;
+
+        *debugCameraRotation = quaternionFromAxisAngle(Vector3(0, 1, 0), -yaw * DELTA_TIME) * (*debugCameraRotation);
+        *debugCameraRotation = (*debugCameraRotation) * quaternionFromAxisAngle(Vector3(1, 0, 0), -pitch * DELTA_TIME);
+
+        lastPointerX = input->pointerX;
+        lastPointerY = input->pointerY;
+    }
+    // Move in the direction of the current rotation
     moveVector = rotateVectorByQuaternion(moveVector, *debugCameraRotation);
     *debugCameraPos += moveVector;
 }
@@ -407,6 +433,7 @@ extern "C" void updateGame (game_input *input, game_memory *gameMemory, render_c
     if (!gameState->gameInitialized) {
         gameState->gameInitialized = true;
         gameState->debugCameraPos = {};
+        gameState->debugCameraPos.z = 3.0f;
         gameState->debugCameraRotation = quaternionFromAxisAngle(Vector3(1.0f, 0.0f, 0.0f), 0.0f);
     }
 

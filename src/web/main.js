@@ -1,3 +1,7 @@
+"use strict";
+
+var MobileDetect = require("mobile-detect");
+
 var Game = require("./wasm/game.js");
 var WebGLRenderer = require("./WebGLRenderer");
 
@@ -28,11 +32,15 @@ WebPlatform.prototype = {
 
     run: function () {
         this.viewport = document.getElementById("run-around-game");
+        this.viewport.style["touch-action"] = "none";
+        this.viewport.style["overflow"] = "hidden";
         this.canvas = document.createElement("canvas");
         this.viewport.insertAdjacentElement("beforeend", this.canvas);
 
         this.canvas.width = 960;
         this.canvas.height = 540;
+        this.canvas.style["touch-action"] = "none";
+        this.canvas.style["overflow"] = "hidden";
 
         window.addEventListener("resize", this.resize.bind(this));
         this.updateCallback = this.update.bind(this);
@@ -135,10 +143,24 @@ WebPlatform.prototype = {
         this.renderCommands.get_memory().set_size(0);
         this.renderCommands.get_memory().set_capacity(renderCommandMemory);
 
+        // input
         this.input = new Input();
+        this.gameInput = this.game.wrapPointer(this.game._malloc(this.game.sizeof_game_input()), this.game.game_input);
+
         document.addEventListener("keydown", this.onKeyDown.bind(this), false);
         document.addEventListener("keyup", this.onKeyUp.bind(this), false);
-        this.gameInput = this.game.wrapPointer(this.game._malloc(this.game.sizeof_game_input()), this.game.game_input);
+
+        var mobileDetect = new MobileDetect(window.navigator.userAgent);
+        if (mobileDetect.mobile() || mobileDetect.tablet()) {
+            document.addEventListener("touchstart", this.onTouchStart.bind(this), false);
+            document.addEventListener("touchmove", this.onTouchMove.bind(this), false);
+            document.addEventListener("touchend", this.onTouchEnd.bind(this), false);
+        }
+        else {
+            document.addEventListener("mousedown", this.onMouseDown.bind(this));
+            document.addEventListener("mouseup", this.onMouseUp.bind(this));
+            document.addEventListener("mousemove", this.onMouseMove.bind(this));
+        }
 
         this.resize();
         this.update();
@@ -150,12 +172,17 @@ WebPlatform.prototype = {
         this.gameInput.backButton = this.input.keyDown["s"];
         this.gameInput.leftButton = this.input.keyDown["a"];
         this.gameInput.rightButton = this.input.keyDown["d"];
-        //this.gameInput.upButton = this.input.keyDown[" "];
-        //this.gameInput.downButton = this.input.keyDown["w"];
-        //this.gameInput.turnUpButton = this.input.keyDown["w"];
-        //this.gameInput.turnDownButton = this.input.keyDown["w"];
-        //this.gameInput.turnLeftButton = this.input.keyDown["w"];
-        //this.gameInput.turnRightButton = this.input.keyDown["w"];
+        this.gameInput.upButton = this.input.keyDown[" "];
+        this.gameInput.downButton = this.input.keyDown["shift"];
+        this.gameInput.turnUpButton = this.input.keyDown["arrowup"];
+        this.gameInput.turnDownButton = this.input.keyDown["arrowdown"];
+        this.gameInput.turnLeftButton = this.input.keyDown["arrowleft"];
+        this.gameInput.turnRightButton = this.input.keyDown["arrowright"];
+
+        this.gameInput.pointerDown = this.input.pointerDown;
+        this.gameInput.pointerJustDown = this.input.pointerJustDown;
+        this.gameInput.pointerX = this.input.pointerX;
+        this.gameInput.pointerY = this.input.pointerY;
 
         this.renderCommands.get_memory().set_size(0);
         this.game.ccall("updateGame", 
@@ -169,6 +196,13 @@ WebPlatform.prototype = {
         );
         
         this.renderer.renderFrame(this.game, this.renderCommands);
+
+        for (var key in this.input.keyJustPressed) {
+            if (this.input.hasOwnProperty(key)) {
+                this.input.keyJustPressed[key] = false;
+            }
+        }
+        this.input.pointerJustDown = false;
 
         window.requestAnimationFrame(this.updateCallback);
     },
@@ -200,6 +234,46 @@ WebPlatform.prototype = {
     onKeyUp :function (key) {
         var keyName = key.key.toLowerCase();
         this.input.keyDown[keyName] = false;
+    },
+
+    onTouchStart: function (e) {
+        if (!this.input.pointerDown) {
+            this.input.pointerJustDown = true;
+        }
+        this.input.pointerDown = true;
+        this.setMouseXY(e.touches[0].clientX, e.touches[0].clientY);
+    },
+
+    onTouchMove: function (e) {
+        this.setMouseXY(e.touches[0].clientX, e.touches[0].clientY);
+    },
+
+    onTouchEnd: function (e) {
+        this.input.pointerDown = false;
+    },
+
+    onMouseDown: function (e) {
+        if (!this.input.pointerDown) {
+            this.input.pointerJustDown = true;
+        }
+        this.input.pointerDown = true;
+    },
+
+    onMouseUp: function (e) {
+        this.input.pointerDown = false;
+    },
+
+    onMouseMove: function (e) {
+        this.setMouseXY(e.clientX, e.clientY);
+    },
+
+    setMouseXY: function (x, y) {
+        let scaleX = this.canvas.width / this.canvas.clientWidth;
+        let scaleY = this.canvas.height / this.canvas.clientHeight;
+        var mouseX = (x - this.canvas.clientLeft) * scaleX;
+        var mouseY = (y - this.canvas.clientTop) * scaleY;
+        this.input.pointerX = mouseX;
+        this.input.pointerY = mouseY;
     }
 
 };
