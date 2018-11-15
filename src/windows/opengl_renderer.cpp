@@ -199,9 +199,16 @@ int initOpenGL (HWND window, renderer_memory *memory) {
     return 0;
 }
 
+void setCamera (openGL_renderer *renderer, render_command_set_camera *setCameraCommand) {
+    renderer->viewMatrix = setCameraCommand->viewMatrix;
+    renderer->projMatrix = setCameraCommand->projMatrix;
+}
+
 void drawMesh (openGL_renderer *renderer, GLuint program, render_mesh_command *meshCommand) {
     openGL_mesh *mesh = &renderer->meshes[meshCommand->key];
 
+    // TODO(ebuchholz): have a way to avoid finding and settings attributes/uniforms for each
+    // time we draw a mesh
     glBindBuffer(GL_ARRAY_BUFFER, mesh->positionBuffer);
     GLint positionLocation = glGetAttribLocation(program, "position");
     glEnableVertexAttribArray(positionLocation);
@@ -219,6 +226,22 @@ void drawMesh (openGL_renderer *renderer, GLuint program, render_mesh_command *m
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->indexBuffer);
 
+    // NOTE(ebuchholz): run_around_math matrices memory-order is
+    // x0 y0 z0 
+    // x1 y1 z1
+    // x2 y2 z2
+    // but OpenGL memory-order is
+    // x0 x1 x2
+    // y0 y1 y2
+    // z0 z1 z2
+    // so glUniformMatrixNfv calls are transposed, and both in the run_around_game code and 
+    // opengl shaders, matrices are multiplied like column major matrices (proj * view * model)
+    GLint viewMatrixLocation = glGetUniformLocation(program, "viewMatrix");
+    glUniformMatrix4fv(viewMatrixLocation, 1, true, renderer->viewMatrix.m);
+
+    GLint projMatrixLocation = glGetUniformLocation(program, "projMatrix");
+    glUniformMatrix4fv(projMatrixLocation, 1, true, renderer->projMatrix.m);
+
     glDrawElements(GL_TRIANGLES, mesh->numIndices, GL_UNSIGNED_INT, 0);
 }
 
@@ -227,7 +250,7 @@ void renderFrame (renderer_memory *memory, render_command_list *renderCommands) 
 
     glViewport(0, 0, 960, 540);
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
+    //glEnable(GL_CULL_FACE);
     glClearColor(0.0, 0.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -248,9 +271,17 @@ void renderFrame (renderer_memory *memory, render_command_list *renderCommands) 
             {
                 render_mesh_command *meshCommand = 
                     (render_mesh_command *)((char *)renderCommands->memory.base + 
-                                                renderCommandOffset);
+                                            renderCommandOffset);
                 drawMesh(renderer, program, meshCommand);
                 renderCommandOffset += sizeof(render_mesh_command);
+            } break;
+            case RENDER_COMMAND_SET_CAMERA: 
+            {
+                render_command_set_camera *setCameraCommand = 
+                    (render_command_set_camera *)((char *)renderCommands->memory.base + 
+                                                  renderCommandOffset);
+                setCamera(renderer, setCameraCommand);
+                renderCommandOffset += sizeof(render_command_set_camera);
             } break;
         }
     }

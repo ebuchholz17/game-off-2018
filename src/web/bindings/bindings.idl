@@ -1,3 +1,46 @@
+interface matrix3x3 {
+    attribute float[] m;
+};
+
+interface matrix4x4 {
+    attribute float[] m;
+};
+
+interface vector3 {
+    attribute float x;
+    attribute float y;
+    attribute float z;
+    attribute float r;
+    attribute float g;
+    attribute float b;
+    attribute float[] c;
+};
+
+
+// TODO(ebuchholz): double check all of this quaternion stuff, it's ported from nfl thrower 
+// typescript code
+interface quaternion {
+    attribute float w;
+    attribute float x;
+    attribute float y;
+    attribute float z;
+};
+
+interface aabb {
+    [Value] attribute vector3 min;
+    [Value] attribute vector3 max;
+};
+
+interface sphere {
+    [Value] attribute vector3 pos;
+    attribute float radius;
+};
+
+interface plane {
+    [Value] attribute vector3 normal;
+     attribute float distance;
+};
+
 interface memory_arena {
     attribute VoidPtr base;
     attribute unsigned long size;
@@ -39,7 +82,8 @@ interface loaded_mesh_asset {
 };
 
 enum render_command_type {
-    "RENDER_COMMAND_MESH"
+    "RENDER_COMMAND_MESH",
+    "RENDER_COMMAND_SET_CAMERA"
 };
 
 interface render_command_header{
@@ -50,8 +94,32 @@ interface render_mesh_command {
     attribute long key;
 };
 
+interface render_command_set_camera {
+    [Value] attribute matrix4x4 viewMatrix;
+    [Value] attribute matrix4x4 projMatrix;
+};
+
 interface render_command_list {
     [Value] attribute memory_arena memory;
+};
+
+interface game_input {
+    attribute boolean forwardButton;
+    attribute boolean backButton;
+    attribute boolean leftButton;
+    attribute boolean rightButton;
+    attribute boolean upButton;
+    attribute boolean downButton;
+
+    attribute boolean turnUpButton;
+    attribute boolean turnDownButton;
+    attribute boolean turnLeftButton;
+    attribute boolean turnRightButton;
+
+    attribute boolean pointerDown;
+    attribute boolean pointerJustDown;
+    attribute long pointerX;
+    attribute long pointerY;
 };
 
 interface game_memory {

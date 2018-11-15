@@ -30,6 +30,63 @@ LRESULT CALLBACK windowCallback (HWND window, unsigned int message, WPARAM wPara
     return result;
 }
 
+static void processWindowsMessages (game_input *input) {
+    MSG message;
+    while (PeekMessage(&message, 0, 0, 0, PM_REMOVE)) {
+        switch (message.message) {
+            case WM_QUIT: 
+            {
+                programRunning = false;
+            } break; 
+            case WM_SYSKEYDOWN:
+            case WM_SYSKEYUP:
+            case WM_KEYDOWN:
+            case WM_KEYUP: 
+            {
+                unsigned int keyCode = (unsigned int)message.wParam;
+                //bool wasDown = (message.lParam & (1 << 30)) != 0;
+                bool keyDown = (message.lParam & (1 << 31)) == 0;
+                // NOTE(ebuchholz): don't care whether the button was just pressed for now
+                if (keyCode == 'W') {
+                    input->forwardButton = keyDown;
+                }
+                else if (keyCode == 'S') {
+                    input->backButton = keyDown;
+                }
+                else if (keyCode == 'A') {
+                    input->leftButton = keyDown;
+                }
+                else if (keyCode == 'D') {
+                    input->rightButton = keyDown;
+                }
+                else if (keyCode == VK_UP) {
+                    input->turnUpButton = keyDown;
+                }
+                else if (keyCode == VK_DOWN) {
+                    input->turnDownButton = keyDown;
+                }
+                else if (keyCode == VK_LEFT) {
+                    input->turnLeftButton = keyDown;
+                }
+                else if (keyCode == VK_RIGHT) {
+                    input->turnRightButton = keyDown;
+                }
+                else if (keyCode == VK_SPACE) {
+                    input->upButton = keyDown;
+                }
+                else if (keyCode == VK_SHIFT) {
+                    input->downButton = keyDown;
+                }
+            } break;
+            default: 
+            {
+                TranslateMessage(&message);
+                DispatchMessageA(&message);
+            } break;
+        }
+    }
+}
+
 int WINAPI WinMain (HINSTANCE instance, HINSTANCE prevInstance, LPSTR commandLine, int showCode) {
     LARGE_INTEGER perfCountFrequencyResult;
     QueryPerformanceFrequency(&perfCountFrequencyResult);
@@ -140,22 +197,14 @@ int WINAPI WinMain (HINSTANCE instance, HINSTANCE prevInstance, LPSTR commandLin
             LARGE_INTEGER lastCounter;
             QueryPerformanceCounter(&lastCounter);
 
+            game_input input ={};
+
             while (programRunning) {
-                MSG message;
-                while (PeekMessage(&message, 0, 0, 0, PM_REMOVE)) {
-                    switch (message.message) {
-                    case WM_QUIT:
-                        programRunning = false;
-                        break;
-                    default:
-                        TranslateMessage(&message);
-                        DispatchMessageA(&message);
-                        break;
-                    }
-                }
+
+                processWindowsMessages(&input);
 
                 renderCommands.memory.size = 0;
-                updateGame(&renderCommands);
+                updateGame(&input, &gameMemory, &renderCommands);
                 renderFrame(&rendererMemory, &renderCommands);
 
                 // Sleep for any leftover time

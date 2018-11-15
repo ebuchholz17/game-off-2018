@@ -230,37 +230,37 @@ Module['loaded_mesh_asset'] = loaded_mesh_asset;
   var self = this.ptr;
   _emscripten_bind_loaded_mesh_asset___destroy___0(self);
 };
-// game_memory
-/** @suppress {undefinedVars, duplicate} */function game_memory() { throw "cannot construct a game_memory, no constructor in IDL" }
-game_memory.prototype = Object.create(WrapperObject.prototype);
-game_memory.prototype.constructor = game_memory;
-game_memory.prototype.__class__ = game_memory;
-game_memory.__cache__ = {};
-Module['game_memory'] = game_memory;
+// float_mesh_attribute
+/** @suppress {undefinedVars, duplicate} */function float_mesh_attribute() { throw "cannot construct a float_mesh_attribute, no constructor in IDL" }
+float_mesh_attribute.prototype = Object.create(WrapperObject.prototype);
+float_mesh_attribute.prototype.constructor = float_mesh_attribute;
+float_mesh_attribute.prototype.__class__ = float_mesh_attribute;
+float_mesh_attribute.__cache__ = {};
+Module['float_mesh_attribute'] = float_mesh_attribute;
 
-  game_memory.prototype['get_memory'] = game_memory.prototype.get_memory = /** @suppress {undefinedVars, duplicate} */function() {
+  float_mesh_attribute.prototype['get_values'] = float_mesh_attribute.prototype.get_values = /** @suppress {undefinedVars, duplicate} */function() {
   var self = this.ptr;
-  return wrapPointer(_emscripten_bind_game_memory_get_memory_0(self), VoidPtr);
+  return wrapPointer(_emscripten_bind_float_mesh_attribute_get_values_0(self), VoidPtr);
 };
-    game_memory.prototype['set_memory'] = game_memory.prototype.set_memory = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+    float_mesh_attribute.prototype['set_values'] = float_mesh_attribute.prototype.set_values = /** @suppress {undefinedVars, duplicate} */function(arg0) {
   var self = this.ptr;
   if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
-  _emscripten_bind_game_memory_set_memory_1(self, arg0);
+  _emscripten_bind_float_mesh_attribute_set_values_1(self, arg0);
 };
-    Object.defineProperty(game_memory.prototype, 'memory', { get: game_memory.prototype.get_memory, set: game_memory.prototype.set_memory }) 
-  game_memory.prototype['get_memoryCapacity'] = game_memory.prototype.get_memoryCapacity = /** @suppress {undefinedVars, duplicate} */function() {
+    Object.defineProperty(float_mesh_attribute.prototype, 'values', { get: float_mesh_attribute.prototype.get_values, set: float_mesh_attribute.prototype.set_values }) 
+  float_mesh_attribute.prototype['get_count'] = float_mesh_attribute.prototype.get_count = /** @suppress {undefinedVars, duplicate} */function() {
   var self = this.ptr;
-  return _emscripten_bind_game_memory_get_memoryCapacity_0(self);
+  return _emscripten_bind_float_mesh_attribute_get_count_0(self);
 };
-    game_memory.prototype['set_memoryCapacity'] = game_memory.prototype.set_memoryCapacity = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+    float_mesh_attribute.prototype['set_count'] = float_mesh_attribute.prototype.set_count = /** @suppress {undefinedVars, duplicate} */function(arg0) {
   var self = this.ptr;
   if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
-  _emscripten_bind_game_memory_set_memoryCapacity_1(self, arg0);
+  _emscripten_bind_float_mesh_attribute_set_count_1(self, arg0);
 };
-    Object.defineProperty(game_memory.prototype, 'memoryCapacity', { get: game_memory.prototype.get_memoryCapacity, set: game_memory.prototype.set_memoryCapacity }) 
-  game_memory.prototype['__destroy__'] = game_memory.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
+    Object.defineProperty(float_mesh_attribute.prototype, 'count', { get: float_mesh_attribute.prototype.get_count, set: float_mesh_attribute.prototype.set_count }) 
+  float_mesh_attribute.prototype['__destroy__'] = float_mesh_attribute.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
   var self = this.ptr;
-  _emscripten_bind_game_memory___destroy___0(self);
+  _emscripten_bind_float_mesh_attribute___destroy___0(self);
 };
 // memory_arena
 /** @suppress {undefinedVars, duplicate} */function memory_arena() { throw "cannot construct a memory_arena, no constructor in IDL" }
@@ -304,6 +304,38 @@ Module['memory_arena'] = memory_arena;
   var self = this.ptr;
   _emscripten_bind_memory_arena___destroy___0(self);
 };
+// render_command_set_camera
+/** @suppress {undefinedVars, duplicate} */function render_command_set_camera() { throw "cannot construct a render_command_set_camera, no constructor in IDL" }
+render_command_set_camera.prototype = Object.create(WrapperObject.prototype);
+render_command_set_camera.prototype.constructor = render_command_set_camera;
+render_command_set_camera.prototype.__class__ = render_command_set_camera;
+render_command_set_camera.__cache__ = {};
+Module['render_command_set_camera'] = render_command_set_camera;
+
+  render_command_set_camera.prototype['get_viewMatrix'] = render_command_set_camera.prototype.get_viewMatrix = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return wrapPointer(_emscripten_bind_render_command_set_camera_get_viewMatrix_0(self), matrix4x4);
+};
+    render_command_set_camera.prototype['set_viewMatrix'] = render_command_set_camera.prototype.set_viewMatrix = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_render_command_set_camera_set_viewMatrix_1(self, arg0);
+};
+    Object.defineProperty(render_command_set_camera.prototype, 'viewMatrix', { get: render_command_set_camera.prototype.get_viewMatrix, set: render_command_set_camera.prototype.set_viewMatrix }) 
+  render_command_set_camera.prototype['get_projMatrix'] = render_command_set_camera.prototype.get_projMatrix = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return wrapPointer(_emscripten_bind_render_command_set_camera_get_projMatrix_0(self), matrix4x4);
+};
+    render_command_set_camera.prototype['set_projMatrix'] = render_command_set_camera.prototype.set_projMatrix = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_render_command_set_camera_set_projMatrix_1(self, arg0);
+};
+    Object.defineProperty(render_command_set_camera.prototype, 'projMatrix', { get: render_command_set_camera.prototype.get_projMatrix, set: render_command_set_camera.prototype.set_projMatrix }) 
+  render_command_set_camera.prototype['__destroy__'] = render_command_set_camera.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  _emscripten_bind_render_command_set_camera___destroy___0(self);
+};
 // render_command_header
 /** @suppress {undefinedVars, duplicate} */function render_command_header() { throw "cannot construct a render_command_header, no constructor in IDL" }
 render_command_header.prototype = Object.create(WrapperObject.prototype);
@@ -326,37 +358,415 @@ Module['render_command_header'] = render_command_header;
   var self = this.ptr;
   _emscripten_bind_render_command_header___destroy___0(self);
 };
-// float_mesh_attribute
-/** @suppress {undefinedVars, duplicate} */function float_mesh_attribute() { throw "cannot construct a float_mesh_attribute, no constructor in IDL" }
-float_mesh_attribute.prototype = Object.create(WrapperObject.prototype);
-float_mesh_attribute.prototype.constructor = float_mesh_attribute;
-float_mesh_attribute.prototype.__class__ = float_mesh_attribute;
-float_mesh_attribute.__cache__ = {};
-Module['float_mesh_attribute'] = float_mesh_attribute;
+// aabb
+/** @suppress {undefinedVars, duplicate} */function aabb() { throw "cannot construct a aabb, no constructor in IDL" }
+aabb.prototype = Object.create(WrapperObject.prototype);
+aabb.prototype.constructor = aabb;
+aabb.prototype.__class__ = aabb;
+aabb.__cache__ = {};
+Module['aabb'] = aabb;
 
-  float_mesh_attribute.prototype['get_values'] = float_mesh_attribute.prototype.get_values = /** @suppress {undefinedVars, duplicate} */function() {
+  aabb.prototype['get_min'] = aabb.prototype.get_min = /** @suppress {undefinedVars, duplicate} */function() {
   var self = this.ptr;
-  return wrapPointer(_emscripten_bind_float_mesh_attribute_get_values_0(self), VoidPtr);
+  return wrapPointer(_emscripten_bind_aabb_get_min_0(self), vector3);
 };
-    float_mesh_attribute.prototype['set_values'] = float_mesh_attribute.prototype.set_values = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+    aabb.prototype['set_min'] = aabb.prototype.set_min = /** @suppress {undefinedVars, duplicate} */function(arg0) {
   var self = this.ptr;
   if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
-  _emscripten_bind_float_mesh_attribute_set_values_1(self, arg0);
+  _emscripten_bind_aabb_set_min_1(self, arg0);
 };
-    Object.defineProperty(float_mesh_attribute.prototype, 'values', { get: float_mesh_attribute.prototype.get_values, set: float_mesh_attribute.prototype.set_values }) 
-  float_mesh_attribute.prototype['get_count'] = float_mesh_attribute.prototype.get_count = /** @suppress {undefinedVars, duplicate} */function() {
+    Object.defineProperty(aabb.prototype, 'min', { get: aabb.prototype.get_min, set: aabb.prototype.set_min }) 
+  aabb.prototype['get_max'] = aabb.prototype.get_max = /** @suppress {undefinedVars, duplicate} */function() {
   var self = this.ptr;
-  return _emscripten_bind_float_mesh_attribute_get_count_0(self);
+  return wrapPointer(_emscripten_bind_aabb_get_max_0(self), vector3);
 };
-    float_mesh_attribute.prototype['set_count'] = float_mesh_attribute.prototype.set_count = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+    aabb.prototype['set_max'] = aabb.prototype.set_max = /** @suppress {undefinedVars, duplicate} */function(arg0) {
   var self = this.ptr;
   if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
-  _emscripten_bind_float_mesh_attribute_set_count_1(self, arg0);
+  _emscripten_bind_aabb_set_max_1(self, arg0);
 };
-    Object.defineProperty(float_mesh_attribute.prototype, 'count', { get: float_mesh_attribute.prototype.get_count, set: float_mesh_attribute.prototype.set_count }) 
-  float_mesh_attribute.prototype['__destroy__'] = float_mesh_attribute.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
+    Object.defineProperty(aabb.prototype, 'max', { get: aabb.prototype.get_max, set: aabb.prototype.set_max }) 
+  aabb.prototype['__destroy__'] = aabb.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
   var self = this.ptr;
-  _emscripten_bind_float_mesh_attribute___destroy___0(self);
+  _emscripten_bind_aabb___destroy___0(self);
+};
+// vector3
+/** @suppress {undefinedVars, duplicate} */function vector3() { throw "cannot construct a vector3, no constructor in IDL" }
+vector3.prototype = Object.create(WrapperObject.prototype);
+vector3.prototype.constructor = vector3;
+vector3.prototype.__class__ = vector3;
+vector3.__cache__ = {};
+Module['vector3'] = vector3;
+
+  vector3.prototype['get_x'] = vector3.prototype.get_x = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_vector3_get_x_0(self);
+};
+    vector3.prototype['set_x'] = vector3.prototype.set_x = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_vector3_set_x_1(self, arg0);
+};
+    Object.defineProperty(vector3.prototype, 'x', { get: vector3.prototype.get_x, set: vector3.prototype.set_x }) 
+  vector3.prototype['get_y'] = vector3.prototype.get_y = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_vector3_get_y_0(self);
+};
+    vector3.prototype['set_y'] = vector3.prototype.set_y = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_vector3_set_y_1(self, arg0);
+};
+    Object.defineProperty(vector3.prototype, 'y', { get: vector3.prototype.get_y, set: vector3.prototype.set_y }) 
+  vector3.prototype['get_z'] = vector3.prototype.get_z = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_vector3_get_z_0(self);
+};
+    vector3.prototype['set_z'] = vector3.prototype.set_z = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_vector3_set_z_1(self, arg0);
+};
+    Object.defineProperty(vector3.prototype, 'z', { get: vector3.prototype.get_z, set: vector3.prototype.set_z }) 
+  vector3.prototype['get_r'] = vector3.prototype.get_r = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_vector3_get_r_0(self);
+};
+    vector3.prototype['set_r'] = vector3.prototype.set_r = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_vector3_set_r_1(self, arg0);
+};
+    Object.defineProperty(vector3.prototype, 'r', { get: vector3.prototype.get_r, set: vector3.prototype.set_r }) 
+  vector3.prototype['get_g'] = vector3.prototype.get_g = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_vector3_get_g_0(self);
+};
+    vector3.prototype['set_g'] = vector3.prototype.set_g = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_vector3_set_g_1(self, arg0);
+};
+    Object.defineProperty(vector3.prototype, 'g', { get: vector3.prototype.get_g, set: vector3.prototype.set_g }) 
+  vector3.prototype['get_b'] = vector3.prototype.get_b = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_vector3_get_b_0(self);
+};
+    vector3.prototype['set_b'] = vector3.prototype.set_b = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_vector3_set_b_1(self, arg0);
+};
+    Object.defineProperty(vector3.prototype, 'b', { get: vector3.prototype.get_b, set: vector3.prototype.set_b }) 
+  vector3.prototype['get_c'] = vector3.prototype.get_c = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  return _emscripten_bind_vector3_get_c_1(self, arg0);
+};
+    vector3.prototype['set_c'] = vector3.prototype.set_c = /** @suppress {undefinedVars, duplicate} */function(arg0, arg1) {
+  var self = this.ptr;
+  ensureCache.prepare();
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  if (arg1 && typeof arg1 === 'object') arg1 = arg1.ptr;
+  _emscripten_bind_vector3_set_c_2(self, arg0, arg1);
+};
+    Object.defineProperty(vector3.prototype, 'c', { get: vector3.prototype.get_c, set: vector3.prototype.set_c }) 
+  vector3.prototype['__destroy__'] = vector3.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  _emscripten_bind_vector3___destroy___0(self);
+};
+// game_input
+/** @suppress {undefinedVars, duplicate} */function game_input() { throw "cannot construct a game_input, no constructor in IDL" }
+game_input.prototype = Object.create(WrapperObject.prototype);
+game_input.prototype.constructor = game_input;
+game_input.prototype.__class__ = game_input;
+game_input.__cache__ = {};
+Module['game_input'] = game_input;
+
+  game_input.prototype['get_forwardButton'] = game_input.prototype.get_forwardButton = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return !!(_emscripten_bind_game_input_get_forwardButton_0(self));
+};
+    game_input.prototype['set_forwardButton'] = game_input.prototype.set_forwardButton = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_game_input_set_forwardButton_1(self, arg0);
+};
+    Object.defineProperty(game_input.prototype, 'forwardButton', { get: game_input.prototype.get_forwardButton, set: game_input.prototype.set_forwardButton }) 
+  game_input.prototype['get_backButton'] = game_input.prototype.get_backButton = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return !!(_emscripten_bind_game_input_get_backButton_0(self));
+};
+    game_input.prototype['set_backButton'] = game_input.prototype.set_backButton = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_game_input_set_backButton_1(self, arg0);
+};
+    Object.defineProperty(game_input.prototype, 'backButton', { get: game_input.prototype.get_backButton, set: game_input.prototype.set_backButton }) 
+  game_input.prototype['get_leftButton'] = game_input.prototype.get_leftButton = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return !!(_emscripten_bind_game_input_get_leftButton_0(self));
+};
+    game_input.prototype['set_leftButton'] = game_input.prototype.set_leftButton = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_game_input_set_leftButton_1(self, arg0);
+};
+    Object.defineProperty(game_input.prototype, 'leftButton', { get: game_input.prototype.get_leftButton, set: game_input.prototype.set_leftButton }) 
+  game_input.prototype['get_rightButton'] = game_input.prototype.get_rightButton = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return !!(_emscripten_bind_game_input_get_rightButton_0(self));
+};
+    game_input.prototype['set_rightButton'] = game_input.prototype.set_rightButton = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_game_input_set_rightButton_1(self, arg0);
+};
+    Object.defineProperty(game_input.prototype, 'rightButton', { get: game_input.prototype.get_rightButton, set: game_input.prototype.set_rightButton }) 
+  game_input.prototype['get_upButton'] = game_input.prototype.get_upButton = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return !!(_emscripten_bind_game_input_get_upButton_0(self));
+};
+    game_input.prototype['set_upButton'] = game_input.prototype.set_upButton = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_game_input_set_upButton_1(self, arg0);
+};
+    Object.defineProperty(game_input.prototype, 'upButton', { get: game_input.prototype.get_upButton, set: game_input.prototype.set_upButton }) 
+  game_input.prototype['get_downButton'] = game_input.prototype.get_downButton = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return !!(_emscripten_bind_game_input_get_downButton_0(self));
+};
+    game_input.prototype['set_downButton'] = game_input.prototype.set_downButton = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_game_input_set_downButton_1(self, arg0);
+};
+    Object.defineProperty(game_input.prototype, 'downButton', { get: game_input.prototype.get_downButton, set: game_input.prototype.set_downButton }) 
+  game_input.prototype['get_turnUpButton'] = game_input.prototype.get_turnUpButton = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return !!(_emscripten_bind_game_input_get_turnUpButton_0(self));
+};
+    game_input.prototype['set_turnUpButton'] = game_input.prototype.set_turnUpButton = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_game_input_set_turnUpButton_1(self, arg0);
+};
+    Object.defineProperty(game_input.prototype, 'turnUpButton', { get: game_input.prototype.get_turnUpButton, set: game_input.prototype.set_turnUpButton }) 
+  game_input.prototype['get_turnDownButton'] = game_input.prototype.get_turnDownButton = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return !!(_emscripten_bind_game_input_get_turnDownButton_0(self));
+};
+    game_input.prototype['set_turnDownButton'] = game_input.prototype.set_turnDownButton = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_game_input_set_turnDownButton_1(self, arg0);
+};
+    Object.defineProperty(game_input.prototype, 'turnDownButton', { get: game_input.prototype.get_turnDownButton, set: game_input.prototype.set_turnDownButton }) 
+  game_input.prototype['get_turnLeftButton'] = game_input.prototype.get_turnLeftButton = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return !!(_emscripten_bind_game_input_get_turnLeftButton_0(self));
+};
+    game_input.prototype['set_turnLeftButton'] = game_input.prototype.set_turnLeftButton = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_game_input_set_turnLeftButton_1(self, arg0);
+};
+    Object.defineProperty(game_input.prototype, 'turnLeftButton', { get: game_input.prototype.get_turnLeftButton, set: game_input.prototype.set_turnLeftButton }) 
+  game_input.prototype['get_turnRightButton'] = game_input.prototype.get_turnRightButton = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return !!(_emscripten_bind_game_input_get_turnRightButton_0(self));
+};
+    game_input.prototype['set_turnRightButton'] = game_input.prototype.set_turnRightButton = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_game_input_set_turnRightButton_1(self, arg0);
+};
+    Object.defineProperty(game_input.prototype, 'turnRightButton', { get: game_input.prototype.get_turnRightButton, set: game_input.prototype.set_turnRightButton }) 
+  game_input.prototype['get_pointerDown'] = game_input.prototype.get_pointerDown = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return !!(_emscripten_bind_game_input_get_pointerDown_0(self));
+};
+    game_input.prototype['set_pointerDown'] = game_input.prototype.set_pointerDown = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_game_input_set_pointerDown_1(self, arg0);
+};
+    Object.defineProperty(game_input.prototype, 'pointerDown', { get: game_input.prototype.get_pointerDown, set: game_input.prototype.set_pointerDown }) 
+  game_input.prototype['get_pointerJustDown'] = game_input.prototype.get_pointerJustDown = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return !!(_emscripten_bind_game_input_get_pointerJustDown_0(self));
+};
+    game_input.prototype['set_pointerJustDown'] = game_input.prototype.set_pointerJustDown = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_game_input_set_pointerJustDown_1(self, arg0);
+};
+    Object.defineProperty(game_input.prototype, 'pointerJustDown', { get: game_input.prototype.get_pointerJustDown, set: game_input.prototype.set_pointerJustDown }) 
+  game_input.prototype['get_pointerX'] = game_input.prototype.get_pointerX = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_game_input_get_pointerX_0(self);
+};
+    game_input.prototype['set_pointerX'] = game_input.prototype.set_pointerX = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_game_input_set_pointerX_1(self, arg0);
+};
+    Object.defineProperty(game_input.prototype, 'pointerX', { get: game_input.prototype.get_pointerX, set: game_input.prototype.set_pointerX }) 
+  game_input.prototype['get_pointerY'] = game_input.prototype.get_pointerY = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_game_input_get_pointerY_0(self);
+};
+    game_input.prototype['set_pointerY'] = game_input.prototype.set_pointerY = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_game_input_set_pointerY_1(self, arg0);
+};
+    Object.defineProperty(game_input.prototype, 'pointerY', { get: game_input.prototype.get_pointerY, set: game_input.prototype.set_pointerY }) 
+  game_input.prototype['__destroy__'] = game_input.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  _emscripten_bind_game_input___destroy___0(self);
+};
+// matrix4x4
+/** @suppress {undefinedVars, duplicate} */function matrix4x4() { throw "cannot construct a matrix4x4, no constructor in IDL" }
+matrix4x4.prototype = Object.create(WrapperObject.prototype);
+matrix4x4.prototype.constructor = matrix4x4;
+matrix4x4.prototype.__class__ = matrix4x4;
+matrix4x4.__cache__ = {};
+Module['matrix4x4'] = matrix4x4;
+
+  matrix4x4.prototype['get_m'] = matrix4x4.prototype.get_m = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  return _emscripten_bind_matrix4x4_get_m_1(self, arg0);
+};
+    matrix4x4.prototype['set_m'] = matrix4x4.prototype.set_m = /** @suppress {undefinedVars, duplicate} */function(arg0, arg1) {
+  var self = this.ptr;
+  ensureCache.prepare();
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  if (arg1 && typeof arg1 === 'object') arg1 = arg1.ptr;
+  _emscripten_bind_matrix4x4_set_m_2(self, arg0, arg1);
+};
+    Object.defineProperty(matrix4x4.prototype, 'm', { get: matrix4x4.prototype.get_m, set: matrix4x4.prototype.set_m }) 
+  matrix4x4.prototype['__destroy__'] = matrix4x4.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  _emscripten_bind_matrix4x4___destroy___0(self);
+};
+// sphere
+/** @suppress {undefinedVars, duplicate} */function sphere() { throw "cannot construct a sphere, no constructor in IDL" }
+sphere.prototype = Object.create(WrapperObject.prototype);
+sphere.prototype.constructor = sphere;
+sphere.prototype.__class__ = sphere;
+sphere.__cache__ = {};
+Module['sphere'] = sphere;
+
+  sphere.prototype['get_pos'] = sphere.prototype.get_pos = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return wrapPointer(_emscripten_bind_sphere_get_pos_0(self), vector3);
+};
+    sphere.prototype['set_pos'] = sphere.prototype.set_pos = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_sphere_set_pos_1(self, arg0);
+};
+    Object.defineProperty(sphere.prototype, 'pos', { get: sphere.prototype.get_pos, set: sphere.prototype.set_pos }) 
+  sphere.prototype['get_radius'] = sphere.prototype.get_radius = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_sphere_get_radius_0(self);
+};
+    sphere.prototype['set_radius'] = sphere.prototype.set_radius = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_sphere_set_radius_1(self, arg0);
+};
+    Object.defineProperty(sphere.prototype, 'radius', { get: sphere.prototype.get_radius, set: sphere.prototype.set_radius }) 
+  sphere.prototype['__destroy__'] = sphere.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  _emscripten_bind_sphere___destroy___0(self);
+};
+// quaternion
+/** @suppress {undefinedVars, duplicate} */function quaternion() { throw "cannot construct a quaternion, no constructor in IDL" }
+quaternion.prototype = Object.create(WrapperObject.prototype);
+quaternion.prototype.constructor = quaternion;
+quaternion.prototype.__class__ = quaternion;
+quaternion.__cache__ = {};
+Module['quaternion'] = quaternion;
+
+  quaternion.prototype['get_w'] = quaternion.prototype.get_w = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_quaternion_get_w_0(self);
+};
+    quaternion.prototype['set_w'] = quaternion.prototype.set_w = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_quaternion_set_w_1(self, arg0);
+};
+    Object.defineProperty(quaternion.prototype, 'w', { get: quaternion.prototype.get_w, set: quaternion.prototype.set_w }) 
+  quaternion.prototype['get_x'] = quaternion.prototype.get_x = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_quaternion_get_x_0(self);
+};
+    quaternion.prototype['set_x'] = quaternion.prototype.set_x = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_quaternion_set_x_1(self, arg0);
+};
+    Object.defineProperty(quaternion.prototype, 'x', { get: quaternion.prototype.get_x, set: quaternion.prototype.set_x }) 
+  quaternion.prototype['get_y'] = quaternion.prototype.get_y = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_quaternion_get_y_0(self);
+};
+    quaternion.prototype['set_y'] = quaternion.prototype.set_y = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_quaternion_set_y_1(self, arg0);
+};
+    Object.defineProperty(quaternion.prototype, 'y', { get: quaternion.prototype.get_y, set: quaternion.prototype.set_y }) 
+  quaternion.prototype['get_z'] = quaternion.prototype.get_z = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_quaternion_get_z_0(self);
+};
+    quaternion.prototype['set_z'] = quaternion.prototype.set_z = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_quaternion_set_z_1(self, arg0);
+};
+    Object.defineProperty(quaternion.prototype, 'z', { get: quaternion.prototype.get_z, set: quaternion.prototype.set_z }) 
+  quaternion.prototype['__destroy__'] = quaternion.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  _emscripten_bind_quaternion___destroy___0(self);
+};
+// plane
+/** @suppress {undefinedVars, duplicate} */function plane() { throw "cannot construct a plane, no constructor in IDL" }
+plane.prototype = Object.create(WrapperObject.prototype);
+plane.prototype.constructor = plane;
+plane.prototype.__class__ = plane;
+plane.__cache__ = {};
+Module['plane'] = plane;
+
+  plane.prototype['get_normal'] = plane.prototype.get_normal = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return wrapPointer(_emscripten_bind_plane_get_normal_0(self), vector3);
+};
+    plane.prototype['set_normal'] = plane.prototype.set_normal = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_plane_set_normal_1(self, arg0);
+};
+    Object.defineProperty(plane.prototype, 'normal', { get: plane.prototype.get_normal, set: plane.prototype.set_normal }) 
+  plane.prototype['get_distance'] = plane.prototype.get_distance = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_plane_get_distance_0(self);
+};
+    plane.prototype['set_distance'] = plane.prototype.set_distance = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_plane_set_distance_1(self, arg0);
+};
+    Object.defineProperty(plane.prototype, 'distance', { get: plane.prototype.get_distance, set: plane.prototype.set_distance }) 
+  plane.prototype['__destroy__'] = plane.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  _emscripten_bind_plane___destroy___0(self);
 };
 // render_command_list
 /** @suppress {undefinedVars, duplicate} */function render_command_list() { throw "cannot construct a render_command_list, no constructor in IDL" }
@@ -401,6 +811,31 @@ Module['render_mesh_command'] = render_mesh_command;
   render_mesh_command.prototype['__destroy__'] = render_mesh_command.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
   var self = this.ptr;
   _emscripten_bind_render_mesh_command___destroy___0(self);
+};
+// matrix3x3
+/** @suppress {undefinedVars, duplicate} */function matrix3x3() { throw "cannot construct a matrix3x3, no constructor in IDL" }
+matrix3x3.prototype = Object.create(WrapperObject.prototype);
+matrix3x3.prototype.constructor = matrix3x3;
+matrix3x3.prototype.__class__ = matrix3x3;
+matrix3x3.__cache__ = {};
+Module['matrix3x3'] = matrix3x3;
+
+  matrix3x3.prototype['get_m'] = matrix3x3.prototype.get_m = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  return _emscripten_bind_matrix3x3_get_m_1(self, arg0);
+};
+    matrix3x3.prototype['set_m'] = matrix3x3.prototype.set_m = /** @suppress {undefinedVars, duplicate} */function(arg0, arg1) {
+  var self = this.ptr;
+  ensureCache.prepare();
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  if (arg1 && typeof arg1 === 'object') arg1 = arg1.ptr;
+  _emscripten_bind_matrix3x3_set_m_2(self, arg0, arg1);
+};
+    Object.defineProperty(matrix3x3.prototype, 'm', { get: matrix3x3.prototype.get_m, set: matrix3x3.prototype.set_m }) 
+  matrix3x3.prototype['__destroy__'] = matrix3x3.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  _emscripten_bind_matrix3x3___destroy___0(self);
 };
 // asset_list
 /** @suppress {undefinedVars, duplicate} */function asset_list() { throw "cannot construct a asset_list, no constructor in IDL" }
@@ -500,6 +935,38 @@ Module['VoidPtr'] = VoidPtr;
   var self = this.ptr;
   _emscripten_bind_VoidPtr___destroy___0(self);
 };
+// game_memory
+/** @suppress {undefinedVars, duplicate} */function game_memory() { throw "cannot construct a game_memory, no constructor in IDL" }
+game_memory.prototype = Object.create(WrapperObject.prototype);
+game_memory.prototype.constructor = game_memory;
+game_memory.prototype.__class__ = game_memory;
+game_memory.__cache__ = {};
+Module['game_memory'] = game_memory;
+
+  game_memory.prototype['get_memory'] = game_memory.prototype.get_memory = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return wrapPointer(_emscripten_bind_game_memory_get_memory_0(self), VoidPtr);
+};
+    game_memory.prototype['set_memory'] = game_memory.prototype.set_memory = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_game_memory_set_memory_1(self, arg0);
+};
+    Object.defineProperty(game_memory.prototype, 'memory', { get: game_memory.prototype.get_memory, set: game_memory.prototype.set_memory }) 
+  game_memory.prototype['get_memoryCapacity'] = game_memory.prototype.get_memoryCapacity = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_game_memory_get_memoryCapacity_0(self);
+};
+    game_memory.prototype['set_memoryCapacity'] = game_memory.prototype.set_memoryCapacity = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_game_memory_set_memoryCapacity_1(self, arg0);
+};
+    Object.defineProperty(game_memory.prototype, 'memoryCapacity', { get: game_memory.prototype.get_memoryCapacity, set: game_memory.prototype.set_memoryCapacity }) 
+  game_memory.prototype['__destroy__'] = game_memory.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  _emscripten_bind_game_memory___destroy___0(self);
+};
 // int_mesh_attribute
 /** @suppress {undefinedVars, duplicate} */function int_mesh_attribute() { throw "cannot construct a int_mesh_attribute, no constructor in IDL" }
 int_mesh_attribute.prototype = Object.create(WrapperObject.prototype);
@@ -545,6 +1012,8 @@ Module['int_mesh_attribute'] = int_mesh_attribute;
     // render_command_type
 
     Module['RENDER_COMMAND_MESH'] = _emscripten_enum_render_command_type_RENDER_COMMAND_MESH();
+
+    Module['RENDER_COMMAND_SET_CAMERA'] = _emscripten_enum_render_command_type_RENDER_COMMAND_SET_CAMERA();
 
   }
   if (Module['calledRun']) setupEnums();

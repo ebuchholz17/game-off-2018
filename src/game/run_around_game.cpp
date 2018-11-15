@@ -92,14 +92,14 @@ static float stringToFloat (char *start, char *end) {
     return integerPart + fractionalPart;
 }
 
-static float stringToFloat (char *string) {
-    char *end = string;
-    while (*end != 0) {
-        ++end;
-    }
-    --end;
-    return stringToFloat(string, end);
-}
+//static float stringToFloat (char *string) {
+//    char *end = string;
+//    while (*end != 0) {
+//        ++end;
+//    }
+//    --end;
+//    return stringToFloat(string, end);
+//}
 
 // TODO(ebuchholz): move somewhere else
 static bool stringsAreEqual (int length, char *a, char *b) {
@@ -304,9 +304,6 @@ static void parseOBJ (void *objData, game_assets *assets, int key, memory_arena 
     //    ((int *)loadedMesh->indices.values)[i*3+1] = ((int *)loadedMesh->indices.values)[i*3+2];
     //    ((int *)loadedMesh->indices.values)[i*3+2] = temp;
     //}
-
-    float t = stringToFloat("234234.343");
-
 }
 
 static void pushAsset (asset_list *assetList, char *path, asset_type type, int key) {
@@ -321,7 +318,6 @@ static void pushAsset (asset_list *assetList, char *path, asset_type type, int k
 // TODO(ebuchholz): Maybe pack everything into a single file and load that?
 extern "C" void getGameAssetList (asset_list *assetList) {
     pushAsset(assetList, "assets/meshes/geosphere.obj", ASSET_TYPE_OBJ, MESH_KEY_SPHERE);
-    pushAsset(assetList, "assets/meshes/simplebunny.obj", ASSET_TYPE_OBJ, MESH_KEY_TREE);
 }
 
 extern "C" void parseGameAsset (void *assetData, asset_type type, int key,
@@ -358,15 +354,77 @@ extern "C" void parseGameAsset (void *assetData, asset_type type, int key,
     }
 }
 
-extern "C" void updateGame (render_command_list *renderCommands) { 
+static void drawMesh (mesh_key key, render_command_list *renderCommands) {
     render_mesh_command *meshCommand = 
         (render_mesh_command *)pushRenderCommand(renderCommands,
                                                  RENDER_COMMAND_MESH,
                                                  sizeof(render_mesh_command));
-    meshCommand->key = MESH_KEY_SPHERE;
+    meshCommand->key = key;
+}
 
-    meshCommand = (render_mesh_command *)pushRenderCommand(renderCommands,
-                                                           RENDER_COMMAND_MESH,
-                                                           sizeof(render_mesh_command));
-    meshCommand->key = MESH_KEY_TREE;
+void debugCameraMovement (vector3 *debugCameraPos, quaternion *debugCameraRotation, 
+                          game_input *input) 
+{
+    const float CAMERA_SPEED = 3.0f;
+    const float CAMERA_TURN_SPEED = 1.0f;
+    vector3 moveVector = {};
+    if (input->forwardButton) {
+        moveVector.z -= CAMERA_SPEED * DELTA_TIME;
+    }
+    if (input->backButton) {
+        moveVector.z += CAMERA_SPEED * DELTA_TIME;
+    }
+    if (input->leftButton) {
+        moveVector.x -= CAMERA_SPEED * DELTA_TIME;
+    }
+    if (input->rightButton) {
+        moveVector.x += CAMERA_SPEED * DELTA_TIME;
+    }
+    if (input->upButton) {
+        debugCameraPos->y += CAMERA_SPEED * DELTA_TIME;
+    }
+    if (input->downButton) {
+        debugCameraPos->y -= CAMERA_SPEED * DELTA_TIME;
+    }
+    if (input->turnUpButton) {
+        *debugCameraRotation = (*debugCameraRotation) * quaternionFromAxisAngle(Vector3(1, 0, 0), +CAMERA_TURN_SPEED * DELTA_TIME);
+    }
+    if (input->turnDownButton) {
+        *debugCameraRotation = (*debugCameraRotation) * quaternionFromAxisAngle(Vector3(1, 0, 0), -CAMERA_TURN_SPEED * DELTA_TIME);
+    }
+    if (input->turnLeftButton) {
+        *debugCameraRotation = quaternionFromAxisAngle(Vector3(0, 1, 0), +CAMERA_TURN_SPEED * DELTA_TIME) * (*debugCameraRotation);
+    }
+    if (input->turnRightButton) {
+        *debugCameraRotation = quaternionFromAxisAngle(Vector3(0, 1, 0), -CAMERA_TURN_SPEED * DELTA_TIME) * (*debugCameraRotation);
+    }
+    moveVector = rotateVectorByQuaternion(moveVector, *debugCameraRotation);
+    *debugCameraPos += moveVector;
+}
+
+extern "C" void updateGame (game_input *input, game_memory *gameMemory, render_command_list *renderCommands) { 
+    game_state *gameState = (game_state *)gameMemory->memory;
+    if (!gameState->gameInitialized) {
+        gameState->gameInitialized = true;
+        gameState->debugCameraPos = {};
+        gameState->debugCameraRotation = quaternionFromAxisAngle(Vector3(1.0f, 0.0f, 0.0f), 0.0f);
+    }
+
+    debugCameraMovement(&gameState->debugCameraPos, &gameState->debugCameraRotation, input);
+
+    // TODO(ebuchholz): get screen dimensions from render commands? and use them
+    matrix4x4 projMatrix = createPerspectiveMatrix(0.1f, 1000.0f, (16.0f / 9.0f), 80.0f);
+    matrix4x4 viewMatrix = createViewMatrix(gameState->debugCameraRotation, 
+                                            gameState->debugCameraPos.x,
+                                            gameState->debugCameraPos.y,
+                                            gameState->debugCameraPos.z);
+
+    render_command_set_camera *setCameraCommand = 
+        (render_command_set_camera *)pushRenderCommand(renderCommands,
+                                                 RENDER_COMMAND_SET_CAMERA,
+                                                 sizeof(render_command_set_camera));
+    setCameraCommand->viewMatrix = viewMatrix;
+    setCameraCommand->projMatrix = projMatrix;
+
+    drawMesh(MESH_KEY_SPHERE, renderCommands);
 }

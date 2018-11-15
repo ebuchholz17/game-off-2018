@@ -202,6 +202,9 @@ struct openGL_renderer {
 
     int numMeshes;
     openGL_mesh meshes[MAX_OPENGL_MESHES];
+
+    matrix4x4 viewMatrix;
+    matrix4x4 projMatrix;
 };
 
 #endif

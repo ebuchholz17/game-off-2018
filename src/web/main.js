@@ -1,6 +1,13 @@
 var Game = require("./wasm/game.js");
 var WebGLRenderer = require("./WebGLRenderer");
 
+var Input = function () {
+    this.keyDown = {};
+    this.keyJustPressed = {};
+    this.mouseX = -1;
+    this.mouseY = -1;
+};
+
 var WebPlatform = function () {
     this.viewport = null;
     this.canvas = null;
@@ -10,6 +17,7 @@ var WebPlatform = function () {
     this.renderer = null;
     this.totalAssetsLoaded = 0;
 };
+
 
 WebPlatform.prototype = {
 
@@ -127,17 +135,37 @@ WebPlatform.prototype = {
         this.renderCommands.get_memory().set_size(0);
         this.renderCommands.get_memory().set_capacity(renderCommandMemory);
 
+        this.input = new Input();
+        document.addEventListener("keydown", this.onKeyDown.bind(this), false);
+        document.addEventListener("keyup", this.onKeyUp.bind(this), false);
+        this.gameInput = this.game.wrapPointer(this.game._malloc(this.game.sizeof_game_input()), this.game.game_input);
+
         this.resize();
         this.update();
     },
 
     update: function () {
 
+        this.gameInput.forwardButton = this.input.keyDown["w"];
+        this.gameInput.backButton = this.input.keyDown["s"];
+        this.gameInput.leftButton = this.input.keyDown["a"];
+        this.gameInput.rightButton = this.input.keyDown["d"];
+        //this.gameInput.upButton = this.input.keyDown[" "];
+        //this.gameInput.downButton = this.input.keyDown["w"];
+        //this.gameInput.turnUpButton = this.input.keyDown["w"];
+        //this.gameInput.turnDownButton = this.input.keyDown["w"];
+        //this.gameInput.turnLeftButton = this.input.keyDown["w"];
+        //this.gameInput.turnRightButton = this.input.keyDown["w"];
+
         this.renderCommands.get_memory().set_size(0);
         this.game.ccall("updateGame", 
             "null", 
-            ["number"], 
-            [this.game.getPointer(this.renderCommands)]
+            ["number", "number", "number"], 
+            [
+                this.game.getPointer(this.gameInput), 
+                this.game.getPointer(this.gameMemory), 
+                this.game.getPointer(this.renderCommands)
+            ]
         );
         
         this.renderer.renderFrame(this.game, this.renderCommands);
@@ -159,6 +187,19 @@ WebPlatform.prototype = {
     resize: function () {
         this.canvas.style.width = this.viewport.clientWidth + "px";
         this.canvas.style.height = this.viewport.clientHeight + "px";
+    },
+
+    onKeyDown: function (key) {
+        var keyName = key.key.toLowerCase();
+        if (!this.input.keyDown[keyName]) { 
+            this.input.keyJustPressed[keyName] = true; 
+        }
+        this.input.keyDown[keyName] = true;
+    },
+
+    onKeyUp :function (key) {
+        var keyName = key.key.toLowerCase();
+        this.input.keyDown[keyName] = false;
     }
 
 };

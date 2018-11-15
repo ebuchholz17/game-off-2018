@@ -1,4 +1,0 @@
-#ifndef RUN_AROUND_PLATFORM_H
-#define RUN_AROUND_PLATFORM_H
-
-#endif

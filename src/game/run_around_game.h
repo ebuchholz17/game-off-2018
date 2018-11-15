@@ -2,6 +2,9 @@
 #define RUN_AROUND_GAME_H
 
 #include "run_around_platform.h"
+#include "run_around_math.cpp"
+
+#define DELTA_TIME (1.0f / 60.0f)
 
 enum mesh_key {
     MESH_KEY_SPHERE,
@@ -25,6 +28,11 @@ struct game_state {
     memory_arena memory;
     bool assetsInitialized;
     game_assets assets;
+
+    bool gameInitialized;
+
+    vector3 debugCameraPos;
+    quaternion debugCameraRotation;
 };
 
 #endif

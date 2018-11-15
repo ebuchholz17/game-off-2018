@@ -28,6 +28,9 @@ var ShaderTypes = {
 var WebGLRenderer = function () {
     this.shaders = [];
     this.meshes = [];
+
+    this.viewMatrix = null;
+    this.projMatrix = null;
 };
 
 WebGLRenderer.prototype = {
@@ -109,7 +112,38 @@ WebGLRenderer.prototype = {
         mesh.numIndices = loadedMesh.indices.count;
     },
 
-    drawMesh: function (meshCommand, program) {
+    setCamera: function (setCameraCommand) {
+        this.viewMatrix = setCameraCommand.viewMatrix;
+        this.projMatrix = setCameraCommand.projMatrix;
+    },
+
+    matrix4x4transpose: function (matrixBuffer) {
+        var floatBuffer = new Float32Array(16)
+
+        floatBuffer[0] = matrixBuffer[0];
+        floatBuffer[1] = matrixBuffer[4];
+        floatBuffer[2] = matrixBuffer[8];
+        floatBuffer[3] = matrixBuffer[12];
+
+        floatBuffer[4] = matrixBuffer[1];
+        floatBuffer[5] = matrixBuffer[5];
+        floatBuffer[6] = matrixBuffer[9];
+        floatBuffer[7] = matrixBuffer[13];
+
+        floatBuffer[8] = matrixBuffer[2];
+        floatBuffer[9] = matrixBuffer[6];
+        floatBuffer[10] = matrixBuffer[10];
+        floatBuffer[11] = matrixBuffer[14];
+
+        floatBuffer[12] = matrixBuffer[3];
+        floatBuffer[13] = matrixBuffer[7];
+        floatBuffer[14] = matrixBuffer[11];
+        floatBuffer[15] = matrixBuffer[15]
+
+        return floatBuffer;
+    },
+
+    drawMesh: function (game, meshCommand, program) {
         var mesh = this.meshes[meshCommand.key];
 
         gl.bindBuffer(gl.ARRAY_BUFFER, mesh.positionBuffer);
@@ -129,13 +163,25 @@ WebGLRenderer.prototype = {
 
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, mesh.indexBuffer);
 
+        var floatBuffer = new Float32Array(game.buffer,
+                                           this.viewMatrix.ptr,
+                                           16); //4x4 matrix
+        var viewMatrixLocation = gl.getUniformLocation(program, "viewMatrix");
+        gl.uniformMatrix4fv(viewMatrixLocation, false, this.matrix4x4transpose(floatBuffer));
+
+        floatBuffer = new Float32Array(game.buffer,
+                                           this.projMatrix.ptr,
+                                           16); //4x4 matrix
+        var projMatrixLocation = gl.getUniformLocation(program, "projMatrix");
+        gl.uniformMatrix4fv(projMatrixLocation, false, this.matrix4x4transpose(floatBuffer));
+
         gl.drawElements(gl.TRIANGLES, mesh.numIndices, gl.UNSIGNED_INT, 0);
     },
 
     renderFrame: function (game, renderCommands) {
         gl.viewport(0, 0, this.canvas.width, this.canvas.height);
         gl.enable(gl.DEPTH_TEST);
-        gl.enable(gl.CULL_FACE);
+        //gl.enable(gl.CULL_FACE);
         gl.clearColor(0.0, 0.0, 0.0, 1.0);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
@@ -157,7 +203,14 @@ WebGLRenderer.prototype = {
                     var meshCommand = game.wrapPointer(renderMemoryPointer + renderCommandOffset, 
                                                             game.render_mesh_command);
                     renderCommandOffset += game.sizeof_render_mesh_command();
-                    this.drawMesh(meshCommand, program);
+                    this.drawMesh(game, meshCommand, program);
+                } break;
+                case game.RENDER_COMMAND_SET_CAMERA:
+                {
+                    var setCameraCommand = game.wrapPointer(renderMemoryPointer + renderCommandOffset, 
+                                                            game.render_command_set_camera);
+                    renderCommandOffset += game.sizeof_render_command_set_camera();
+                    this.setCamera(setCameraCommand, program);
                 } break;
             }
         }
