@@ -6,6 +6,7 @@ char *defaultVertexShaderSource = R"shader(
     attribute vec2 texCoord;
     attribute vec3 normal;
 
+    uniform mat4 modelMatrix;
     uniform mat4 viewMatrix;
     uniform mat4 projMatrix;
 
@@ -13,10 +14,11 @@ char *defaultVertexShaderSource = R"shader(
     varying float vLighting;
 
     void main() {
-        gl_Position = projMatrix * viewMatrix * vec4(position, 1.0);
+        gl_Position = projMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);
         vTexCoord = texCoord;
-        vec3 lightDir = normalize(vec3(1.0, 1.0, 1.0));
-        float lighting = dot(normal, lightDir);
+        vec4 newNormal = modelMatrix * vec4(normal, 0.0);
+        vec4 lightDir = normalize(vec4(1.0, 1.0, 1.0, 0.0));
+        float lighting = dot(newNormal, lightDir);
         vLighting = lighting;
     }
 )shader";
@@ -37,7 +39,9 @@ char *defaultFragmentShaderSource = R"shader(
     varying float vLighting;
 
     void main() {
-        gl_FragColor = vec4(0.0, vTexCoord.s * vLighting, vTexCoord.t * vLighting, 1.0);
+        vec4 baseColor = vec4(0.0, clamp(vTexCoord.s, 0.0, 1.0), clamp(vTexCoord.t, 0.0, 1.0), 1.0);
+        vec4 lighting = vec4(0.05, 0.05, 0.05, 1.0) + (vec4(1.0, 1.0, 1.0, 1.0) * vLighting);
+        gl_FragColor = baseColor * lighting;
     }
 )shader";
 

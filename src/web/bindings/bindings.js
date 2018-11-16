@@ -808,6 +808,16 @@ Module['render_mesh_command'] = render_mesh_command;
   _emscripten_bind_render_mesh_command_set_key_1(self, arg0);
 };
     Object.defineProperty(render_mesh_command.prototype, 'key', { get: render_mesh_command.prototype.get_key, set: render_mesh_command.prototype.set_key }) 
+  render_mesh_command.prototype['get_modelMatrix'] = render_mesh_command.prototype.get_modelMatrix = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return wrapPointer(_emscripten_bind_render_mesh_command_get_modelMatrix_0(self), matrix4x4);
+};
+    render_mesh_command.prototype['set_modelMatrix'] = render_mesh_command.prototype.set_modelMatrix = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_render_mesh_command_set_modelMatrix_1(self, arg0);
+};
+    Object.defineProperty(render_mesh_command.prototype, 'modelMatrix', { get: render_mesh_command.prototype.get_modelMatrix, set: render_mesh_command.prototype.set_modelMatrix }) 
   render_mesh_command.prototype['__destroy__'] = render_mesh_command.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
   var self = this.ptr;
   _emscripten_bind_render_mesh_command___destroy___0(self);

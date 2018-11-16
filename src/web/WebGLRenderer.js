@@ -164,6 +164,12 @@ WebGLRenderer.prototype = {
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, mesh.indexBuffer);
 
         var floatBuffer = new Float32Array(game.buffer,
+                                           meshCommand.modelMatrix.ptr,
+                                           16); //4x4 matrix
+        var modelMatrixLocation = gl.getUniformLocation(program, "modelMatrix");
+        gl.uniformMatrix4fv(modelMatrixLocation, false, this.matrix4x4transpose(floatBuffer));
+
+        floatBuffer = new Float32Array(game.buffer,
                                            this.viewMatrix.ptr,
                                            16); //4x4 matrix
         var viewMatrixLocation = gl.getUniformLocation(program, "viewMatrix");
@@ -181,7 +187,7 @@ WebGLRenderer.prototype = {
     renderFrame: function (game, renderCommands) {
         gl.viewport(0, 0, this.canvas.width, this.canvas.height);
         gl.enable(gl.DEPTH_TEST);
-        //gl.enable(gl.CULL_FACE);
+        gl.enable(gl.CULL_FACE);
         gl.clearColor(0.0, 0.0, 0.0, 1.0);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 

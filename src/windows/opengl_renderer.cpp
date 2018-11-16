@@ -236,6 +236,10 @@ void drawMesh (openGL_renderer *renderer, GLuint program, render_mesh_command *m
     // z0 z1 z2
     // so glUniformMatrixNfv calls are transposed, and both in the run_around_game code and 
     // opengl shaders, matrices are multiplied like column major matrices (proj * view * model)
+    // TODO(ebuchholz): better to multiply these ahead of time
+    GLint modelMatrixLocation = glGetUniformLocation(program, "modelMatrix");
+    glUniformMatrix4fv(modelMatrixLocation, 1, true, meshCommand->modelMatrix.m);
+
     GLint viewMatrixLocation = glGetUniformLocation(program, "viewMatrix");
     glUniformMatrix4fv(viewMatrixLocation, 1, true, renderer->viewMatrix.m);
 

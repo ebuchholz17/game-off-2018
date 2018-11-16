@@ -468,6 +468,14 @@ void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_mesh_command_set_key_1(render_m
   self->key = arg0;
 }
 
+matrix4x4* EMSCRIPTEN_KEEPALIVE emscripten_bind_render_mesh_command_get_modelMatrix_0(render_mesh_command* self) {
+  return &self->modelMatrix;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_mesh_command_set_modelMatrix_1(render_mesh_command* self, matrix4x4* arg0) {
+  self->modelMatrix = *arg0;
+}
+
 void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_mesh_command___destroy___0(render_mesh_command* self) {
   delete self;
 }

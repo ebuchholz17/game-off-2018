@@ -61,6 +61,7 @@ struct render_command_header{
 
 struct render_mesh_command {
     int key;
+    matrix4x4 modelMatrix;
 };
 
 struct render_command_set_camera {
@@ -95,6 +96,5 @@ struct game_memory {
     void *memory;
     unsigned int memoryCapacity;
 };
-
 
 #endif

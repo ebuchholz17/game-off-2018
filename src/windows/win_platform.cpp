@@ -78,6 +78,24 @@ static void processWindowsMessages (game_input *input) {
                     input->downButton = keyDown;
                 }
             } break;
+            case WM_MOUSEMOVE:
+            {
+                POINT newMousePos;
+                GetCursorPos(&newMousePos);
+                input->pointerX = newMousePos.x;
+                input->pointerY = newMousePos.y;
+            } break;
+            case WM_LBUTTONDOWN:
+            {
+                if (!input->pointerDown) {
+                    input->pointerJustDown = true;
+                }
+                input->pointerDown = true;
+            } break;
+            case WM_LBUTTONUP:
+            {
+                input->pointerDown = false;
+            } break;
             default: 
             {
                 TranslateMessage(&message);
@@ -201,6 +219,7 @@ int WINAPI WinMain (HINSTANCE instance, HINSTANCE prevInstance, LPSTR commandLin
 
             while (programRunning) {
 
+                input.pointerJustDown = false;
                 processWindowsMessages(&input);
 
                 renderCommands.memory.size = 0;
@@ -212,12 +231,13 @@ int WINAPI WinMain (HINSTANCE instance, HINSTANCE prevInstance, LPSTR commandLin
                 QueryPerformanceCounter(&workCounter);
                 long long counterElapsed = workCounter.QuadPart - lastCounter.QuadPart;
                 float elapsedMS = (1000.0f * (float)counterElapsed) / (float)perfCountFrequency;
-                if (elapsedMS < targetMSPerFrame) {
-                    DWORD sleepMS = (DWORD)(targetMSPerFrame - elapsedMS);
-                    if (sleepMS > 0) {
-                        Sleep(sleepMS);
-                    }
-                }
+                // use vsync instead
+                //if (elapsedMS < targetMSPerFrame) {
+                //    DWORD sleepMS = (DWORD)(targetMSPerFrame - elapsedMS);
+                //    if (sleepMS > 0) {
+                //        Sleep(sleepMS);
+                //    }
+                //}
 
                 QueryPerformanceCounter(&lastCounter);
             }

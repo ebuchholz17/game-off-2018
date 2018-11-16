@@ -354,12 +354,13 @@ extern "C" void parseGameAsset (void *assetData, asset_type type, int key,
     }
 }
 
-static void drawMesh (mesh_key key, render_command_list *renderCommands) {
+static void drawMesh (mesh_key key, matrix4x4 modelMatrix, render_command_list *renderCommands) {
     render_mesh_command *meshCommand = 
         (render_mesh_command *)pushRenderCommand(renderCommands,
                                                  RENDER_COMMAND_MESH,
                                                  sizeof(render_mesh_command));
     meshCommand->key = key;
+    meshCommand->modelMatrix = modelMatrix;
 }
 
 void debugCameraMovement (vector3 *debugCameraPos, quaternion *debugCameraRotation, 
@@ -439,6 +440,12 @@ extern "C" void updateGame (game_input *input, game_memory *gameMemory, render_c
 
     debugCameraMovement(&gameState->debugCameraPos, &gameState->debugCameraRotation, input);
 
+    // TODO(ebuchholz): remove
+    static float rotationAmount = 0.0f;
+    rotationAmount += DELTA_TIME * 1.0f;
+
+    matrix4x4 modelMatrix = rotationMatrixFromAxisAngle(Vector3(0.0f, 1.0f, 0.0f), rotationAmount);
+
     // TODO(ebuchholz): get screen dimensions from render commands? and use them
     matrix4x4 projMatrix = createPerspectiveMatrix(0.1f, 1000.0f, (16.0f / 9.0f), 80.0f);
     matrix4x4 viewMatrix = createViewMatrix(gameState->debugCameraRotation, 
@@ -453,5 +460,5 @@ extern "C" void updateGame (game_input *input, game_memory *gameMemory, render_c
     setCameraCommand->viewMatrix = viewMatrix;
     setCameraCommand->projMatrix = projMatrix;
 
-    drawMesh(MESH_KEY_SPHERE, renderCommands);
+    drawMesh(MESH_KEY_SPHERE, modelMatrix, renderCommands);
 }

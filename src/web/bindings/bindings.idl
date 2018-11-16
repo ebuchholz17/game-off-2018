@@ -92,6 +92,7 @@ interface render_command_header{
 
 interface render_mesh_command {
     attribute long key;
+    [Value] attribute matrix4x4 modelMatrix;
 };
 
 interface render_command_set_camera {
