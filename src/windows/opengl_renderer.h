@@ -192,7 +192,13 @@ struct openGL_mesh {
     int numIndices;
 };
 
+struct openGL_texture {
+    int key;
+    GLuint textureID;
+};
+
 #define MAX_OPENGL_MESHES 100
+#define MAX_OPENGL_TEXTURES 100
 
 struct openGL_renderer {
     HGLRC context;
@@ -202,6 +208,8 @@ struct openGL_renderer {
 
     int numMeshes;
     openGL_mesh meshes[MAX_OPENGL_MESHES];
+    int numTextures;
+    openGL_texture textures[MAX_OPENGL_TEXTURES];
 
     matrix4x4 viewMatrix;
     matrix4x4 projMatrix;

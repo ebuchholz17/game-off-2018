@@ -191,15 +191,34 @@ int WINAPI WinMain (HINSTANCE instance, HINSTANCE prevInstance, LPSTR commandLin
                         fseek(objFile, 0, SEEK_SET);
 
                         char *fileData = (char *)malloc(fileSize + 1);
-                        size_t totalRead = fread(fileData, fileSize, 1, objFile);
+                        fread(fileData, fileSize, 1, objFile);
                         fileData[fileSize] = 0;
-                        
                         fclose(objFile);
 
                         parseGameAsset(fileData, ASSET_TYPE_OBJ, assetToLoad->key, &gameMemory, &workingAssetMemory);
                         free(fileData);
 
                         loadRendererMesh(&rendererMemory, (loaded_mesh_asset *)workingAssetMemory.base);
+                    } break;
+                    case ASSET_TYPE_BMP:
+                    {
+                        FILE *bmpFile; 
+                        fopen_s(&bmpFile, assetToLoad->path, "rb");
+                        assert(bmpFile); // TODO(ebuchholz): better error check?
+
+                        fseek(bmpFile, 0, SEEK_END);
+                        int fileSize = ftell(bmpFile);
+                        fseek(bmpFile, 0, SEEK_SET);
+
+                        char *fileData = (char *)malloc(fileSize);
+                        fread(fileData, fileSize, 1, bmpFile);
+                        fclose(bmpFile);
+
+                        parseGameAsset(fileData, ASSET_TYPE_BMP, assetToLoad->key, &gameMemory, &workingAssetMemory);
+                        free(fileData);
+
+                        // load texture onto gpu
+                        loadRendererTexture(&rendererMemory, (loaded_texture_asset *)workingAssetMemory.base);
                     } break;
                 }
             }

@@ -14,6 +14,11 @@ var WebGLMesh = function () {
     this.numIndices = -1;
 };
 
+var WebGLTexture = function () {
+    this.key = -1;
+    this.textureID = -1;
+};
+
 var ShaderProgram = function () {
     this.type = -1;
     this.vertexShader = -1;
@@ -28,6 +33,7 @@ var ShaderTypes = {
 var WebGLRenderer = function () {
     this.shaders = [];
     this.meshes = [];
+    this.textures = [];
 
     this.viewMatrix = null;
     this.projMatrix = null;
@@ -112,6 +118,23 @@ WebGLRenderer.prototype = {
         mesh.numIndices = loadedMesh.indices.count;
     },
 
+    loadTexture: function (game, loadedTexture) {
+        var texture = new WebGLTexture();
+        texture.key = loadedTexture.key;
+        this.textures[texture.key] = texture;
+
+        texture.textureID = gl.createTexture();
+        var uintBuffer = new Uint8Array(game.buffer,
+                                        loadedTexture.pixels.ptr,
+                                        loadedTexture.width * loadedTexture.height * 4);
+        gl.bindTexture(gl.TEXTURE_2D, texture.textureID);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, loadedTexture.width, loadedTexture.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, uintBuffer);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+    },
+
     setCamera: function (setCameraCommand) {
         this.viewMatrix = setCameraCommand.viewMatrix;
         this.projMatrix = setCameraCommand.projMatrix;
@@ -143,8 +166,8 @@ WebGLRenderer.prototype = {
         return floatBuffer;
     },
 
-    drawMesh: function (game, meshCommand, program) {
-        var mesh = this.meshes[meshCommand.key];
+    drawModel: function (game, modelCommand, program) {
+        var mesh = this.meshes[modelCommand.meshKey];
 
         gl.bindBuffer(gl.ARRAY_BUFFER, mesh.positionBuffer);
         var positionLocation = gl.getAttribLocation(program, "position");
@@ -163,8 +186,9 @@ WebGLRenderer.prototype = {
 
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, mesh.indexBuffer);
 
+        // TODO(ebuchholz): figure out how to do this without making new array buffer view every frame
         var floatBuffer = new Float32Array(game.buffer,
-                                           meshCommand.modelMatrix.ptr,
+                                           modelCommand.modelMatrix.ptr,
                                            16); //4x4 matrix
         var modelMatrixLocation = gl.getUniformLocation(program, "modelMatrix");
         gl.uniformMatrix4fv(modelMatrixLocation, false, this.matrix4x4transpose(floatBuffer));
@@ -181,6 +205,12 @@ WebGLRenderer.prototype = {
         var projMatrixLocation = gl.getUniformLocation(program, "projMatrix");
         gl.uniformMatrix4fv(projMatrixLocation, false, this.matrix4x4transpose(floatBuffer));
 
+        var texture = this.textures[modelCommand.textureKey];
+        var textureLocation = gl.getUniformLocation(program, "texture");
+        gl.uniform1i(textureLocation, 0);
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, texture.textureID);
+
         gl.drawElements(gl.TRIANGLES, mesh.numIndices, gl.UNSIGNED_INT, 0);
     },
 
@@ -188,7 +218,7 @@ WebGLRenderer.prototype = {
         gl.viewport(0, 0, this.canvas.width, this.canvas.height);
         gl.enable(gl.DEPTH_TEST);
         gl.enable(gl.CULL_FACE);
-        gl.clearColor(0.0, 0.0, 0.0, 1.0);
+        gl.clearColor(0.0, 0.7, 0.8, 1.0);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
         var program = this.shaders[ShaderTypes.DEFAULT].program;
@@ -204,12 +234,12 @@ WebGLRenderer.prototype = {
             switch (header.type) {
                 default:
                     break;
-                case game.RENDER_COMMAND_MESH:
+                case game.RENDER_COMMAND_MODEL:
                 {
-                    var meshCommand = game.wrapPointer(renderMemoryPointer + renderCommandOffset, 
-                                                            game.render_mesh_command);
-                    renderCommandOffset += game.sizeof_render_mesh_command();
-                    this.drawMesh(game, meshCommand, program);
+                    var modelCommand = game.wrapPointer(renderMemoryPointer + renderCommandOffset, 
+                                                            game.render_command_model);
+                    renderCommandOffset += game.sizeof_render_command_model();
+                    this.drawModel(game, modelCommand, program);
                 } break;
                 case game.RENDER_COMMAND_SET_CAMERA:
                 {

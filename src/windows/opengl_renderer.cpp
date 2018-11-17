@@ -117,6 +117,23 @@ void loadRendererMesh (renderer_memory *memory, loaded_mesh_asset *loadedMesh) {
     mesh->numIndices = loadedMesh->indices.count;
 }
 
+void loadRendererTexture (renderer_memory *memory, loaded_texture_asset *loadedTexture) {
+    openGL_renderer *renderer = (openGL_renderer *)memory->memory;
+    assert(renderer->numTextures < MAX_OPENGL_TEXTURES);
+    // TODO(ebuchholz): triple check that the keys will line up this way
+    openGL_texture *texture = &renderer->textures[loadedTexture->key];
+    renderer->numTextures++;
+
+    glGenTextures(1, &texture->textureID);
+    glBindTexture(GL_TEXTURE_2D, texture->textureID);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, loadedTexture->width, loadedTexture->height, 
+                 0, GL_RGBA, GL_UNSIGNED_BYTE, loadedTexture->pixels);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+}
+
 static void createShaderProgram(openGL_renderer *renderer, shader_type type,
                                 char *vertexSource, char *fragmentSource, 
                                 renderer_memory *memory) 
@@ -204,8 +221,8 @@ void setCamera (openGL_renderer *renderer, render_command_set_camera *setCameraC
     renderer->projMatrix = setCameraCommand->projMatrix;
 }
 
-void drawMesh (openGL_renderer *renderer, GLuint program, render_mesh_command *meshCommand) {
-    openGL_mesh *mesh = &renderer->meshes[meshCommand->key];
+void drawModel (openGL_renderer *renderer, GLuint program, render_command_model *modelCommand) {
+    openGL_mesh *mesh = &renderer->meshes[modelCommand->meshKey];
 
     // TODO(ebuchholz): have a way to avoid finding and settings attributes/uniforms for each
     // time we draw a mesh
@@ -238,13 +255,20 @@ void drawMesh (openGL_renderer *renderer, GLuint program, render_mesh_command *m
     // opengl shaders, matrices are multiplied like column major matrices (proj * view * model)
     // TODO(ebuchholz): better to multiply these ahead of time
     GLint modelMatrixLocation = glGetUniformLocation(program, "modelMatrix");
-    glUniformMatrix4fv(modelMatrixLocation, 1, true, meshCommand->modelMatrix.m);
+    glUniformMatrix4fv(modelMatrixLocation, 1, true, modelCommand->modelMatrix.m);
 
     GLint viewMatrixLocation = glGetUniformLocation(program, "viewMatrix");
     glUniformMatrix4fv(viewMatrixLocation, 1, true, renderer->viewMatrix.m);
 
     GLint projMatrixLocation = glGetUniformLocation(program, "projMatrix");
     glUniformMatrix4fv(projMatrixLocation, 1, true, renderer->projMatrix.m);
+
+    openGL_texture *texture = &renderer->textures[modelCommand->textureKey];
+
+    glActiveTexture(GL_TEXTURE0);
+    GLuint textureLocation = glGetUniformLocation(program, "texture");
+    glUniform1i(textureLocation, 0);
+    glBindTexture(GL_TEXTURE_2D, texture->textureID);
 
     glDrawElements(GL_TRIANGLES, mesh->numIndices, GL_UNSIGNED_INT, 0);
 }
@@ -255,7 +279,7 @@ void renderFrame (renderer_memory *memory, render_command_list *renderCommands) 
     glViewport(0, 0, 960, 540);
     glEnable(GL_DEPTH_TEST);
     //glEnable(GL_CULL_FACE);
-    glClearColor(0.0, 0.0, 0.0, 1.0);
+    glClearColor(0.0f, 0.7f, 0.8f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     GLuint program = renderer->shaders[SHADER_TYPE_DEFAULT].program;
@@ -271,13 +295,13 @@ void renderFrame (renderer_memory *memory, render_command_list *renderCommands) 
             default:
                 // error
                 break;
-            case RENDER_COMMAND_MESH: 
+            case RENDER_COMMAND_MODEL: 
             {
-                render_mesh_command *meshCommand = 
-                    (render_mesh_command *)((char *)renderCommands->memory.base + 
+                render_command_model *modelCommand = 
+                    (render_command_model *)((char *)renderCommands->memory.base + 
                                             renderCommandOffset);
-                drawMesh(renderer, program, meshCommand);
-                renderCommandOffset += sizeof(render_mesh_command);
+                drawModel(renderer, program, modelCommand);
+                renderCommandOffset += sizeof(render_command_model);
             } break;
             case RENDER_COMMAND_SET_CAMERA: 
             {

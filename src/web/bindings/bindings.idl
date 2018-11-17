@@ -48,7 +48,8 @@ interface memory_arena {
 };
 
 enum asset_type {
-    "ASSET_TYPE_OBJ"
+    "ASSET_TYPE_OBJ",
+    "ASSET_TYPE_BMP"
 };
 
 interface asset_to_load {
@@ -81,8 +82,15 @@ interface loaded_mesh_asset {
     [Value] attribute int_mesh_attribute indices;
 };
 
+interface loaded_texture_asset {
+    attribute long key;
+    attribute long width;
+    attribute long height;
+    attribute VoidPtr pixels; 
+};
+
 enum render_command_type {
-    "RENDER_COMMAND_MESH",
+    "RENDER_COMMAND_MODEL",
     "RENDER_COMMAND_SET_CAMERA"
 };
 
@@ -90,8 +98,9 @@ interface render_command_header{
     attribute render_command_type type;
 };
 
-interface render_mesh_command {
-    attribute long key;
+interface render_command_model {
+    attribute long meshKey;
+    attribute long textureKey;
     [Value] attribute matrix4x4 modelMatrix;
 };
 

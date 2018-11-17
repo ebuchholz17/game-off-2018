@@ -79,6 +79,10 @@ WebPlatform.prototype = {
                 {
                     this.loadOBJFile(assetToLoad.path, assetToLoad.type, assetToLoad.key);
                 } break;
+                case this.game.ASSET_TYPE_BMP: 
+                {
+                    this.loadBMPFile(assetToLoad.path, assetToLoad.type, assetToLoad.key);
+                } break;
             }
         }
 
@@ -118,6 +122,55 @@ WebPlatform.prototype = {
                     }.bind(this),
                     function () {
                         console.log("fetch .text() failed for " + path);
+                    }.bind(this)
+                );
+            }.bind(this),
+            function () {
+                console.log("Failed to fetch " + path);
+            }.bind(this)
+        );
+    },
+
+    loadBMPFile: function (path, assetType, assetKey) {
+        fetch(path).then(
+            function (file) {
+                file.arrayBuffer().then(
+                    function (data) {
+                        console.log();
+                        var fileDataView = new Uint8Array(data);
+                        //var strLength = this.game.lengthBytesUTF8(data);
+                        var numBytes = data.byteLength;
+                        var bmpFileData = this.game._malloc(numBytes);
+                        var bmpDataView = new Uint8Array(this.game.buffer, 
+                                                         bmpFileData,
+                                                         numBytes);
+                        bmpDataView.set(fileDataView, 0);
+
+                        this.workingAssetMemory.size = 0;
+
+                        this.game.ccall("parseGameAsset", 
+                            "null", 
+                            ["number", "number", "number", "number", "number"], 
+                            [
+                                bmpFileData, 
+                                assetType,
+                                assetKey,
+                                this.game.getPointer(this.gameMemory),
+                                this.game.getPointer(this.workingAssetMemory)
+                            ]
+                        );
+
+                        var loadedTexture = 
+                            this.game.wrapPointer(
+                                this.game.getPointer(this.workingAssetMemory.base), 
+                                this.game.loaded_texture_asset
+                            );
+
+                        this.renderer.loadTexture(this.game, loadedTexture);
+                        this.onAssetLoaded();
+                    }.bind(this),
+                    function () {
+                        console.log("fetch .arrayBuffer() failed for " + path);
                     }.bind(this)
                 );
             }.bind(this),

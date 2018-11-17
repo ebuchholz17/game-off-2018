@@ -475,6 +475,48 @@ Module['vector3'] = vector3;
   var self = this.ptr;
   _emscripten_bind_vector3___destroy___0(self);
 };
+// render_command_model
+/** @suppress {undefinedVars, duplicate} */function render_command_model() { throw "cannot construct a render_command_model, no constructor in IDL" }
+render_command_model.prototype = Object.create(WrapperObject.prototype);
+render_command_model.prototype.constructor = render_command_model;
+render_command_model.prototype.__class__ = render_command_model;
+render_command_model.__cache__ = {};
+Module['render_command_model'] = render_command_model;
+
+  render_command_model.prototype['get_meshKey'] = render_command_model.prototype.get_meshKey = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_render_command_model_get_meshKey_0(self);
+};
+    render_command_model.prototype['set_meshKey'] = render_command_model.prototype.set_meshKey = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_render_command_model_set_meshKey_1(self, arg0);
+};
+    Object.defineProperty(render_command_model.prototype, 'meshKey', { get: render_command_model.prototype.get_meshKey, set: render_command_model.prototype.set_meshKey }) 
+  render_command_model.prototype['get_textureKey'] = render_command_model.prototype.get_textureKey = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_render_command_model_get_textureKey_0(self);
+};
+    render_command_model.prototype['set_textureKey'] = render_command_model.prototype.set_textureKey = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_render_command_model_set_textureKey_1(self, arg0);
+};
+    Object.defineProperty(render_command_model.prototype, 'textureKey', { get: render_command_model.prototype.get_textureKey, set: render_command_model.prototype.set_textureKey }) 
+  render_command_model.prototype['get_modelMatrix'] = render_command_model.prototype.get_modelMatrix = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return wrapPointer(_emscripten_bind_render_command_model_get_modelMatrix_0(self), matrix4x4);
+};
+    render_command_model.prototype['set_modelMatrix'] = render_command_model.prototype.set_modelMatrix = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_render_command_model_set_modelMatrix_1(self, arg0);
+};
+    Object.defineProperty(render_command_model.prototype, 'modelMatrix', { get: render_command_model.prototype.get_modelMatrix, set: render_command_model.prototype.set_modelMatrix }) 
+  render_command_model.prototype['__destroy__'] = render_command_model.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  _emscripten_bind_render_command_model___destroy___0(self);
+};
 // game_input
 /** @suppress {undefinedVars, duplicate} */function game_input() { throw "cannot construct a game_input, no constructor in IDL" }
 game_input.prototype = Object.create(WrapperObject.prototype);
@@ -790,37 +832,57 @@ Module['render_command_list'] = render_command_list;
   var self = this.ptr;
   _emscripten_bind_render_command_list___destroy___0(self);
 };
-// render_mesh_command
-/** @suppress {undefinedVars, duplicate} */function render_mesh_command() { throw "cannot construct a render_mesh_command, no constructor in IDL" }
-render_mesh_command.prototype = Object.create(WrapperObject.prototype);
-render_mesh_command.prototype.constructor = render_mesh_command;
-render_mesh_command.prototype.__class__ = render_mesh_command;
-render_mesh_command.__cache__ = {};
-Module['render_mesh_command'] = render_mesh_command;
+// loaded_texture_asset
+/** @suppress {undefinedVars, duplicate} */function loaded_texture_asset() { throw "cannot construct a loaded_texture_asset, no constructor in IDL" }
+loaded_texture_asset.prototype = Object.create(WrapperObject.prototype);
+loaded_texture_asset.prototype.constructor = loaded_texture_asset;
+loaded_texture_asset.prototype.__class__ = loaded_texture_asset;
+loaded_texture_asset.__cache__ = {};
+Module['loaded_texture_asset'] = loaded_texture_asset;
 
-  render_mesh_command.prototype['get_key'] = render_mesh_command.prototype.get_key = /** @suppress {undefinedVars, duplicate} */function() {
+  loaded_texture_asset.prototype['get_key'] = loaded_texture_asset.prototype.get_key = /** @suppress {undefinedVars, duplicate} */function() {
   var self = this.ptr;
-  return _emscripten_bind_render_mesh_command_get_key_0(self);
+  return _emscripten_bind_loaded_texture_asset_get_key_0(self);
 };
-    render_mesh_command.prototype['set_key'] = render_mesh_command.prototype.set_key = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+    loaded_texture_asset.prototype['set_key'] = loaded_texture_asset.prototype.set_key = /** @suppress {undefinedVars, duplicate} */function(arg0) {
   var self = this.ptr;
   if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
-  _emscripten_bind_render_mesh_command_set_key_1(self, arg0);
+  _emscripten_bind_loaded_texture_asset_set_key_1(self, arg0);
 };
-    Object.defineProperty(render_mesh_command.prototype, 'key', { get: render_mesh_command.prototype.get_key, set: render_mesh_command.prototype.set_key }) 
-  render_mesh_command.prototype['get_modelMatrix'] = render_mesh_command.prototype.get_modelMatrix = /** @suppress {undefinedVars, duplicate} */function() {
+    Object.defineProperty(loaded_texture_asset.prototype, 'key', { get: loaded_texture_asset.prototype.get_key, set: loaded_texture_asset.prototype.set_key }) 
+  loaded_texture_asset.prototype['get_width'] = loaded_texture_asset.prototype.get_width = /** @suppress {undefinedVars, duplicate} */function() {
   var self = this.ptr;
-  return wrapPointer(_emscripten_bind_render_mesh_command_get_modelMatrix_0(self), matrix4x4);
+  return _emscripten_bind_loaded_texture_asset_get_width_0(self);
 };
-    render_mesh_command.prototype['set_modelMatrix'] = render_mesh_command.prototype.set_modelMatrix = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+    loaded_texture_asset.prototype['set_width'] = loaded_texture_asset.prototype.set_width = /** @suppress {undefinedVars, duplicate} */function(arg0) {
   var self = this.ptr;
   if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
-  _emscripten_bind_render_mesh_command_set_modelMatrix_1(self, arg0);
+  _emscripten_bind_loaded_texture_asset_set_width_1(self, arg0);
 };
-    Object.defineProperty(render_mesh_command.prototype, 'modelMatrix', { get: render_mesh_command.prototype.get_modelMatrix, set: render_mesh_command.prototype.set_modelMatrix }) 
-  render_mesh_command.prototype['__destroy__'] = render_mesh_command.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
+    Object.defineProperty(loaded_texture_asset.prototype, 'width', { get: loaded_texture_asset.prototype.get_width, set: loaded_texture_asset.prototype.set_width }) 
+  loaded_texture_asset.prototype['get_height'] = loaded_texture_asset.prototype.get_height = /** @suppress {undefinedVars, duplicate} */function() {
   var self = this.ptr;
-  _emscripten_bind_render_mesh_command___destroy___0(self);
+  return _emscripten_bind_loaded_texture_asset_get_height_0(self);
+};
+    loaded_texture_asset.prototype['set_height'] = loaded_texture_asset.prototype.set_height = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_loaded_texture_asset_set_height_1(self, arg0);
+};
+    Object.defineProperty(loaded_texture_asset.prototype, 'height', { get: loaded_texture_asset.prototype.get_height, set: loaded_texture_asset.prototype.set_height }) 
+  loaded_texture_asset.prototype['get_pixels'] = loaded_texture_asset.prototype.get_pixels = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return wrapPointer(_emscripten_bind_loaded_texture_asset_get_pixels_0(self), VoidPtr);
+};
+    loaded_texture_asset.prototype['set_pixels'] = loaded_texture_asset.prototype.set_pixels = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_loaded_texture_asset_set_pixels_1(self, arg0);
+};
+    Object.defineProperty(loaded_texture_asset.prototype, 'pixels', { get: loaded_texture_asset.prototype.get_pixels, set: loaded_texture_asset.prototype.set_pixels }) 
+  loaded_texture_asset.prototype['__destroy__'] = loaded_texture_asset.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  _emscripten_bind_loaded_texture_asset___destroy___0(self);
 };
 // matrix3x3
 /** @suppress {undefinedVars, duplicate} */function matrix3x3() { throw "cannot construct a matrix3x3, no constructor in IDL" }
@@ -1017,11 +1079,13 @@ Module['int_mesh_attribute'] = int_mesh_attribute;
 
     Module['ASSET_TYPE_OBJ'] = _emscripten_enum_asset_type_ASSET_TYPE_OBJ();
 
+    Module['ASSET_TYPE_BMP'] = _emscripten_enum_asset_type_ASSET_TYPE_BMP();
+
     
 
     // render_command_type
 
-    Module['RENDER_COMMAND_MESH'] = _emscripten_enum_render_command_type_RENDER_COMMAND_MESH();
+    Module['RENDER_COMMAND_MODEL'] = _emscripten_enum_render_command_type_RENDER_COMMAND_MODEL();
 
     Module['RENDER_COMMAND_SET_CAMERA'] = _emscripten_enum_render_command_type_RENDER_COMMAND_SET_CAMERA();
 

@@ -14,7 +14,8 @@ struct memory_arena {
 
 // asset loading
 enum asset_type {
-    ASSET_TYPE_OBJ
+    ASSET_TYPE_OBJ,
+    ASSET_TYPE_BMP
 };
 
 struct asset_to_load {
@@ -50,8 +51,15 @@ struct loaded_mesh_asset {
     int_mesh_attribute indices;
 };
 
+struct loaded_texture_asset {
+    int key;
+    int width;
+    int height;
+    void *pixels; // unsigned int, but void for compatibility with webidl
+};
+
 enum render_command_type {
-    RENDER_COMMAND_MESH,
+    RENDER_COMMAND_MODEL,
     RENDER_COMMAND_SET_CAMERA
 };
 
@@ -59,8 +67,9 @@ struct render_command_header{
     render_command_type type;
 };
 
-struct render_mesh_command {
-    int key;
+struct render_command_model {
+    int meshKey;
+    int textureKey;
     matrix4x4 modelMatrix;
 };
 

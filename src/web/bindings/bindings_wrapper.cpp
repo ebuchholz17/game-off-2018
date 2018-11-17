@@ -44,14 +44,17 @@ int sizeof_int_mesh_attribute () {
 int sizeof_loaded_mesh_asset () {
     return sizeof(loaded_mesh_asset);
 }  
+int sizeof_loaded_texture_asset () {
+    return sizeof(loaded_mesh_asset);
+}  
 int sizeof_memory_arena () {
     return sizeof(memory_arena);
 }  
 int sizeof_render_command_header () {
     return sizeof(render_command_header);
 }  
-int sizeof_render_mesh_command () {
-    return sizeof(render_mesh_command);
+int sizeof_render_command_model () {
+    return sizeof(render_command_model);
 }  
 int sizeof_render_command_set_camera () {
     return sizeof(render_command_set_camera);
@@ -79,9 +82,10 @@ EMSCRIPTEN_BINDINGS(bindings) {
     function ("sizeof_float_mesh_attribute", &sizeof_float_mesh_attribute);
     function ("sizeof_int_mesh_attribute", &sizeof_int_mesh_attribute);
     function ("sizeof_loaded_mesh_asset", &sizeof_loaded_mesh_asset);
+    function ("sizeof_loaded_texture_asset", &sizeof_loaded_texture_asset);
     function ("sizeof_memory_arena", &sizeof_memory_arena);
     function ("sizeof_render_command_header", &sizeof_render_command_header);
-    function ("sizeof_render_mesh_command", &sizeof_render_mesh_command);
+    function ("sizeof_render_command_model", &sizeof_render_command_model);
     function ("sizeof_render_command_set_camera", &sizeof_render_command_set_camera);
     function ("sizeof_render_command_list", &sizeof_render_command_list);
     function ("sizeof_game_input", &sizeof_game_input);

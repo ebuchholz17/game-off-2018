@@ -14,11 +14,10 @@ char *defaultVertexShaderSource = R"shader(
     varying float vLighting;
 
     void main() {
-        gl_Position = projMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);
-        vTexCoord = texCoord;
-        vec4 newNormal = modelMatrix * vec4(normal, 0.0);
-        vec4 lightDir = normalize(vec4(1.0, 1.0, 1.0, 0.0));
-        float lighting = dot(newNormal, lightDir);
+        gl_Position = projMatrix * viewMatrix * modelMatrix * vec4(position, 1.0); vTexCoord = texCoord;
+        vec4 newNormal = normalize(modelMatrix * vec4(normal, 0.0));
+        vec3 lightDir = normalize(vec3(0.0, 1.0, 0.3));
+        float lighting = dot(newNormal, vec4(lightDir, 0.0));
         vLighting = lighting;
     }
 )shader";
@@ -38,10 +37,17 @@ char *defaultFragmentShaderSource = R"shader(
     varying vec2 vTexCoord;
     varying float vLighting;
 
+    uniform sampler2D texture;
+
     void main() {
-        vec4 baseColor = vec4(0.0, clamp(vTexCoord.s, 0.0, 1.0), clamp(vTexCoord.t, 0.0, 1.0), 1.0);
-        vec4 lighting = vec4(0.05, 0.05, 0.05, 1.0) + (vec4(1.0, 1.0, 1.0, 1.0) * vLighting);
-        gl_FragColor = baseColor * lighting;
+        vec2 sampleCoord;
+        sampleCoord.x = vTexCoord.x;
+        sampleCoord.y = vTexCoord.y;
+        vec3 textureColor = texture2D(texture, sampleCoord).rgb;
+
+        vec3 ambientLighting = vec3(0.3, 0.6, 1.0) * 0.15;
+        vec3 directLighting = vec3(1.0, 0.9, 0.6) * vLighting * textureColor;
+        gl_FragColor = clamp(vec4(ambientLighting + directLighting, 1.0), vec4(0.0, 0.0, 0.0, 0.0), vec4(1.0, 1.0, 1.0, 1.0));
     }
 )shader";
 

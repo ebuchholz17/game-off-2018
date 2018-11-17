@@ -306,6 +306,38 @@ static void parseOBJ (void *objData, game_assets *assets, int key, memory_arena 
     //}
 }
 
+static void parseBitmap (void *fileData, game_assets *assets, int key, memory_arena *workingMemory) {
+    int numTextures = assets->numTextures;
+    assert(numTextures < MAX_NUM_TEXTURES);
+
+    texture_asset *textureAsset = (texture_asset *)allocateMemorySize(&assets->assetMemory, sizeof(texture_asset *));
+    assets->textures[numTextures] = textureAsset;
+    assets->numTextures++;
+
+    loaded_texture_asset *loadedBitmap = (loaded_texture_asset *)allocateMemorySize(workingMemory, sizeof(loaded_texture_asset));
+    loadedBitmap->key = key;
+
+    bitmap_header *header = (bitmap_header *)fileData;    
+    unsigned char *pixels = (unsigned char *)((char *)fileData + header->bitmapOffset);
+
+    int width = header->width;
+    int height = header->height;
+    loadedBitmap->width = width;
+    loadedBitmap->height = height;
+    unsigned char *bitmapPixels = (unsigned char *)allocateMemorySize(workingMemory, sizeof(unsigned char) * 4 * width * height);
+    loadedBitmap->pixels = (unsigned int *)bitmapPixels;
+
+    unsigned int numPixelValues = width * height * 3;
+    unsigned int numBitmapValues = 0;
+    for (unsigned int i = 0; i < numPixelValues; i += 3) {
+        bitmapPixels[numBitmapValues] = pixels[i+2];
+        bitmapPixels[numBitmapValues+1] = pixels[i+1];
+        bitmapPixels[numBitmapValues+2] = pixels[i];
+        bitmapPixels[numBitmapValues+3] = 0xff;
+        numBitmapValues += 4;
+    }
+}
+
 static void pushAsset (asset_list *assetList, char *path, asset_type type, int key) {
     assert(assetList->numAssetsToLoad < assetList->maxAssetsToLoad);
     asset_to_load *assetToLoad = assetList->assetsToLoad + assetList->numAssetsToLoad;
@@ -318,6 +350,9 @@ static void pushAsset (asset_list *assetList, char *path, asset_type type, int k
 // TODO(ebuchholz): Maybe pack everything into a single file and load that?
 extern "C" void getGameAssetList (asset_list *assetList) {
     pushAsset(assetList, "assets/meshes/geosphere.obj", ASSET_TYPE_OBJ, MESH_KEY_SPHERE);
+    pushAsset(assetList, "assets/meshes/cube.obj", ASSET_TYPE_OBJ, MESH_KEY_CUBE);
+    pushAsset(assetList, "assets/textures/uv_test.bmp", ASSET_TYPE_BMP, TEXTURE_KEY_UV_TEST);
+    pushAsset(assetList, "assets/textures/ground.bmp", ASSET_TYPE_BMP, TEXTURE_KEY_GROUND);
 }
 
 extern "C" void parseGameAsset (void *assetData, asset_type type, int key,
@@ -351,16 +386,21 @@ extern "C" void parseGameAsset (void *assetData, asset_type type, int key,
     case ASSET_TYPE_OBJ:
         parseOBJ(assetData, &gameState->assets, key, workingMemory);
         break;
+    case ASSET_TYPE_BMP:
+        parseBitmap(assetData, &gameState->assets, key, workingMemory);
+        break;
     }
 }
 
-static void drawMesh (mesh_key key, matrix4x4 modelMatrix, render_command_list *renderCommands) {
-    render_mesh_command *meshCommand = 
-        (render_mesh_command *)pushRenderCommand(renderCommands,
-                                                 RENDER_COMMAND_MESH,
-                                                 sizeof(render_mesh_command));
-    meshCommand->key = key;
-    meshCommand->modelMatrix = modelMatrix;
+static void drawModel (mesh_key meshKey, texture_key textureKey, 
+                       matrix4x4 modelMatrix, render_command_list *renderCommands) {
+    render_command_model *modelCommand = 
+        (render_command_model *)pushRenderCommand(renderCommands,
+                                                 RENDER_COMMAND_MODEL,
+                                                 sizeof(render_command_model));
+    modelCommand->meshKey = meshKey;
+    modelCommand->textureKey = textureKey;
+    modelCommand->modelMatrix = modelMatrix;
 }
 
 void debugCameraMovement (vector3 *debugCameraPos, quaternion *debugCameraRotation, 
@@ -434,6 +474,7 @@ extern "C" void updateGame (game_input *input, game_memory *gameMemory, render_c
     if (!gameState->gameInitialized) {
         gameState->gameInitialized = true;
         gameState->debugCameraPos = {};
+        gameState->debugCameraPos.y = 0.5f;
         gameState->debugCameraPos.z = 3.0f;
         gameState->debugCameraRotation = quaternionFromAxisAngle(Vector3(1.0f, 0.0f, 0.0f), 0.0f);
     }
@@ -443,8 +484,6 @@ extern "C" void updateGame (game_input *input, game_memory *gameMemory, render_c
     // TODO(ebuchholz): remove
     static float rotationAmount = 0.0f;
     rotationAmount += DELTA_TIME * 1.0f;
-
-    matrix4x4 modelMatrix = rotationMatrixFromAxisAngle(Vector3(0.0f, 1.0f, 0.0f), rotationAmount);
 
     // TODO(ebuchholz): get screen dimensions from render commands? and use them
     matrix4x4 projMatrix = createPerspectiveMatrix(0.1f, 1000.0f, (16.0f / 9.0f), 80.0f);
@@ -460,5 +499,9 @@ extern "C" void updateGame (game_input *input, game_memory *gameMemory, render_c
     setCameraCommand->viewMatrix = viewMatrix;
     setCameraCommand->projMatrix = projMatrix;
 
-    drawMesh(MESH_KEY_SPHERE, modelMatrix, renderCommands);
+    matrix4x4 modelMatrix = translationMatrix(0.0f, 0.5f, 0.0f) * rotationMatrixFromAxisAngle(Vector3(0.0f, 1.0f, 0.0f), rotationAmount);
+    drawModel(MESH_KEY_SPHERE, TEXTURE_KEY_UV_TEST, modelMatrix, renderCommands);
+
+    modelMatrix = translationMatrix(0.0f, -30.0f, 0.0f) * scaleMatrix(30.0f);
+    drawModel(MESH_KEY_CUBE, TEXTURE_KEY_GROUND, modelMatrix, renderCommands);
 }
