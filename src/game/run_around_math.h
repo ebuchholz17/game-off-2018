@@ -56,6 +56,12 @@ struct plane {
     float distance;
 };
 
+struct triangle {
+    vector3 p0;
+    vector3 p1;
+    vector3 p2;
+};
+
 struct line {
     vector3 a;
     vector3 b;
