@@ -1,5 +1,50 @@
 #include "run_around_game.h"
 
+// NOTE(ebuchholz): taken from ebrt, and probably RTCD
+// TODO(ebuchholz): make a line segment and cylidner collision test
+inline bool triangleIntersection (vector3 rayPos, vector3 rayDir, 
+                                  vector3 p0, vector3 p1, vector3 p2,
+                                  float *t, vector3 *normal, vector3 *intersectionPoint) {
+    vector3 ab = p1 - p0;
+    vector3 ac = p2 - p0;
+    vector3 qp = -rayDir; 
+
+    vector3 n = crossProduct(ab, ac); // triangle normal
+    float d = dotProduct(qp, n);
+    //if (d <= 0.0f) { // backface culling
+    //    return false;
+    //}
+    float ood = 1.0f / d;
+    vector3 ap = rayPos - p0;
+    float newT = dotProduct(ap, n);
+    newT *= ood;
+    if (newT < 0.0f) {
+        return false;
+    }
+
+    vector3 e = crossProduct(qp, ap);
+    float v = dotProduct(ac, e);
+    v *= ood;
+    if( v < 0.0f || v > 1.0f) {
+        return false;
+    }
+    float w = -dotProduct(ab,e);
+    w *= ood;
+    if (w < 0.0f || v + w > 1.0f) {
+        return false;
+    } 
+
+    float u = 1.0f - v - w;
+
+    *t = newT;
+    *normal = normalize(crossProduct(ab, ac));
+    if (d < 0.0f) {
+        *normal = -*normal;
+    }
+    *intersectionPoint = u * p0 + v * p1 + w * p2;
+    return true;
+}
+
 static void *pushRenderCommand (render_command_list *renderCommands, 
                          render_command_type type, 
                          unsigned int size) 
@@ -119,6 +164,7 @@ static void parseOBJ (void *objData, game_assets *assets, int key, memory_arena 
     mesh_asset *meshAsset = (mesh_asset *)allocateMemorySize(&assets->assetMemory, sizeof(mesh_asset *));
     assets->meshes[numMeshes] = meshAsset;
     assets->numMeshes++;
+    meshAsset->key = (mesh_key)key;
 
     loaded_mesh_asset *loadedMesh = (loaded_mesh_asset *)allocateMemorySize(workingMemory, sizeof(loaded_mesh_asset));
     loadedMesh->key = key;
@@ -306,6 +352,54 @@ static void parseOBJ (void *objData, game_assets *assets, int key, memory_arena 
     //}
 }
 
+// parses .obj but also makes a copy of some of the data to use for level data
+static void parseLevelOBJ (void *objData, game_assets *assets, int meshKey, int levelMeshKey,
+                           memory_arena *workingMemory) 
+{
+    parseOBJ(objData, assets, meshKey, workingMemory);
+
+    int numLevelMeshes = assets->numLevelMeshes;
+    assert(numLevelMeshes < MAX_NUM_LEVEL_MESHES);
+
+    level_mesh *levelMesh = (level_mesh *)allocateMemorySize(&assets->assetMemory, sizeof(level_mesh));
+    assets->levelMeshes[numLevelMeshes] = levelMesh;
+    assets->numLevelMeshes++;
+
+    levelMesh->key = (level_mesh_key)levelMeshKey;
+
+    loaded_mesh_asset *meshAssetData = (loaded_mesh_asset *)workingMemory->base;
+
+    // NOTE(ebuchholz): assuming every index is unique and every 3 of them for a triangle, so
+    // we can just loop through these positions and make a triangle for every 9 (3 vertices)
+    float_mesh_attribute *positions = &meshAssetData->positions;
+    int numPositions = positions->count;
+    levelMesh->triangleCount = numPositions / 9;
+    levelMesh->triangles = (triangle *)allocateMemorySize(&assets->assetMemory, sizeof(triangle) * levelMesh->triangleCount);
+    levelMesh->boundingBox = {}; 
+    int numTriangles = 0;
+    for (int i = 0; i < numPositions; i += 9) {
+        triangle *tri = levelMesh->triangles + numTriangles;
+        tri->p0.x = ((float *)positions->values)[i];
+        tri->p0.y = ((float *)positions->values)[i+1];
+        tri->p0.z = ((float *)positions->values)[i+2];
+
+        tri->p1.x = ((float *)positions->values)[i+3];
+        tri->p1.y = ((float *)positions->values)[i+4];
+        tri->p1.z = ((float *)positions->values)[i+5];
+
+        tri->p2.x = ((float *)positions->values)[i+6];
+        tri->p2.y = ((float *)positions->values)[i+7];
+        tri->p2.z = ((float *)positions->values)[i+8];
+
+        // TODO(ebuchholz): probably better just to keep track of the min/max coordinates, but
+        // I already have the functions for these so it's easier
+        aabb triangleAABB = getTriangleBounds(tri->p0, tri->p1, tri->p2);
+        levelMesh->boundingBox = unionAABB(levelMesh->boundingBox, triangleAABB);
+
+        numTriangles++;
+    }
+}
+
 static void parseBitmap (void *fileData, game_assets *assets, int key, memory_arena *workingMemory) {
     int numTextures = assets->numTextures;
     assert(numTextures < MAX_NUM_TEXTURES);
@@ -338,24 +432,35 @@ static void parseBitmap (void *fileData, game_assets *assets, int key, memory_ar
     }
 }
 
-static void pushAsset (asset_list *assetList, char *path, asset_type type, int key) {
+static void pushAsset (asset_list *assetList, char *path, asset_type type, int key1, int key2) {
     assert(assetList->numAssetsToLoad < assetList->maxAssetsToLoad);
     asset_to_load *assetToLoad = assetList->assetsToLoad + assetList->numAssetsToLoad;
     assetList->numAssetsToLoad++;
     assetToLoad->path = path;
     assetToLoad->type = type;
-    assetToLoad->key = key;
+    assetToLoad->key1 = key1;
+    assetToLoad->key2 = key2;
+}
+
+static void pushAsset (asset_list *assetList, char *path, asset_type type, int key) {
+    pushAsset(assetList, path, type, key, -1);
 }
 
 // TODO(ebuchholz): Maybe pack everything into a single file and load that?
 extern "C" void getGameAssetList (asset_list *assetList) {
     pushAsset(assetList, "assets/meshes/geosphere.obj", ASSET_TYPE_OBJ, MESH_KEY_SPHERE);
     pushAsset(assetList, "assets/meshes/cube.obj", ASSET_TYPE_OBJ, MESH_KEY_CUBE);
+    pushAsset(assetList, "assets/meshes/cylinder.obj", ASSET_TYPE_OBJ, MESH_KEY_CYLINDER);
     pushAsset(assetList, "assets/textures/uv_test.bmp", ASSET_TYPE_BMP, TEXTURE_KEY_UV_TEST);
     pushAsset(assetList, "assets/textures/ground.bmp", ASSET_TYPE_BMP, TEXTURE_KEY_GROUND);
+    pushAsset(assetList, "assets/textures/grey.bmp", ASSET_TYPE_BMP, TEXTURE_KEY_GREY);
+    pushAsset(assetList, "assets/textures/blue.bmp", ASSET_TYPE_BMP, TEXTURE_KEY_BLUE);
+
+    pushAsset(assetList, "assets/meshes/test_ground.obj", ASSET_TYPE_LEVEL_OBJ, 
+              MESH_KEY_TEST_GROUND, LEVEL_MESH_KEY_TEST_GROUND);
 }
 
-extern "C" void parseGameAsset (void *assetData, asset_type type, int key,
+extern "C" void parseGameAsset (void *assetData, asset_type type, int key1, int key2,
                                 game_memory *gameMemory, memory_arena *workingMemory) 
 {
     game_state *gameState = (game_state *)gameMemory->memory;
@@ -384,10 +489,13 @@ extern "C" void parseGameAsset (void *assetData, asset_type type, int key,
         assert(false); // must provide a valid type
         break;
     case ASSET_TYPE_OBJ:
-        parseOBJ(assetData, &gameState->assets, key, workingMemory);
+        parseOBJ(assetData, &gameState->assets, key1, workingMemory);
+        break;
+    case ASSET_TYPE_LEVEL_OBJ:
+        parseLevelOBJ(assetData, &gameState->assets, key1, key2, workingMemory);
         break;
     case ASSET_TYPE_BMP:
-        parseBitmap(assetData, &gameState->assets, key, workingMemory);
+        parseBitmap(assetData, &gameState->assets, key1, workingMemory);
         break;
     }
 }
@@ -403,94 +511,108 @@ static void drawModel (mesh_key meshKey, texture_key textureKey,
     modelCommand->modelMatrix = modelMatrix;
 }
 
-void debugCameraMovement (vector3 *debugCameraPos, quaternion *debugCameraRotation, 
-                          game_input *input) 
-{
+static void debugPlayerMovement (game_state *gameState, game_input *input) {
+    const float PLAYER_SPEED = 1.0f;
+
+    // Position
+    if (input->forwardButton) {
+        gameState->playerPos.z -= PLAYER_SPEED * DELTA_TIME;
+    }
+    if (input->backButton) {
+        gameState->playerPos.z += PLAYER_SPEED * DELTA_TIME;
+    }
+    if (input->leftButton) {
+        gameState->playerPos.x -= PLAYER_SPEED * DELTA_TIME;
+    }
+    if (input->rightButton) {
+        gameState->playerPos.x += PLAYER_SPEED * DELTA_TIME;
+    }
+    if (input->upButton) {
+        gameState->playerPos.y += PLAYER_SPEED * DELTA_TIME;
+    }
+    if (input->downButton) {
+        gameState->playerPos.y -= PLAYER_SPEED * DELTA_TIME;
+    }
+
+    aabb *playerAABB = &gameState->playerAABB;
+    playerAABB->min.x = gameState->playerPos.x - 0.5f;
+    playerAABB->min.y = gameState->playerPos.y - 0.0f;
+    playerAABB->min.z = gameState->playerPos.z - 0.5f;
+    playerAABB->max.x = gameState->playerPos.x + 0.5f;
+    playerAABB->max.y = gameState->playerPos.y + 1.0f;
+    playerAABB->max.z = gameState->playerPos.z + 0.5f;
+}
+
+static void debugCameraMovement (debug_camera *debugCamera, game_input *input) {
     const float CAMERA_SPEED = 3.0f;
     const float CAMERA_TURN_SPEED = 1.0f;
 
-    // TODO(ebuchholz): put either in input or game stat
-    static int lastPointerX = 0;
-    static int lastPointerY = 0;
-
     // Position
     vector3 moveVector = {};
-    if (input->forwardButton) {
+    if (input->turnUpButton) {
         moveVector.z -= CAMERA_SPEED * DELTA_TIME;
     }
-    if (input->backButton) {
+    if (input->turnDownButton) {
         moveVector.z += CAMERA_SPEED * DELTA_TIME;
     }
-    if (input->leftButton) {
+    if (input->turnLeftButton) {
         moveVector.x -= CAMERA_SPEED * DELTA_TIME;
     }
-    if (input->rightButton) {
+    if (input->turnRightButton) {
         moveVector.x += CAMERA_SPEED * DELTA_TIME;
-    }
-    if (input->upButton) {
-        debugCameraPos->y += CAMERA_SPEED * DELTA_TIME;
-    }
-    if (input->downButton) {
-        debugCameraPos->y -= CAMERA_SPEED * DELTA_TIME;
     }
 
     // Rotation
-    if (input->turnUpButton) {
-        *debugCameraRotation = (*debugCameraRotation) * quaternionFromAxisAngle(Vector3(1, 0, 0), +CAMERA_TURN_SPEED * DELTA_TIME);
-    }
-    if (input->turnDownButton) {
-        *debugCameraRotation = (*debugCameraRotation) * quaternionFromAxisAngle(Vector3(1, 0, 0), -CAMERA_TURN_SPEED * DELTA_TIME);
-    }
-    if (input->turnLeftButton) {
-        *debugCameraRotation = quaternionFromAxisAngle(Vector3(0, 1, 0), +CAMERA_TURN_SPEED * DELTA_TIME) * (*debugCameraRotation);
-    }
-    if (input->turnRightButton) {
-        *debugCameraRotation = quaternionFromAxisAngle(Vector3(0, 1, 0), -CAMERA_TURN_SPEED * DELTA_TIME) * (*debugCameraRotation);
-    }
     if (input->pointerJustDown) {
-        lastPointerX = input->pointerX;
-        lastPointerY = input->pointerY;
+        debugCamera->lastPointerX = input->pointerX;
+        debugCamera->lastPointerY = input->pointerY;
     }
     if (input->pointerDown) {
-        int pointerDX = input->pointerX - lastPointerX;
-        int pointerDY = input->pointerY - lastPointerY;
+        int pointerDX = input->pointerX - debugCamera->lastPointerX;
+        int pointerDY = input->pointerY - debugCamera->lastPointerY;
 
         float yaw = (float)pointerDX * 0.25f;
         float pitch = (float)pointerDY * 0.25f;
 
-        *debugCameraRotation = quaternionFromAxisAngle(Vector3(0, 1, 0), -yaw * DELTA_TIME) * (*debugCameraRotation);
-        *debugCameraRotation = (*debugCameraRotation) * quaternionFromAxisAngle(Vector3(1, 0, 0), -pitch * DELTA_TIME);
+        debugCamera->rotation = quaternionFromAxisAngle(Vector3(0, 1, 0), -yaw * DELTA_TIME) * (debugCamera->rotation);
+        debugCamera->rotation = (debugCamera->rotation) * quaternionFromAxisAngle(Vector3(1, 0, 0), -pitch * DELTA_TIME);
 
-        lastPointerX = input->pointerX;
-        lastPointerY = input->pointerY;
+        debugCamera->lastPointerX = input->pointerX;
+        debugCamera->lastPointerY = input->pointerY;
     }
     // Move in the direction of the current rotation
-    moveVector = rotateVectorByQuaternion(moveVector, *debugCameraRotation);
-    *debugCameraPos += moveVector;
+    moveVector = rotateVectorByQuaternion(moveVector, debugCamera->rotation);
+    debugCamera->pos += moveVector;
 }
 
 extern "C" void updateGame (game_input *input, game_memory *gameMemory, render_command_list *renderCommands) { 
     game_state *gameState = (game_state *)gameMemory->memory;
     if (!gameState->gameInitialized) {
         gameState->gameInitialized = true;
-        gameState->debugCameraPos = {};
-        gameState->debugCameraPos.y = 0.5f;
-        gameState->debugCameraPos.z = 3.0f;
-        gameState->debugCameraRotation = quaternionFromAxisAngle(Vector3(1.0f, 0.0f, 0.0f), 0.0f);
+
+        debug_camera *debugCamera = &gameState->debugCamera;
+        debugCamera->pos = {};
+        debugCamera->pos.x = 3.0f;
+        debugCamera->pos.y = 3.0f;
+        debugCamera->pos.z = 3.0f;
+        debugCamera->rotation = 
+            quaternionFromAxisAngle(Vector3(0.0f, 1.0f, 0.0f), 45.0f * (PI / 180.0f)) *
+            quaternionFromAxisAngle(Vector3(1.0f, 0.0f, 0.0f), -33.0f * (PI / 180.0f));
+        debugCamera->lastPointerX = 0;
+        debugCamera->lastPointerY = 0;
+
+        gameState->playerPos = {};
     }
 
-    debugCameraMovement(&gameState->debugCameraPos, &gameState->debugCameraRotation, input);
-
-    // TODO(ebuchholz): remove
-    static float rotationAmount = 0.0f;
-    rotationAmount += DELTA_TIME * 1.0f;
+    debugPlayerMovement(gameState, input);
+    debugCameraMovement(&gameState->debugCamera, input);
 
     // TODO(ebuchholz): get screen dimensions from render commands? and use them
     matrix4x4 projMatrix = createPerspectiveMatrix(0.1f, 1000.0f, (16.0f / 9.0f), 80.0f);
-    matrix4x4 viewMatrix = createViewMatrix(gameState->debugCameraRotation, 
-                                            gameState->debugCameraPos.x,
-                                            gameState->debugCameraPos.y,
-                                            gameState->debugCameraPos.z);
+    matrix4x4 viewMatrix = createViewMatrix(gameState->debugCamera.rotation, 
+                                            gameState->debugCamera.pos.x,
+                                            gameState->debugCamera.pos.y,
+                                            gameState->debugCamera.pos.z);
 
     render_command_set_camera *setCameraCommand = 
         (render_command_set_camera *)pushRenderCommand(renderCommands,
@@ -499,9 +621,12 @@ extern "C" void updateGame (game_input *input, game_memory *gameMemory, render_c
     setCameraCommand->viewMatrix = viewMatrix;
     setCameraCommand->projMatrix = projMatrix;
 
-    matrix4x4 modelMatrix = translationMatrix(0.0f, 0.5f, 0.0f) * rotationMatrixFromAxisAngle(Vector3(0.0f, 1.0f, 0.0f), rotationAmount);
-    drawModel(MESH_KEY_SPHERE, TEXTURE_KEY_UV_TEST, modelMatrix, renderCommands);
+    texture_key cylKey = 
+        aabbIntersection(gameState->playerAABB, 
+                         gameState->assets.levelMeshes[LEVEL_MESH_KEY_TEST_GROUND]->boundingBox) ? TEXTURE_KEY_BLUE : TEXTURE_KEY_GREY;
+    matrix4x4 modelMatrix = translationMatrix(gameState->playerPos.x, gameState->playerPos.y, gameState->playerPos.z);
+    drawModel(MESH_KEY_CYLINDER, cylKey, modelMatrix, renderCommands);
 
-    modelMatrix = translationMatrix(0.0f, -30.0f, 0.0f) * scaleMatrix(30.0f);
-    drawModel(MESH_KEY_CUBE, TEXTURE_KEY_GROUND, modelMatrix, renderCommands);
+    modelMatrix = translationMatrix(0.0f, 0.0f, 0.0f) * scaleMatrix(1.0f);
+    drawModel(MESH_KEY_TEST_GROUND, TEXTURE_KEY_GREY, modelMatrix, renderCommands);
 }
