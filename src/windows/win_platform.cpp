@@ -242,6 +242,7 @@ int WINAPI WinMain (HINSTANCE instance, HINSTANCE prevInstance, LPSTR commandLin
                 processWindowsMessages(&input);
 
                 renderCommands.memory.size = 0;
+                memset(renderCommands.memory.base, 0, renderCommands.memory.capacity);
                 updateGame(&input, &gameMemory, &renderCommands);
                 renderFrame(&rendererMemory, &renderCommands);
 

@@ -23,6 +23,7 @@
 #define GL_ARRAY_BUFFER                           0x8892
 #define GL_ELEMENT_ARRAY_BUFFER                   0x8893
 #define GL_STATIC_DRAW                            0x88E4
+#define GL_DYNAMIC_DRAW                           0x88E8
 
 #define GL_TEXTURE0                               0x84C0
 
@@ -173,6 +174,7 @@ struct renderer_memory {
 
 enum shader_type {
     SHADER_TYPE_DEFAULT,
+    SHADER_TYPE_LINES,
     SHADER_TYPE_COUNT
 };
 
@@ -204,7 +206,8 @@ struct openGL_renderer {
     HGLRC context;
     HDC deviceContext;
 
-    shader_program shaders[1];
+    int numShaders;
+    shader_program shaders[2];
 
     int numMeshes;
     openGL_mesh meshes[MAX_OPENGL_MESHES];
@@ -213,6 +216,8 @@ struct openGL_renderer {
 
     matrix4x4 viewMatrix;
     matrix4x4 projMatrix;
+
+    GLuint debugPositionBuffer;
 };
 
 #endif

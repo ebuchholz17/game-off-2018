@@ -56,4 +56,9 @@ struct plane {
     float distance;
 };
 
+struct line {
+    vector3 a;
+    vector3 b;
+};
+
 #endif

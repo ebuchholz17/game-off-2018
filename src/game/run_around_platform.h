@@ -60,6 +60,7 @@ struct loaded_texture_asset {
 
 enum render_command_type {
     RENDER_COMMAND_MODEL,
+    RENDER_COMMAND_LINES,
     RENDER_COMMAND_SET_CAMERA
 };
 
@@ -71,6 +72,11 @@ struct render_command_model {
     int meshKey;
     int textureKey;
     matrix4x4 modelMatrix;
+};
+
+struct render_command_lines {
+    line *lines;
+    int numLines;
 };
 
 struct render_command_set_camera {

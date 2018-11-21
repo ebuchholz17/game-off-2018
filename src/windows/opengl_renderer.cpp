@@ -139,7 +139,9 @@ static void createShaderProgram(openGL_renderer *renderer, shader_type type,
                                 renderer_memory *memory) 
 {
     // shader_type enum must map inside of the shader array
+    assert(type == renderer->numShaders);
     shader_program *shaderProgram = &renderer->shaders[type];
+    renderer->numShaders++;
 
     loadShader(&shaderProgram->vertexShader, GL_VERTEX_SHADER, vertexSource, memory);
     loadShader(&shaderProgram->fragmentShader, GL_FRAGMENT_SHADER, fragmentSource, memory);
@@ -213,6 +215,11 @@ int initOpenGL (HWND window, renderer_memory *memory) {
 
     createShaderProgram(renderer, SHADER_TYPE_DEFAULT,
                         defaultVertexShaderSource, defaultFragmentShaderSource, memory);
+    createShaderProgram(renderer, SHADER_TYPE_LINES,
+                        lineVertexShaderSource, lineFragmentShaderSource, memory);
+
+    // For line drawing, maybe other commands that don't have a buffer ready ahead of time and supply data on demand
+    glGenBuffers(1, &renderer->debugPositionBuffer);
     return 0;
 }
 
@@ -273,6 +280,23 @@ void drawModel (openGL_renderer *renderer, GLuint program, render_command_model 
     glDrawElements(GL_TRIANGLES, mesh->numIndices, GL_UNSIGNED_INT, 0);
 }
 
+void drawLines (openGL_renderer *renderer, GLuint program, render_command_lines *lineCommand) {
+    glBindBuffer(GL_ARRAY_BUFFER, renderer->debugPositionBuffer);
+    glBufferData(GL_ARRAY_BUFFER, lineCommand->numLines * sizeof(line), lineCommand->lines, GL_DYNAMIC_DRAW);
+
+    GLint positionLocation = glGetAttribLocation(program, "position");
+    glEnableVertexAttribArray(positionLocation);
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, FALSE, 0, 0);
+
+    GLint viewMatrixLocation = glGetUniformLocation(program, "viewMatrix");
+    glUniformMatrix4fv(viewMatrixLocation, 1, true, renderer->viewMatrix.m);
+
+    GLint projMatrixLocation = glGetUniformLocation(program, "projMatrix");
+    glUniformMatrix4fv(projMatrixLocation, 1, true, renderer->projMatrix.m);
+
+    glDrawArrays(GL_LINES, 0, lineCommand->numLines * 2);
+}
+
 void renderFrame (renderer_memory *memory, render_command_list *renderCommands) {
     openGL_renderer *renderer = (openGL_renderer *)memory->memory;
 
@@ -281,9 +305,6 @@ void renderFrame (renderer_memory *memory, render_command_list *renderCommands) 
     //glEnable(GL_CULL_FACE);
     glClearColor(0.0f, 0.7f, 0.8f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    GLuint program = renderer->shaders[SHADER_TYPE_DEFAULT].program;
-    glUseProgram(program);
 
     unsigned int renderCommandOffset = 0;
     while (renderCommandOffset < renderCommands->memory.size) {
@@ -297,11 +318,27 @@ void renderFrame (renderer_memory *memory, render_command_list *renderCommands) 
                 break;
             case RENDER_COMMAND_MODEL: 
             {
+                // TODO(ebuchholz): have a way to not have to set the program for command
+                GLuint program = renderer->shaders[SHADER_TYPE_DEFAULT].program;
+                glUseProgram(program);
+
                 render_command_model *modelCommand = 
                     (render_command_model *)((char *)renderCommands->memory.base + 
                                             renderCommandOffset);
                 drawModel(renderer, program, modelCommand);
                 renderCommandOffset += sizeof(render_command_model);
+            } break;
+            case RENDER_COMMAND_LINES: 
+            {
+                GLuint program = renderer->shaders[SHADER_TYPE_LINES].program;
+                glUseProgram(program);
+
+                render_command_lines *lineCommand = 
+                    (render_command_lines *)((char *)renderCommands->memory.base + 
+                                            renderCommandOffset);
+                drawLines(renderer, program, lineCommand);
+                renderCommandOffset += sizeof(render_command_lines);
+                renderCommandOffset += sizeof(line) * lineCommand->numLines; // also account for the line data
             } break;
             case RENDER_COMMAND_SET_CAMERA: 
             {

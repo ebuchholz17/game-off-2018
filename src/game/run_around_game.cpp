@@ -1,5 +1,18 @@
 #include "run_around_game.h"
 
+static line *pushLineOntoRenderCommand (render_command_list *renderCommands, render_command_lines *lineCommand) {
+    assert(renderCommands->memory.size + sizeof(line) < renderCommands->memory.capacity);
+
+    line *result = (line *)((char *)renderCommands->memory.base + renderCommands->memory.size);
+    renderCommands->memory.size += sizeof(line);
+
+    // must finish with the line command before doing other ones
+    assert(result == lineCommand->lines + lineCommand->numLines);
+    lineCommand->numLines++;
+
+    return result;
+}
+                                        
 static void *pushRenderCommand (render_command_list *renderCommands, 
                          render_command_type type, 
                          unsigned int size) 
@@ -349,9 +362,9 @@ static void pushAsset (asset_list *assetList, char *path, asset_type type, int k
 
 // TODO(ebuchholz): Maybe pack everything into a single file and load that?
 extern "C" void getGameAssetList (asset_list *assetList) {
-    pushAsset(assetList, "assets/meshes/geosphere.obj", ASSET_TYPE_OBJ, MESH_KEY_SPHERE);
+    pushAsset(assetList, "assets/meshes/character.obj", ASSET_TYPE_OBJ, MESH_KEY_SPHERE);
     pushAsset(assetList, "assets/meshes/cube.obj", ASSET_TYPE_OBJ, MESH_KEY_CUBE);
-    pushAsset(assetList, "assets/textures/uv_test.bmp", ASSET_TYPE_BMP, TEXTURE_KEY_UV_TEST);
+    pushAsset(assetList, "assets/textures/purple.bmp", ASSET_TYPE_BMP, TEXTURE_KEY_UV_TEST);
     pushAsset(assetList, "assets/textures/ground.bmp", ASSET_TYPE_BMP, TEXTURE_KEY_GROUND);
 }
 
@@ -401,6 +414,43 @@ static void drawModel (mesh_key meshKey, texture_key textureKey,
     modelCommand->meshKey = meshKey;
     modelCommand->textureKey = textureKey;
     modelCommand->modelMatrix = modelMatrix;
+}
+
+static render_command_lines *startLines (render_command_list *renderCommands) {
+    render_command_lines *lineCommand = 
+        (render_command_lines *)pushRenderCommand(renderCommands, RENDER_COMMAND_LINES, sizeof(render_command_lines));
+    lineCommand->lines = (line *)((char *)renderCommands->memory.base + renderCommands->memory.size);
+    return lineCommand;
+}
+
+static void drawLine (float ax, float ay, float az, float bx, float by, float bz, render_command_list *renderCommands, render_command_lines *lineCommand) {
+    line *line = pushLineOntoRenderCommand(renderCommands, lineCommand);
+    line->a.x = ax;
+    line->a.y = ay;
+    line->a.z = az;
+    line->b.x = bx;
+    line->b.y = by;
+    line->b.z = bz;
+}
+
+//static void drawTriangle (triangle *t, render_command_list *renderCommands) {
+//    render_command_lines *lineCommand = startLines(renderCommands);
+//    drawLine(0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, renderCommands, lineCommand);
+//    drawLine(1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, renderCommands, lineCommand);
+//    drawLine(1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, renderCommands, lineCommand);
+//    drawLine(0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, renderCommands, lineCommand);
+//
+//}
+
+static void drawCircle (float centerX, float centerY, float centerZ, float radius, render_command_list *renderCommands) {
+    render_command_lines *lineCommand = startLines(renderCommands);
+    const int numPoints = 16;
+    float deltaAngle = (2.0f * PI) / numPoints;
+    for (int i = 0; i < numPoints; ++i) {
+        drawLine(centerX + radius * cosf(deltaAngle * (float)i), centerY + radius * sinf(deltaAngle * (float)i), centerZ, 
+                 centerX + radius * cosf(deltaAngle * (float)((i+1)%numPoints)), centerY + radius * sinf(deltaAngle * (float)((i+1)%numPoints)), centerZ, 
+                 renderCommands, lineCommand);
+    }
 }
 
 void debugCameraMovement (vector3 *debugCameraPos, quaternion *debugCameraRotation, 
@@ -494,8 +544,8 @@ extern "C" void updateGame (game_input *input, game_memory *gameMemory, render_c
 
     render_command_set_camera *setCameraCommand = 
         (render_command_set_camera *)pushRenderCommand(renderCommands,
-                                                 RENDER_COMMAND_SET_CAMERA,
-                                                 sizeof(render_command_set_camera));
+                                                       RENDER_COMMAND_SET_CAMERA,
+                                                       sizeof(render_command_set_camera));
     setCameraCommand->viewMatrix = viewMatrix;
     setCameraCommand->projMatrix = projMatrix;
 
@@ -504,4 +554,13 @@ extern "C" void updateGame (game_input *input, game_memory *gameMemory, render_c
 
     modelMatrix = translationMatrix(0.0f, -30.0f, 0.0f) * scaleMatrix(30.0f);
     drawModel(MESH_KEY_CUBE, TEXTURE_KEY_GROUND, modelMatrix, renderCommands);
+
+    // test drawing some lines in a nice little square
+    render_command_lines *lineCommand = startLines(renderCommands);
+    drawLine(0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, renderCommands, lineCommand);
+    drawLine(1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, renderCommands, lineCommand);
+    drawLine(1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, renderCommands, lineCommand);
+    drawLine(0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, renderCommands, lineCommand);
+
+    drawCircle(0.0f, 3.0f, 3.0f, 2.0f, renderCommands);
 }
