@@ -637,26 +637,82 @@ static void setupCollisionSensors (player_state *player, float playerRadius, flo
 }
 
 static void debugPlayerMovement (player_state *player, game_input *input) {
-    const float PLAYER_SPEED = 1.0f;
-    vector3 forward = crossProduct(player->upDirection, Vector3(1.0f, 0.0f, 0.0f));
+    const float PLAYER_ACCELERATION = 5.0f;
+    const float PLAYER_DECELERATION = 30.0f;
+    const float PLAYER_FRICTION = 5.0f;
+    //vector3 forward = crossProduct(player->upDirection, Vector3(1.0f, 0.0f, 0.0f));
+    vector3 forward = Vector3(0.0f, 0.0f, -1.0f);
+    vector3 side = Vector3(1.0f, 0.0f, 0.0f);
+
     // Position
+    vector3 groundSpeedDirection = normalize(player->groundSpeed);
+    float initialGroundSpeed = length(player->groundSpeed);
+    vector3 newGroundSpeedDirection = Vector3();
     if (input->forwardButton) {
-        player->pos += (PLAYER_SPEED * DELTA_TIME) * forward;
+        newGroundSpeedDirection += forward;
     }
     if (input->backButton) {
-        player->pos -= (PLAYER_SPEED * DELTA_TIME) * forward;
+        newGroundSpeedDirection -= forward;
     }
     if (input->leftButton) {
-        player->pos.x -= PLAYER_SPEED * DELTA_TIME;
+        newGroundSpeedDirection -= side;
     }
     if (input->rightButton) {
-        player->pos.x += PLAYER_SPEED * DELTA_TIME;
+        newGroundSpeedDirection += side;
     }
+    if (length(newGroundSpeedDirection) > 0.0f) {
+        newGroundSpeedDirection = normalize(newGroundSpeedDirection);
+        vector3 directionDiff = newGroundSpeedDirection - groundSpeedDirection;
+        vector3 groundSpeedChange = (PLAYER_ACCELERATION * DELTA_TIME) * newGroundSpeedDirection;
+        player->groundSpeed += groundSpeedChange;
+
+        if (length(directionDiff) > 0.0f) {
+            if ((input->forwardButton || input->backButton || input->leftButton || input->rightButton) &&
+                initialGroundSpeed > 0.0f) 
+            {
+                float amountInOppositeDirection = dotProduct(directionDiff, -groundSpeedDirection);
+                amountInOppositeDirection *= amountInOppositeDirection;
+                if (amountInOppositeDirection > 0.0f) {
+                    vector3 decelerationVector = -groundSpeedDirection * amountInOppositeDirection * PLAYER_DECELERATION * DELTA_TIME;
+                    decelerationVector *= (length(player->groundSpeed) / MAX_GROUND_SPEED);
+                    player->groundSpeed += decelerationVector;
+                }
+            }
+        }
+    }
+
+    if (!input->forwardButton &&
+        !input->backButton &&
+        !input->leftButton &&
+        !input->rightButton &&
+        length(player->groundSpeed) > 0.0f) 
+    {
+        vector3 frictionVector = DELTA_TIME * PLAYER_FRICTION * normalize(player->groundSpeed);
+        if (length(player->groundSpeed) < length(frictionVector)) {
+            player->groundSpeed = Vector3();
+        }
+        else {
+            player->groundSpeed -= frictionVector;
+        }
+    }
+
+    if (length(player->groundSpeed) > MAX_GROUND_SPEED) {
+        player->groundSpeed = MAX_GROUND_SPEED * normalize(player->groundSpeed);
+    }
+
     if (input->upButton) {
-        player->pos.y += PLAYER_SPEED * DELTA_TIME;
+        player->pos.y += PLAYER_ACCELERATION * DELTA_TIME;
     }
     if (input->downButton) {
-        player->pos.y -= PLAYER_SPEED * DELTA_TIME;
+        player->pos.y -= PLAYER_ACCELERATION * DELTA_TIME;
+    }
+    // TODO(ebuchholz): better integration?
+    if (length(player->groundSpeed) > 0.0f) {
+        vector3 slopeSide = crossProduct(normalize(player->groundSpeed), player->slopeDirection);
+        vector3 slopeForward = crossProduct(player->slopeDirection, slopeSide);
+
+        player->velocity = length(player->groundSpeed) * slopeForward;
+        player->pos += player->velocity * DELTA_TIME;
     }
 
     float playerRadius = 0.4f;
@@ -874,6 +930,7 @@ extern "C" void updateGame (game_input *input, game_memory *gameMemory, render_c
         gameState->player.collisionSensors[4] = {};
         gameState->player.mode = PLAYER_SURFACE_MODE_FLOOR;
         gameState->player.upDirection = Vector3(0.0f, 1.0f, 0.0f);
+        gameState->player.slopeDirection = Vector3(0.0f, 1.0f, 0.0f);
 
         // set up the level
         gameState->levelChunks.numChunks = 0;

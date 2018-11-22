@@ -101,13 +101,17 @@ enum player_surface_mode {
 };
 
 #define NUM_COLLISION_SENSORS 9
+#define MAX_GROUND_SPEED 6.0f
 
 struct player_state {
     vector3 pos;
+    vector3 velocity;
+    vector3 groundSpeed; // 2D, relative to surface the player is running on
     aabb boundingBox;
     line collisionSensors[NUM_COLLISION_SENSORS];
     player_surface_mode mode;
     vector3 upDirection;
+    vector3 slopeDirection;
 };
 
 #define MAX_NUM_LEVEL_CHUNKS 100
