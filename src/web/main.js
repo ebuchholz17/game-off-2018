@@ -52,6 +52,8 @@ WebPlatform.prototype = {
                                                 this.game.game_memory);
         this.gameMemory.memoryCapacity = 10 * 1024 * 1024;
         this.gameMemory.memory = this.game._malloc(this.gameMemory.memoryCapacity);
+        this.gameMemory.tempMemoryCapacity = 10 * 1024 * 1024;
+        this.gameMemory.tempMemory = this.game._malloc(this.gameMemory.tempMemoryCapacity);
 
         this.assetList = this.game.wrapPointer(this.game._malloc(this.game.sizeof_asset_list()), 
                                                 this.game.asset_list);
@@ -77,11 +79,15 @@ WebPlatform.prototype = {
             switch (assetToLoad.type) {
                 case this.game.ASSET_TYPE_OBJ: 
                 {
-                    this.loadOBJFile(assetToLoad.path, assetToLoad.type, assetToLoad.key);
+                    this.loadOBJFile(assetToLoad.path, assetToLoad.type, assetToLoad.key1);
+                } break;
+                case this.game.ASSET_TYPE_LEVEL_OBJ: 
+                {
+                    this.loadLevelOBJFile(assetToLoad.path, assetToLoad.type, assetToLoad.key1, assetToLoad.key2);
                 } break;
                 case this.game.ASSET_TYPE_BMP: 
                 {
-                    this.loadBMPFile(assetToLoad.path, assetToLoad.type, assetToLoad.key);
+                    this.loadBMPFile(assetToLoad.path, assetToLoad.type, assetToLoad.key1);
                 } break;
             }
         }
@@ -101,11 +107,56 @@ WebPlatform.prototype = {
 
                         this.game.ccall("parseGameAsset", 
                             "null", 
-                            ["number", "number", "number", "number", "number"], 
+                            ["number", "number", "number", "number", "number", "number"], 
                             [
                                 objFileData, 
                                 assetType,
                                 assetKey,
+                                -1,
+                                this.game.getPointer(this.gameMemory),
+                                this.game.getPointer(this.workingAssetMemory)
+                            ]
+                        );
+
+                        var loadedMesh = 
+                            this.game.wrapPointer(
+                                this.game.getPointer(this.workingAssetMemory.base), 
+                                this.game.loaded_mesh_asset
+                            );
+
+                        this.renderer.loadMesh(this.game, loadedMesh);
+                        this.onAssetLoaded();
+                    }.bind(this),
+                    function () {
+                        console.log("fetch .text() failed for " + path);
+                    }.bind(this)
+                );
+            }.bind(this),
+            function () {
+                console.log("Failed to fetch " + path);
+            }.bind(this)
+        );
+    },
+
+    loadLevelOBJFile: function (path, assetType, meshKey, levelMeshKey) {
+        fetch(path).then(
+            function (file) {
+                file.text().then(
+                    function (data) {
+                        var strLength = this.game.lengthBytesUTF8(data);
+                        var objFileData = this.game._malloc(strLength + 1);
+                        this.game.writeAsciiToMemory(data, objFileData); 
+
+                        this.workingAssetMemory.size = 0;
+
+                        this.game.ccall("parseGameAsset", 
+                            "null", 
+                            ["number", "number", "number", "number", "number", "number"], 
+                            [
+                                objFileData, 
+                                assetType,
+                                meshKey,
+                                levelMeshKey,
                                 this.game.getPointer(this.gameMemory),
                                 this.game.getPointer(this.workingAssetMemory)
                             ]
@@ -150,11 +201,12 @@ WebPlatform.prototype = {
 
                         this.game.ccall("parseGameAsset", 
                             "null", 
-                            ["number", "number", "number", "number", "number"], 
+                            ["number", "number", "number", "number", "number", "number"], 
                             [
                                 bmpFileData, 
                                 assetType,
                                 assetKey,
+                                -1,
                                 this.game.getPointer(this.gameMemory),
                                 this.game.getPointer(this.workingAssetMemory)
                             ]
@@ -238,6 +290,11 @@ WebPlatform.prototype = {
         this.gameInput.pointerY = this.input.pointerY;
 
         this.renderCommands.get_memory().set_size(0);
+        // zero render command memory
+        var uintBuffer = new Uint8Array(this.game.buffer,
+                                        this.game.getPointer(this.renderCommands.memory.base),
+                                        this.renderCommands.memory.capacity);
+        uintBuffer.fill(0);
         this.game.ccall("updateGame", 
             "null", 
             ["number", "number", "number"], 
@@ -247,7 +304,6 @@ WebPlatform.prototype = {
                 this.game.getPointer(this.renderCommands)
             ]
         );
-        
         this.renderer.renderFrame(this.game, this.renderCommands);
 
         for (var key in this.input.keyJustPressed) {

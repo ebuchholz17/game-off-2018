@@ -7,10 +7,12 @@
 #define DELTA_TIME (1.0f / 60.0f)
 
 enum mesh_key {
-    MESH_KEY_SPHERE,
+    MESH_KEY_PURPLE_MAN,
     MESH_KEY_CUBE,
+    MESH_KEY_CYLINDER,
     MESH_KEY_TEST_GROUND,
-    MESH_KEY_CYLINDER
+    MESH_KEY_TEST_LOOP,
+    MESH_KEY_SPHERE
 };
 
 struct mesh_asset {
@@ -20,6 +22,7 @@ struct mesh_asset {
 
 enum texture_key {
     TEXTURE_KEY_UV_TEST,
+    TEXTURE_KEY_PURPLE,
     TEXTURE_KEY_GROUND,
     TEXTURE_KEY_GREY,
     TEXTURE_KEY_BLUE
@@ -33,13 +36,16 @@ struct texture_asset {
 // TODO(ebuchholz): unify mesh key and level mesh key, maybe use hash tables instead of normal 
 //arrays to make this more convenient
 enum level_mesh_key {
-    LEVEL_MESH_KEY_TEST_GROUND
+    LEVEL_MESH_KEY_TEST_GROUND,
+    LEVEL_MESH_KEY_TEST_LOOP,
+    LEVEL_MESH_KEY_SPHERE
 };
 
 struct level_mesh {
     level_mesh_key key;
     aabb boundingBox;
     triangle *triangles;
+    aabb *triangleAABBs;
     int triangleCount;
 };
 
@@ -88,16 +94,53 @@ struct debug_camera {
     int lastPointerY;
 };
 
+enum player_surface_mode {
+    PLAYER_SURFACE_MODE_FLOOR,
+    PLAYER_SURFACE_MODE_WALL,
+    PLAYER_SURFACE_MODE_CEILING
+};
+
+#define NUM_COLLISION_SENSORS 9
+
+struct player_state {
+    vector3 pos;
+    aabb boundingBox;
+    line collisionSensors[NUM_COLLISION_SENSORS];
+    player_surface_mode mode;
+    vector3 upDirection;
+};
+
+#define MAX_NUM_LEVEL_CHUNKS 100
+
+// TODO(ebuchholz): arbitrary position/rotation/scale for these guys
+struct level_chunk {
+    mesh_key meshKey;
+    level_mesh_key levelMeshKey;
+    vector3 position;
+};
+
+struct level_chunks {
+    level_chunk chunks[100]; // how many should there be?
+    int numChunks;
+};
+
+struct level_chunk_intersection_result {
+    vector3 intersectionPoint;
+    vector3 triangleNormal;
+    int sensorIndex;
+};
+
 struct game_state {
     memory_arena memory;
+    memory_arena tempMemory; // cleared every frame
     bool assetsInitialized;
     game_assets assets;
-
     bool gameInitialized;
+
     debug_camera debugCamera;
 
-    vector3 playerPos;
-    aabb playerAABB;
+    player_state player;
+    level_chunks levelChunks;
 };
 
 #endif

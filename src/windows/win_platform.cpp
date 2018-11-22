@@ -175,6 +175,8 @@ int WINAPI WinMain (HINSTANCE instance, HINSTANCE prevInstance, LPSTR commandLin
             game_memory gameMemory = {};
             gameMemory.memoryCapacity = 10 * 1024 * 1024; // 10MB arbitrarily decided
             gameMemory.memory = malloc(gameMemory.memoryCapacity);
+            gameMemory.tempMemoryCapacity = 10 * 1024 * 1024; // another 10MB arbitrarily decided
+            gameMemory.tempMemory = malloc(gameMemory.tempMemoryCapacity);
 
             for (unsigned int i = 0; i < gameMemory.memoryCapacity; ++i) {
                 *((char *)gameMemory.memory + i) = 0;
@@ -256,6 +258,7 @@ int WINAPI WinMain (HINSTANCE instance, HINSTANCE prevInstance, LPSTR commandLin
 
                 renderCommands.memory.size = 0;
                 memset(renderCommands.memory.base, 0, renderCommands.memory.capacity);
+                memset(gameMemory.tempMemory, 0, gameMemory.tempMemoryCapacity);
                 updateGame(&input, &gameMemory, &renderCommands);
                 renderFrame(&rendererMemory, &renderCommands);
 

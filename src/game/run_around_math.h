@@ -32,8 +32,7 @@ union vector3 {
 };
 
 
-// TODO(ebuchholz): double check all of this quaternion stuff, it's ported from nfl thrower 
-// typescript code
+// TODO(ebuchholz): double check all of this quaternion stuff
 struct quaternion {
     float w;
     float x;

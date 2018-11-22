@@ -8,6 +8,7 @@
 
 using namespace emscripten;
 
+// math.h
 int sizeof_matrix3x3 () {
     return sizeof(matrix3x3);
 }  
@@ -29,6 +30,17 @@ int sizeof_sphere () {
 int sizeof_plane () {
     return sizeof(plane);
 }  
+int sizeof_triangle () {
+    return sizeof(triangle);
+}  
+int sizeof_line () {
+    return sizeof(line);
+}  
+
+// platform.h
+int sizeof_memory_arena () {
+    return sizeof(memory_arena);
+}  
 int sizeof_asset_to_load () {
     return sizeof(asset_to_load);
 }  
@@ -47,14 +59,14 @@ int sizeof_loaded_mesh_asset () {
 int sizeof_loaded_texture_asset () {
     return sizeof(loaded_mesh_asset);
 }  
-int sizeof_memory_arena () {
-    return sizeof(memory_arena);
-}  
 int sizeof_render_command_header () {
     return sizeof(render_command_header);
 }  
 int sizeof_render_command_model () {
     return sizeof(render_command_model);
+}  
+int sizeof_render_command_lines () {
+    return sizeof(render_command_lines);
 }  
 int sizeof_render_command_set_camera () {
     return sizeof(render_command_set_camera);
@@ -77,15 +89,18 @@ EMSCRIPTEN_BINDINGS(bindings) {
     function ("sizeof_aabb", &sizeof_aabb);
     function ("sizeof_sphere", &sizeof_sphere);
     function ("sizeof_plane", &sizeof_plane);
+    function ("sizeof_triangle", &sizeof_triangle);
+    function ("sizeof_line", &sizeof_line);
+    function ("sizeof_memory_arena", &sizeof_memory_arena);
     function ("sizeof_asset_to_load", &sizeof_asset_to_load);
     function ("sizeof_asset_list", &sizeof_asset_list);
     function ("sizeof_float_mesh_attribute", &sizeof_float_mesh_attribute);
     function ("sizeof_int_mesh_attribute", &sizeof_int_mesh_attribute);
     function ("sizeof_loaded_mesh_asset", &sizeof_loaded_mesh_asset);
     function ("sizeof_loaded_texture_asset", &sizeof_loaded_texture_asset);
-    function ("sizeof_memory_arena", &sizeof_memory_arena);
     function ("sizeof_render_command_header", &sizeof_render_command_header);
     function ("sizeof_render_command_model", &sizeof_render_command_model);
+    function ("sizeof_render_command_lines", &sizeof_render_command_lines);
     function ("sizeof_render_command_set_camera", &sizeof_render_command_set_camera);
     function ("sizeof_render_command_list", &sizeof_render_command_list);
     function ("sizeof_game_input", &sizeof_game_input);

@@ -2,9 +2,12 @@
 
 var defaultVertexShaderSource = require("./shaders/defaultVertexShader.glsl");
 var defaultFragmentShaderSource = require("./shaders/defaultFragmentShader.glsl");
+var lineVertexShaderSource = require("./shaders/lineVertexShader.glsl");
+var lineFragmentShaderSource = require("./shaders/lineFragmentShader.glsl");
 
 var gl = null;
 
+// NOTE(ebuchholz): these probably should be 0's instead of -1's
 var WebGLMesh = function () {
     this.key = -1;
     this.positionBuffer = -1;
@@ -27,7 +30,8 @@ var ShaderProgram = function () {
 };
 
 var ShaderTypes = {
-    DEFAULT: 0
+    DEFAULT: 0,
+    LINES: 1
 };
 
 var WebGLRenderer = function () {
@@ -37,6 +41,8 @@ var WebGLRenderer = function () {
 
     this.viewMatrix = null;
     this.projMatrix = null;
+
+    this.debugPositionBuffer = 0;
 };
 
 WebGLRenderer.prototype = {
@@ -46,6 +52,9 @@ WebGLRenderer.prototype = {
         gl = canvas.getContext("webgl");
         var success = gl.getExtension("OES_element_index_uint"); // TODO(ebuchholz): check
         this.compileAndLinkShader(defaultVertexShaderSource, defaultFragmentShaderSource, ShaderTypes.DEFAULT);
+        this.compileAndLinkShader(lineVertexShaderSource, lineFragmentShaderSource, ShaderTypes.LINES);
+
+        this.debugPositionBuffer = gl.createBuffer();
     },
 
     compileAndLinkShader: function (vertexShaderText, fragmentShaderText, type) {
@@ -214,15 +223,35 @@ WebGLRenderer.prototype = {
         gl.drawElements(gl.TRIANGLES, mesh.numIndices, gl.UNSIGNED_INT, 0);
     },
 
+    drawLines: function (game, lineCommand, program) {
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.debugPositionBuffer);
+
+        var floatBuffer = new Float32Array(game.buffer,
+                                           lineCommand.lines.ptr, 
+                                           lineCommand.numLines * game.sizeof_line());
+        gl.bufferData(gl.ARRAY_BUFFER, floatBuffer, gl.DYNAMIC_DRAW);
+
+        var positionLocation = gl.getAttribLocation(program, "position");
+        gl.enableVertexAttribArray(positionLocation);
+        gl.vertexAttribPointer(positionLocation, 3, gl.FLOAT, false, 0, 0);
+
+        floatBuffer = new Float32Array(game.buffer, this.viewMatrix.ptr, 16); //4x4 matrix
+        var viewMatrixLocation = gl.getUniformLocation(program, "viewMatrix");
+        gl.uniformMatrix4fv(viewMatrixLocation, false, this.matrix4x4transpose(floatBuffer));
+
+        floatBuffer = new Float32Array(game.buffer, this.projMatrix.ptr, 16); //4x4 matrix
+        var projMatrixLocation = gl.getUniformLocation(program, "projMatrix");
+        gl.uniformMatrix4fv(projMatrixLocation, false, this.matrix4x4transpose(floatBuffer));
+
+        gl.drawArrays(gl.LINES, 0, lineCommand.numLines * 2);
+    },
+
     renderFrame: function (game, renderCommands) {
         gl.viewport(0, 0, this.canvas.width, this.canvas.height);
         gl.enable(gl.DEPTH_TEST);
-        gl.enable(gl.CULL_FACE);
+        //gl.enable(gl.CULL_FACE);
         gl.clearColor(0.0, 0.7, 0.8, 1.0);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-        var program = this.shaders[ShaderTypes.DEFAULT].program;
-        gl.useProgram(program);
 
         var renderCommandOffset = 0;
         var renderCommandMemorySize = renderCommands.memory.size;
@@ -236,10 +265,24 @@ WebGLRenderer.prototype = {
                     break;
                 case game.RENDER_COMMAND_MODEL:
                 {
+                    var program = this.shaders[ShaderTypes.DEFAULT].program;
+                    gl.useProgram(program);
+
                     var modelCommand = game.wrapPointer(renderMemoryPointer + renderCommandOffset, 
                                                             game.render_command_model);
                     renderCommandOffset += game.sizeof_render_command_model();
                     this.drawModel(game, modelCommand, program);
+                } break;
+                case game.RENDER_COMMAND_LINES:
+                {
+                    var program = this.shaders[ShaderTypes.LINES].program;
+                    gl.useProgram(program);
+
+                    var lineCommand = game.wrapPointer(renderMemoryPointer + renderCommandOffset, 
+                                                       game.render_command_lines);
+                    renderCommandOffset += game.sizeof_render_command_lines();
+                    renderCommandOffset += game.sizeof_line() * lineCommand.numLines;
+                    this.drawLines(game, lineCommand, program);
                 } break;
                 case game.RENDER_COMMAND_SET_CAMERA:
                 {

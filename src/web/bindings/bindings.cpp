@@ -12,71 +12,135 @@ void array_bounds_check(const int array_size, const int array_idx) {
   }
 }
 
-// loaded_mesh_asset
+// render_command_header
 
-int EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_mesh_asset_get_key_0(loaded_mesh_asset* self) {
-  return self->key;
+render_command_type EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_header_get_type_0(render_command_header* self) {
+  return self->type;
 }
 
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_mesh_asset_set_key_1(loaded_mesh_asset* self, int arg0) {
-  self->key = arg0;
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_header_set_type_1(render_command_header* self, render_command_type arg0) {
+  self->type = arg0;
 }
 
-float_mesh_attribute* EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_mesh_asset_get_positions_0(loaded_mesh_asset* self) {
-  return &self->positions;
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_mesh_asset_set_positions_1(loaded_mesh_asset* self, float_mesh_attribute* arg0) {
-  self->positions = *arg0;
-}
-
-float_mesh_attribute* EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_mesh_asset_get_texCoords_0(loaded_mesh_asset* self) {
-  return &self->texCoords;
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_mesh_asset_set_texCoords_1(loaded_mesh_asset* self, float_mesh_attribute* arg0) {
-  self->texCoords = *arg0;
-}
-
-float_mesh_attribute* EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_mesh_asset_get_normals_0(loaded_mesh_asset* self) {
-  return &self->normals;
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_mesh_asset_set_normals_1(loaded_mesh_asset* self, float_mesh_attribute* arg0) {
-  self->normals = *arg0;
-}
-
-int_mesh_attribute* EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_mesh_asset_get_indices_0(loaded_mesh_asset* self) {
-  return &self->indices;
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_mesh_asset_set_indices_1(loaded_mesh_asset* self, int_mesh_attribute* arg0) {
-  self->indices = *arg0;
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_mesh_asset___destroy___0(loaded_mesh_asset* self) {
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_header___destroy___0(render_command_header* self) {
   delete self;
 }
 
-// float_mesh_attribute
+// game_memory
 
-void* EMSCRIPTEN_KEEPALIVE emscripten_bind_float_mesh_attribute_get_values_0(float_mesh_attribute* self) {
-  return self->values;
+void* EMSCRIPTEN_KEEPALIVE emscripten_bind_game_memory_get_memory_0(game_memory* self) {
+  return self->memory;
 }
 
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_float_mesh_attribute_set_values_1(float_mesh_attribute* self, void* arg0) {
-  self->values = arg0;
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_game_memory_set_memory_1(game_memory* self, void* arg0) {
+  self->memory = arg0;
 }
 
-int EMSCRIPTEN_KEEPALIVE emscripten_bind_float_mesh_attribute_get_count_0(float_mesh_attribute* self) {
-  return self->count;
+unsigned int EMSCRIPTEN_KEEPALIVE emscripten_bind_game_memory_get_memoryCapacity_0(game_memory* self) {
+  return self->memoryCapacity;
 }
 
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_float_mesh_attribute_set_count_1(float_mesh_attribute* self, int arg0) {
-  self->count = arg0;
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_game_memory_set_memoryCapacity_1(game_memory* self, unsigned int arg0) {
+  self->memoryCapacity = arg0;
 }
 
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_float_mesh_attribute___destroy___0(float_mesh_attribute* self) {
+void* EMSCRIPTEN_KEEPALIVE emscripten_bind_game_memory_get_tempMemory_0(game_memory* self) {
+  return self->tempMemory;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_game_memory_set_tempMemory_1(game_memory* self, void* arg0) {
+  self->tempMemory = arg0;
+}
+
+unsigned int EMSCRIPTEN_KEEPALIVE emscripten_bind_game_memory_get_tempMemoryCapacity_0(game_memory* self) {
+  return self->tempMemoryCapacity;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_game_memory_set_tempMemoryCapacity_1(game_memory* self, unsigned int arg0) {
+  self->tempMemoryCapacity = arg0;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_game_memory___destroy___0(game_memory* self) {
+  delete self;
+}
+
+// sphere
+
+vector3* EMSCRIPTEN_KEEPALIVE emscripten_bind_sphere_get_pos_0(sphere* self) {
+  return &self->pos;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_sphere_set_pos_1(sphere* self, vector3* arg0) {
+  self->pos = *arg0;
+}
+
+float EMSCRIPTEN_KEEPALIVE emscripten_bind_sphere_get_radius_0(sphere* self) {
+  return self->radius;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_sphere_set_radius_1(sphere* self, float arg0) {
+  self->radius = arg0;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_sphere___destroy___0(sphere* self) {
+  delete self;
+}
+
+// loaded_texture_asset
+
+int EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_texture_asset_get_key_0(loaded_texture_asset* self) {
+  return self->key;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_texture_asset_set_key_1(loaded_texture_asset* self, int arg0) {
+  self->key = arg0;
+}
+
+int EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_texture_asset_get_width_0(loaded_texture_asset* self) {
+  return self->width;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_texture_asset_set_width_1(loaded_texture_asset* self, int arg0) {
+  self->width = arg0;
+}
+
+int EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_texture_asset_get_height_0(loaded_texture_asset* self) {
+  return self->height;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_texture_asset_set_height_1(loaded_texture_asset* self, int arg0) {
+  self->height = arg0;
+}
+
+void* EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_texture_asset_get_pixels_0(loaded_texture_asset* self) {
+  return self->pixels;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_texture_asset_set_pixels_1(loaded_texture_asset* self, void* arg0) {
+  self->pixels = arg0;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_texture_asset___destroy___0(loaded_texture_asset* self) {
+  delete self;
+}
+
+// matrix3x3
+
+float EMSCRIPTEN_KEEPALIVE emscripten_bind_matrix3x3_get_m_1(matrix3x3* self, int arg0) {
+  return self->m[arg0];
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_matrix3x3_set_m_2(matrix3x3* self, int arg0, float arg1) {
+  self->m[arg0] = arg1;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_matrix3x3___destroy___0(matrix3x3* self) {
+  delete self;
+}
+
+// VoidPtr
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_VoidPtr___destroy___0(void** self) {
   delete self;
 }
 
@@ -132,39 +196,25 @@ void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_set_camera___destroy___
   delete self;
 }
 
-// render_command_header
+// render_command_lines
 
-render_command_type EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_header_get_type_0(render_command_header* self) {
-  return self->type;
+line* EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_lines_get_lines_0(render_command_lines* self) {
+  return self->lines;
 }
 
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_header_set_type_1(render_command_header* self, render_command_type arg0) {
-  self->type = arg0;
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_lines_set_lines_1(render_command_lines* self, line* arg0) {
+  self->lines = arg0;
 }
 
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_header___destroy___0(render_command_header* self) {
-  delete self;
+int EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_lines_get_numLines_0(render_command_lines* self) {
+  return self->numLines;
 }
 
-// aabb
-
-vector3* EMSCRIPTEN_KEEPALIVE emscripten_bind_aabb_get_min_0(aabb* self) {
-  return &self->min;
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_lines_set_numLines_1(render_command_lines* self, int arg0) {
+  self->numLines = arg0;
 }
 
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_aabb_set_min_1(aabb* self, vector3* arg0) {
-  self->min = *arg0;
-}
-
-vector3* EMSCRIPTEN_KEEPALIVE emscripten_bind_aabb_get_max_0(aabb* self) {
-  return &self->max;
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_aabb_set_max_1(aabb* self, vector3* arg0) {
-  self->max = *arg0;
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_aabb___destroy___0(aabb* self) {
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_lines___destroy___0(render_command_lines* self) {
   delete self;
 }
 
@@ -230,33 +280,91 @@ void EMSCRIPTEN_KEEPALIVE emscripten_bind_vector3___destroy___0(vector3* self) {
   delete self;
 }
 
-// render_command_model
+// matrix4x4
 
-int EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_model_get_meshKey_0(render_command_model* self) {
-  return self->meshKey;
+float EMSCRIPTEN_KEEPALIVE emscripten_bind_matrix4x4_get_m_1(matrix4x4* self, int arg0) {
+  return self->m[arg0];
 }
 
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_model_set_meshKey_1(render_command_model* self, int arg0) {
-  self->meshKey = arg0;
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_matrix4x4_set_m_2(matrix4x4* self, int arg0, float arg1) {
+  self->m[arg0] = arg1;
 }
 
-int EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_model_get_textureKey_0(render_command_model* self) {
-  return self->textureKey;
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_matrix4x4___destroy___0(matrix4x4* self) {
+  delete self;
 }
 
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_model_set_textureKey_1(render_command_model* self, int arg0) {
-  self->textureKey = arg0;
+// int_mesh_attribute
+
+void* EMSCRIPTEN_KEEPALIVE emscripten_bind_int_mesh_attribute_get_values_0(int_mesh_attribute* self) {
+  return self->values;
 }
 
-matrix4x4* EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_model_get_modelMatrix_0(render_command_model* self) {
-  return &self->modelMatrix;
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_int_mesh_attribute_set_values_1(int_mesh_attribute* self, void* arg0) {
+  self->values = arg0;
 }
 
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_model_set_modelMatrix_1(render_command_model* self, matrix4x4* arg0) {
-  self->modelMatrix = *arg0;
+int EMSCRIPTEN_KEEPALIVE emscripten_bind_int_mesh_attribute_get_count_0(int_mesh_attribute* self) {
+  return self->count;
 }
 
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_model___destroy___0(render_command_model* self) {
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_int_mesh_attribute_set_count_1(int_mesh_attribute* self, int arg0) {
+  self->count = arg0;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_int_mesh_attribute___destroy___0(int_mesh_attribute* self) {
+  delete self;
+}
+
+// triangle
+
+vector3* EMSCRIPTEN_KEEPALIVE emscripten_bind_triangle_get_p0_0(triangle* self) {
+  return &self->p0;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_triangle_set_p0_1(triangle* self, vector3* arg0) {
+  self->p0 = *arg0;
+}
+
+vector3* EMSCRIPTEN_KEEPALIVE emscripten_bind_triangle_get_p1_0(triangle* self) {
+  return &self->p1;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_triangle_set_p1_1(triangle* self, vector3* arg0) {
+  self->p1 = *arg0;
+}
+
+vector3* EMSCRIPTEN_KEEPALIVE emscripten_bind_triangle_get_p2_0(triangle* self) {
+  return &self->p2;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_triangle_set_p2_1(triangle* self, vector3* arg0) {
+  self->p2 = *arg0;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_triangle___destroy___0(triangle* self) {
+  delete self;
+}
+
+// aabb
+
+vector3* EMSCRIPTEN_KEEPALIVE emscripten_bind_aabb_get_min_0(aabb* self) {
+  return &self->min;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_aabb_set_min_1(aabb* self, vector3* arg0) {
+  self->min = *arg0;
+}
+
+vector3* EMSCRIPTEN_KEEPALIVE emscripten_bind_aabb_get_max_0(aabb* self) {
+  return &self->max;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_aabb_set_max_1(aabb* self, vector3* arg0) {
+  self->max = *arg0;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_aabb___destroy___0(aabb* self) {
   delete self;
 }
 
@@ -378,42 +486,6 @@ void EMSCRIPTEN_KEEPALIVE emscripten_bind_game_input___destroy___0(game_input* s
   delete self;
 }
 
-// matrix4x4
-
-float EMSCRIPTEN_KEEPALIVE emscripten_bind_matrix4x4_get_m_1(matrix4x4* self, int arg0) {
-  return self->m[arg0];
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_matrix4x4_set_m_2(matrix4x4* self, int arg0, float arg1) {
-  self->m[arg0] = arg1;
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_matrix4x4___destroy___0(matrix4x4* self) {
-  delete self;
-}
-
-// sphere
-
-vector3* EMSCRIPTEN_KEEPALIVE emscripten_bind_sphere_get_pos_0(sphere* self) {
-  return &self->pos;
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_sphere_set_pos_1(sphere* self, vector3* arg0) {
-  self->pos = *arg0;
-}
-
-float EMSCRIPTEN_KEEPALIVE emscripten_bind_sphere_get_radius_0(sphere* self) {
-  return self->radius;
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_sphere_set_radius_1(sphere* self, float arg0) {
-  self->radius = arg0;
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_sphere___destroy___0(sphere* self) {
-  delete self;
-}
-
 // quaternion
 
 float EMSCRIPTEN_KEEPALIVE emscripten_bind_quaternion_get_w_0(quaternion* self) {
@@ -474,72 +546,6 @@ void EMSCRIPTEN_KEEPALIVE emscripten_bind_plane___destroy___0(plane* self) {
   delete self;
 }
 
-// render_command_list
-
-memory_arena* EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_list_get_memory_0(render_command_list* self) {
-  return &self->memory;
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_list_set_memory_1(render_command_list* self, memory_arena* arg0) {
-  self->memory = *arg0;
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_list___destroy___0(render_command_list* self) {
-  delete self;
-}
-
-// loaded_texture_asset
-
-int EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_texture_asset_get_key_0(loaded_texture_asset* self) {
-  return self->key;
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_texture_asset_set_key_1(loaded_texture_asset* self, int arg0) {
-  self->key = arg0;
-}
-
-int EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_texture_asset_get_width_0(loaded_texture_asset* self) {
-  return self->width;
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_texture_asset_set_width_1(loaded_texture_asset* self, int arg0) {
-  self->width = arg0;
-}
-
-int EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_texture_asset_get_height_0(loaded_texture_asset* self) {
-  return self->height;
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_texture_asset_set_height_1(loaded_texture_asset* self, int arg0) {
-  self->height = arg0;
-}
-
-void* EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_texture_asset_get_pixels_0(loaded_texture_asset* self) {
-  return self->pixels;
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_texture_asset_set_pixels_1(loaded_texture_asset* self, void* arg0) {
-  self->pixels = arg0;
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_texture_asset___destroy___0(loaded_texture_asset* self) {
-  delete self;
-}
-
-// matrix3x3
-
-float EMSCRIPTEN_KEEPALIVE emscripten_bind_matrix3x3_get_m_1(matrix3x3* self, int arg0) {
-  return self->m[arg0];
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_matrix3x3_set_m_2(matrix3x3* self, int arg0, float arg1) {
-  self->m[arg0] = arg1;
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_matrix3x3___destroy___0(matrix3x3* self) {
-  delete self;
-}
-
 // asset_list
 
 int EMSCRIPTEN_KEEPALIVE emscripten_bind_asset_list_get_numAssetsToLoad_0(asset_list* self) {
@@ -570,6 +576,126 @@ void EMSCRIPTEN_KEEPALIVE emscripten_bind_asset_list___destroy___0(asset_list* s
   delete self;
 }
 
+// line
+
+vector3* EMSCRIPTEN_KEEPALIVE emscripten_bind_line_get_a_0(line* self) {
+  return &self->a;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_line_set_a_1(line* self, vector3* arg0) {
+  self->a = *arg0;
+}
+
+vector3* EMSCRIPTEN_KEEPALIVE emscripten_bind_line_get_b_0(line* self) {
+  return &self->b;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_line_set_b_1(line* self, vector3* arg0) {
+  self->b = *arg0;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_line___destroy___0(line* self) {
+  delete self;
+}
+
+// loaded_mesh_asset
+
+int EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_mesh_asset_get_key_0(loaded_mesh_asset* self) {
+  return self->key;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_mesh_asset_set_key_1(loaded_mesh_asset* self, int arg0) {
+  self->key = arg0;
+}
+
+float_mesh_attribute* EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_mesh_asset_get_positions_0(loaded_mesh_asset* self) {
+  return &self->positions;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_mesh_asset_set_positions_1(loaded_mesh_asset* self, float_mesh_attribute* arg0) {
+  self->positions = *arg0;
+}
+
+float_mesh_attribute* EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_mesh_asset_get_texCoords_0(loaded_mesh_asset* self) {
+  return &self->texCoords;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_mesh_asset_set_texCoords_1(loaded_mesh_asset* self, float_mesh_attribute* arg0) {
+  self->texCoords = *arg0;
+}
+
+float_mesh_attribute* EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_mesh_asset_get_normals_0(loaded_mesh_asset* self) {
+  return &self->normals;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_mesh_asset_set_normals_1(loaded_mesh_asset* self, float_mesh_attribute* arg0) {
+  self->normals = *arg0;
+}
+
+int_mesh_attribute* EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_mesh_asset_get_indices_0(loaded_mesh_asset* self) {
+  return &self->indices;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_mesh_asset_set_indices_1(loaded_mesh_asset* self, int_mesh_attribute* arg0) {
+  self->indices = *arg0;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_loaded_mesh_asset___destroy___0(loaded_mesh_asset* self) {
+  delete self;
+}
+
+// float_mesh_attribute
+
+void* EMSCRIPTEN_KEEPALIVE emscripten_bind_float_mesh_attribute_get_values_0(float_mesh_attribute* self) {
+  return self->values;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_float_mesh_attribute_set_values_1(float_mesh_attribute* self, void* arg0) {
+  self->values = arg0;
+}
+
+int EMSCRIPTEN_KEEPALIVE emscripten_bind_float_mesh_attribute_get_count_0(float_mesh_attribute* self) {
+  return self->count;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_float_mesh_attribute_set_count_1(float_mesh_attribute* self, int arg0) {
+  self->count = arg0;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_float_mesh_attribute___destroy___0(float_mesh_attribute* self) {
+  delete self;
+}
+
+// render_command_model
+
+int EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_model_get_meshKey_0(render_command_model* self) {
+  return self->meshKey;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_model_set_meshKey_1(render_command_model* self, int arg0) {
+  self->meshKey = arg0;
+}
+
+int EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_model_get_textureKey_0(render_command_model* self) {
+  return self->textureKey;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_model_set_textureKey_1(render_command_model* self, int arg0) {
+  self->textureKey = arg0;
+}
+
+matrix4x4* EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_model_get_modelMatrix_0(render_command_model* self) {
+  return &self->modelMatrix;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_model_set_modelMatrix_1(render_command_model* self, matrix4x4* arg0) {
+  self->modelMatrix = *arg0;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_model___destroy___0(render_command_model* self) {
+  delete self;
+}
+
 // asset_to_load
 
 char* EMSCRIPTEN_KEEPALIVE emscripten_bind_asset_to_load_get_path_0(asset_to_load* self) {
@@ -588,71 +714,46 @@ void EMSCRIPTEN_KEEPALIVE emscripten_bind_asset_to_load_set_type_1(asset_to_load
   self->type = arg0;
 }
 
-int EMSCRIPTEN_KEEPALIVE emscripten_bind_asset_to_load_get_key_0(asset_to_load* self) {
-  return self->key;
+int EMSCRIPTEN_KEEPALIVE emscripten_bind_asset_to_load_get_key1_0(asset_to_load* self) {
+  return self->key1;
 }
 
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_asset_to_load_set_key_1(asset_to_load* self, int arg0) {
-  self->key = arg0;
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_asset_to_load_set_key1_1(asset_to_load* self, int arg0) {
+  self->key1 = arg0;
+}
+
+int EMSCRIPTEN_KEEPALIVE emscripten_bind_asset_to_load_get_key2_0(asset_to_load* self) {
+  return self->key2;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_asset_to_load_set_key2_1(asset_to_load* self, int arg0) {
+  self->key2 = arg0;
 }
 
 void EMSCRIPTEN_KEEPALIVE emscripten_bind_asset_to_load___destroy___0(asset_to_load* self) {
   delete self;
 }
 
-// VoidPtr
+// render_command_list
 
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_VoidPtr___destroy___0(void** self) {
-  delete self;
+memory_arena* EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_list_get_memory_0(render_command_list* self) {
+  return &self->memory;
 }
 
-// game_memory
-
-void* EMSCRIPTEN_KEEPALIVE emscripten_bind_game_memory_get_memory_0(game_memory* self) {
-  return self->memory;
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_list_set_memory_1(render_command_list* self, memory_arena* arg0) {
+  self->memory = *arg0;
 }
 
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_game_memory_set_memory_1(game_memory* self, void* arg0) {
-  self->memory = arg0;
-}
-
-unsigned int EMSCRIPTEN_KEEPALIVE emscripten_bind_game_memory_get_memoryCapacity_0(game_memory* self) {
-  return self->memoryCapacity;
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_game_memory_set_memoryCapacity_1(game_memory* self, unsigned int arg0) {
-  self->memoryCapacity = arg0;
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_game_memory___destroy___0(game_memory* self) {
-  delete self;
-}
-
-// int_mesh_attribute
-
-void* EMSCRIPTEN_KEEPALIVE emscripten_bind_int_mesh_attribute_get_values_0(int_mesh_attribute* self) {
-  return self->values;
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_int_mesh_attribute_set_values_1(int_mesh_attribute* self, void* arg0) {
-  self->values = arg0;
-}
-
-int EMSCRIPTEN_KEEPALIVE emscripten_bind_int_mesh_attribute_get_count_0(int_mesh_attribute* self) {
-  return self->count;
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_int_mesh_attribute_set_count_1(int_mesh_attribute* self, int arg0) {
-  self->count = arg0;
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_int_mesh_attribute___destroy___0(int_mesh_attribute* self) {
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_render_command_list___destroy___0(render_command_list* self) {
   delete self;
 }
 
 // asset_type
 asset_type EMSCRIPTEN_KEEPALIVE emscripten_enum_asset_type_ASSET_TYPE_OBJ() {
   return ASSET_TYPE_OBJ;
+}
+asset_type EMSCRIPTEN_KEEPALIVE emscripten_enum_asset_type_ASSET_TYPE_LEVEL_OBJ() {
+  return ASSET_TYPE_LEVEL_OBJ;
 }
 asset_type EMSCRIPTEN_KEEPALIVE emscripten_enum_asset_type_ASSET_TYPE_BMP() {
   return ASSET_TYPE_BMP;
@@ -661,6 +762,9 @@ asset_type EMSCRIPTEN_KEEPALIVE emscripten_enum_asset_type_ASSET_TYPE_BMP() {
 // render_command_type
 render_command_type EMSCRIPTEN_KEEPALIVE emscripten_enum_render_command_type_RENDER_COMMAND_MODEL() {
   return RENDER_COMMAND_MODEL;
+}
+render_command_type EMSCRIPTEN_KEEPALIVE emscripten_enum_render_command_type_RENDER_COMMAND_LINES() {
+  return RENDER_COMMAND_LINES;
 }
 render_command_type EMSCRIPTEN_KEEPALIVE emscripten_enum_render_command_type_RENDER_COMMAND_SET_CAMERA() {
   return RENDER_COMMAND_SET_CAMERA;

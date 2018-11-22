@@ -112,6 +112,8 @@ struct game_input {
 struct game_memory {
     void *memory;
     unsigned int memoryCapacity;
+    void *tempMemory;
+    unsigned int tempMemoryCapacity;
 };
 
 #endif
