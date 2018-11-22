@@ -12,6 +12,7 @@ enum mesh_key {
     MESH_KEY_CYLINDER,
     MESH_KEY_TEST_GROUND,
     MESH_KEY_TEST_LOOP,
+    MESH_KEY_TEST_RAMP,
     MESH_KEY_SPHERE
 };
 
@@ -38,6 +39,7 @@ struct texture_asset {
 enum level_mesh_key {
     LEVEL_MESH_KEY_TEST_GROUND,
     LEVEL_MESH_KEY_TEST_LOOP,
+    LEVEL_MESH_KEY_TEST_RAMP,
     LEVEL_MESH_KEY_SPHERE
 };
 
@@ -101,7 +103,7 @@ enum player_surface_mode {
 };
 
 #define NUM_COLLISION_SENSORS 9
-#define MAX_GROUND_SPEED 6.0f
+#define MAX_GROUND_SPEED 20.0f
 
 struct player_state {
     vector3 pos;

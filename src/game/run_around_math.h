@@ -5,6 +5,7 @@
 
 // TODO(ebuchholz): Better constants
 #define PI 3.14159265359f
+#define EPSILON 0.0000001f
 
 union matrix3x3 {
     float m[9];

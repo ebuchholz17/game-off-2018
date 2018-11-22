@@ -463,6 +463,7 @@ extern "C" void getGameAssetList (asset_list *assetList) {
 
     pushAsset(assetList, "assets/meshes/test_ground.obj", ASSET_TYPE_LEVEL_OBJ, MESH_KEY_TEST_GROUND, LEVEL_MESH_KEY_TEST_GROUND);
     pushAsset(assetList, "assets/meshes/loop.obj", ASSET_TYPE_LEVEL_OBJ, MESH_KEY_TEST_LOOP, LEVEL_MESH_KEY_TEST_LOOP);
+    pushAsset(assetList, "assets/meshes/test_ramp.obj", ASSET_TYPE_LEVEL_OBJ, MESH_KEY_TEST_RAMP, LEVEL_MESH_KEY_TEST_RAMP);
     pushAsset(assetList, "assets/meshes/sphere.obj", ASSET_TYPE_LEVEL_OBJ, MESH_KEY_SPHERE, LEVEL_MESH_KEY_SPHERE);
 }
 
@@ -640,6 +641,7 @@ static void debugPlayerMovement (player_state *player, game_input *input) {
     const float PLAYER_ACCELERATION = 5.0f;
     const float PLAYER_DECELERATION = 30.0f;
     const float PLAYER_FRICTION = 5.0f;
+    const float SLOPE_FACTOR = 6.5f;
     //vector3 forward = crossProduct(player->upDirection, Vector3(1.0f, 0.0f, 0.0f));
     vector3 forward = Vector3(0.0f, 0.0f, -1.0f);
     vector3 side = Vector3(1.0f, 0.0f, 0.0f);
@@ -700,12 +702,12 @@ static void debugPlayerMovement (player_state *player, game_input *input) {
         player->groundSpeed = MAX_GROUND_SPEED * normalize(player->groundSpeed);
     }
 
-    if (input->upButton) {
-        player->pos.y += PLAYER_ACCELERATION * DELTA_TIME;
-    }
-    if (input->downButton) {
-        player->pos.y -= PLAYER_ACCELERATION * DELTA_TIME;
-    }
+    //vector3 downhillDirection = crossProduct(player->slopeDirection, Vector3(0.0f, 1.0f, 0.0f));
+    //if (length(downhillDirection) > EPSILON) {
+    //    downhillDirection = crossProduct(player->slopeDirection, downhillDirection);
+    //    player->groundSpeed += downhillDirection * SLOPE_FACTOR * DELTA_TIME;
+    //}
+
     // TODO(ebuchholz): better integration?
     if (length(player->groundSpeed) > 0.0f) {
         vector3 slopeSide = crossProduct(normalize(player->groundSpeed), player->slopeDirection);
@@ -713,6 +715,14 @@ static void debugPlayerMovement (player_state *player, game_input *input) {
 
         player->velocity = length(player->groundSpeed) * slopeForward;
         player->pos += player->velocity * DELTA_TIME;
+    }
+
+    // TODO(ebuchholz): remove, add jump
+    if (input->upButton) {
+        player->pos.y += PLAYER_ACCELERATION * DELTA_TIME;
+    }
+    if (input->downButton) {
+        player->pos.y -= PLAYER_ACCELERATION * DELTA_TIME;
     }
 
     float playerRadius = 0.4f;
@@ -805,6 +815,7 @@ static void processPlayerLevelCollisions (player_state *player, level_chunks *le
                 bestDotProduct = amountUp;
             }
         }
+        player->slopeDirection = triangleNormal;
 
         vector3 displacementVector = bestIntersectionPoint - player->pos + (0.5f * -player->upDirection);
         vector3 projectedVector = dotProduct(player->upDirection, displacementVector) * player->upDirection;
@@ -935,8 +946,9 @@ extern "C" void updateGame (game_input *input, game_memory *gameMemory, render_c
         // set up the level
         gameState->levelChunks.numChunks = 0;
         addLevelChunk(&gameState->levelChunks, MESH_KEY_TEST_GROUND, LEVEL_MESH_KEY_TEST_GROUND, Vector3());
-        addLevelChunk(&gameState->levelChunks, MESH_KEY_TEST_LOOP, LEVEL_MESH_KEY_TEST_LOOP, Vector3(0.0f, 0.0f, -6.0f));
+        addLevelChunk(&gameState->levelChunks, MESH_KEY_TEST_LOOP, LEVEL_MESH_KEY_TEST_LOOP, Vector3(-5.0f, 0.0f, -6.0f));
         addLevelChunk(&gameState->levelChunks, MESH_KEY_SPHERE, LEVEL_MESH_KEY_SPHERE, Vector3(15.0f, 0.0f, 0.0f));
+        addLevelChunk(&gameState->levelChunks, MESH_KEY_TEST_RAMP, LEVEL_MESH_KEY_TEST_RAMP, Vector3(3.0f, 3.0f, -10.0f));
     }
     // general purpose temporary storage
     gameState->tempMemory = {};
@@ -974,14 +986,14 @@ extern "C" void updateGame (game_input *input, game_memory *gameMemory, render_c
 
     processPlayerLevelCollisions(&gameState->player, &gameState->levelChunks, gameState->assets.levelMeshes, &gameState->tempMemory);
 
-    matrix4x4 modelMatrix = translationMatrix(gameState->player.pos.x, gameState->player.pos.y - 0.5f, gameState->player.pos.z) * scaleMatrix(0.3f);
-    drawModel(MESH_KEY_PURPLE_MAN, TEXTURE_KEY_PURPLE, modelMatrix, renderCommands);
+    matrix4x4 modelMatrix = translationMatrix(gameState->player.pos.x, gameState->player.pos.y - 0.5f, gameState->player.pos.z) * scaleMatrix(1.0f);
+    drawModel(MESH_KEY_CYLINDER, TEXTURE_KEY_BLUE, modelMatrix, renderCommands);
 
-    //drawAABB(&gameState->player.boundingBox, renderCommands);
+    drawAABB(&gameState->player.boundingBox, renderCommands);
 
-    //render_command_lines *lineCommand = startLines(renderCommands);
-    //for (int i = 0; i < NUM_COLLISION_SENSORS; ++i) {
-    //    line *sensor = &gameState->player.collisionSensors[i];
-    //    drawLine(sensor->a.x, sensor->a.y, sensor->a.z, sensor->b.x, sensor->b.y, sensor->b.z, renderCommands, lineCommand);
-    //}
+    render_command_lines *lineCommand = startLines(renderCommands);
+    for (int i = 0; i < NUM_COLLISION_SENSORS; ++i) {
+        line *sensor = &gameState->player.collisionSensors[i];
+        drawLine(sensor->a.x, sensor->a.y, sensor->a.z, sensor->b.x, sensor->b.y, sensor->b.z, renderCommands, lineCommand);
+    }
 }
