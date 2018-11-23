@@ -463,6 +463,7 @@ extern "C" void getGameAssetList (asset_list *assetList) {
 
     pushAsset(assetList, "assets/meshes/test_ground.obj", ASSET_TYPE_LEVEL_OBJ, MESH_KEY_TEST_GROUND, LEVEL_MESH_KEY_TEST_GROUND);
     pushAsset(assetList, "assets/meshes/loop.obj", ASSET_TYPE_LEVEL_OBJ, MESH_KEY_TEST_LOOP, LEVEL_MESH_KEY_TEST_LOOP);
+    pushAsset(assetList, "assets/meshes/loop_rotated.obj", ASSET_TYPE_LEVEL_OBJ, MESH_KEY_TEST_LOOP_ROTATED, LEVEL_MESH_KEY_TEST_LOOP_ROTATED);
     pushAsset(assetList, "assets/meshes/test_ramp.obj", ASSET_TYPE_LEVEL_OBJ, MESH_KEY_TEST_RAMP, LEVEL_MESH_KEY_TEST_RAMP);
     pushAsset(assetList, "assets/meshes/sphere.obj", ASSET_TYPE_LEVEL_OBJ, MESH_KEY_SPHERE, LEVEL_MESH_KEY_SPHERE);
 }
@@ -718,8 +719,8 @@ static void debugPlayerMovement (player_state *player, game_input *input) {
 
     // TODO(ebuchholz): better integration?
     if (length(player->groundSpeed) > 0.0f) {
-        vector3 slopeZ = crossProduct(Vector3(1.0f, 0.0f, 0.0f), player->slopeDirection);
-        vector3 slopeX = crossProduct(player->slopeDirection, slopeZ);
+        vector3 slopeZ = normalize(crossProduct(Vector3(1.0f, 0.0f, 0.0f), player->slopeDirection));
+        vector3 slopeX = normalize(crossProduct(player->slopeDirection, slopeZ));
         matrix3x3 slopeOrientation = {};
         slopeOrientation.m[0] = slopeX.x;
         slopeOrientation.m[1] = slopeX.y;
@@ -972,6 +973,7 @@ extern "C" void updateGame (game_input *input, game_memory *gameMemory, render_c
         gameState->levelChunks.numChunks = 0;
         addLevelChunk(&gameState->levelChunks, MESH_KEY_TEST_GROUND, LEVEL_MESH_KEY_TEST_GROUND, Vector3());
         addLevelChunk(&gameState->levelChunks, MESH_KEY_TEST_LOOP, LEVEL_MESH_KEY_TEST_LOOP, Vector3(-5.0f, 0.0f, -6.0f));
+        addLevelChunk(&gameState->levelChunks, MESH_KEY_TEST_LOOP_ROTATED, LEVEL_MESH_KEY_TEST_LOOP_ROTATED, Vector3(-8.0f, 0.0f, 6.0f));
         addLevelChunk(&gameState->levelChunks, MESH_KEY_SPHERE, LEVEL_MESH_KEY_SPHERE, Vector3(15.0f, 0.0f, 0.0f));
         addLevelChunk(&gameState->levelChunks, MESH_KEY_TEST_RAMP, LEVEL_MESH_KEY_TEST_RAMP, Vector3(3.0f, 3.0f, -10.0f));
     }
