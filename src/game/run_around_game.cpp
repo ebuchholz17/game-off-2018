@@ -643,8 +643,8 @@ static void debugPlayerMovement (player_state *player, game_input *input) {
     const float PLAYER_FRICTION = 5.0f;
     const float SLOPE_FACTOR = 7.0f;
     //vector3 forward = crossProduct(player->upDirection, Vector3(1.0f, 0.0f, 0.0f));
-    vector3 forward = Vector3(0.0f, 0.0f, -1.0f);
-    vector3 side = Vector3(1.0f, 0.0f, 0.0f);
+    vector3 forward = player->facing;
+    vector3 side =crossProduct(forward, player->upDirection);
 
     // Position
     vector3 groundSpeedDirection = normalize(player->groundSpeed);
@@ -742,6 +742,10 @@ static void debugPlayerMovement (player_state *player, game_input *input) {
     }
     if (input->downButton) {
         player->pos.y -= PLAYER_ACCELERATION * DELTA_TIME;
+    }
+
+    if (length(player->groundSpeed) > 0.0f) {
+        player->facing = normalize(player->groundSpeed);
     }
 
     float playerRadius = 0.4f;
@@ -962,6 +966,7 @@ extern "C" void updateGame (game_input *input, game_memory *gameMemory, render_c
         gameState->player.mode = PLAYER_SURFACE_MODE_FLOOR;
         gameState->player.upDirection = Vector3(0.0f, 1.0f, 0.0f);
         gameState->player.slopeDirection = Vector3(0.0f, 1.0f, 0.0f);
+        gameState->player.facing = Vector3(0.0f, 0.0f, -1.0f);
 
         // set up the level
         gameState->levelChunks.numChunks = 0;
