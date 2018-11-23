@@ -641,7 +641,7 @@ static void debugPlayerMovement (player_state *player, game_input *input) {
     const float PLAYER_ACCELERATION = 5.0f;
     const float PLAYER_DECELERATION = 30.0f;
     const float PLAYER_FRICTION = 5.0f;
-    const float SLOPE_FACTOR = 6.5f;
+    const float SLOPE_FACTOR = 7.0f;
     //vector3 forward = crossProduct(player->upDirection, Vector3(1.0f, 0.0f, 0.0f));
     vector3 forward = Vector3(0.0f, 0.0f, -1.0f);
     vector3 side = Vector3(1.0f, 0.0f, 0.0f);
@@ -702,6 +702,14 @@ static void debugPlayerMovement (player_state *player, game_input *input) {
         player->groundSpeed = MAX_GROUND_SPEED * normalize(player->groundSpeed);
     }
 
+    vector3 slopeDiff = player->slopeDirection - Vector3(0.0f, 1.0f, 0.0f);
+    if (length(slopeDiff) > EPSILON) {
+        //slopeDiff = normalize(slopeDiff);
+        float slopeModifier = dotProduct(slopeDiff, forward);
+        player->groundSpeed += forward * slopeModifier * SLOPE_FACTOR * DELTA_TIME;
+        slopeModifier = dotProduct(slopeDiff, side);
+        player->groundSpeed += side * slopeModifier * SLOPE_FACTOR * DELTA_TIME;
+    }
     //vector3 downhillDirection = crossProduct(player->slopeDirection, Vector3(0.0f, 1.0f, 0.0f));
     //if (length(downhillDirection) > EPSILON) {
     //    downhillDirection = crossProduct(player->slopeDirection, downhillDirection);
@@ -710,10 +718,21 @@ static void debugPlayerMovement (player_state *player, game_input *input) {
 
     // TODO(ebuchholz): better integration?
     if (length(player->groundSpeed) > 0.0f) {
-        vector3 slopeSide = crossProduct(normalize(player->groundSpeed), player->slopeDirection);
-        vector3 slopeForward = crossProduct(player->slopeDirection, slopeSide);
+        vector3 slopeZ = crossProduct(Vector3(1.0f, 0.0f, 0.0f), player->slopeDirection);
+        vector3 slopeX = crossProduct(player->slopeDirection, slopeZ);
+        matrix3x3 slopeOrientation = {};
+        slopeOrientation.m[0] = slopeX.x;
+        slopeOrientation.m[1] = slopeX.y;
+        slopeOrientation.m[2] = slopeX.z;
+        slopeOrientation.m[3] = player->slopeDirection.x;
+        slopeOrientation.m[4] = player->slopeDirection.y;
+        slopeOrientation.m[5] = player->slopeDirection.z;
+        slopeOrientation.m[6] = slopeZ.x;
+        slopeOrientation.m[7] = slopeZ.y;
+        slopeOrientation.m[8] = slopeZ.z;
+        vector3 rotatedGroundSpeed = transpose(slopeOrientation) * player->groundSpeed;
 
-        player->velocity = length(player->groundSpeed) * slopeForward;
+        player->velocity = rotatedGroundSpeed;
         player->pos += player->velocity * DELTA_TIME;
     }
 
@@ -860,6 +879,7 @@ static void processPlayerLevelCollisions (player_state *player, level_chunks *le
         // falling state
         player->mode = PLAYER_SURFACE_MODE_FLOOR;
         player->upDirection = Vector3(0.0f, 1.0f, 0.0f);
+        player->slopeDirection = Vector3(0.0f, 1.0f, 0.0f);
     }
 }
 
