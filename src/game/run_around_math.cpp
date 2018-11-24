@@ -657,14 +657,15 @@ inline quaternion quaternionFromRotationMatrix (matrix4x4 m) {
 
 // TODO(ebuchholz): Test this, I haven't used this yet
 inline matrix4x4 createLookAtMatrix (float camX, float camY, float camZ, 
-                                     float lookX, float lookY, float lookZ) 
+                                     float lookX, float lookY, float lookZ,
+                                     float upX, float upY, float upZ) 
 {
     matrix4x4 result = identityMatrix4x4();
 
     vector3 zVector = normalize(Vector3(camX, camY, camZ) - Vector3(lookX, lookY, lookZ));
-    vector3 up = Vector3(0.0f, 1.0f, 0.0f);
-    vector3 xVector = crossProduct(up, zVector);
-    vector3 yVector = crossProduct(zVector, xVector);
+    vector3 up = Vector3(upX, upY, upZ);
+    vector3 xVector = normalize(crossProduct(up, zVector));
+    vector3 yVector = normalize(crossProduct(zVector, xVector));
 
     result.m[0] = xVector.x;
     result.m[1] = xVector.y;
@@ -703,7 +704,7 @@ inline quaternion createLookAtQuaternion (float camX, float camY, float camZ,
 
     //return quaternionFromAxisAngle(axis, angle);
 
-    matrix4x4 lookAtMatrix = createLookAtMatrix(camX, camY, camZ, lookX, lookY, lookZ);
+    matrix4x4 lookAtMatrix = createLookAtMatrix(camX, camY, camZ, lookX, lookY, lookZ, 0.0f, 1.0f, 0.0f);
     return quaternionFromRotationMatrix(transpose(lookAtMatrix));
 }
 

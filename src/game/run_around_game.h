@@ -48,7 +48,7 @@ enum level_mesh_key {
 struct level_mesh {
     level_mesh_key key;
     aabb boundingBox;
-    triangle *triangles;
+    triangleWithNormals *triangles;
     aabb *triangleAABBs;
     int triangleCount;
 };
@@ -96,6 +96,8 @@ struct debug_camera {
     quaternion rotation;
     int lastPointerX;
     int lastPointerY;
+    vector3 lookAtTarget;
+    vector3 up;
 };
 
 enum player_surface_mode {

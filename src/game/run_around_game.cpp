@@ -7,7 +7,7 @@ static bool sameSign (float a, float b) {
 }
 
 // From RTCD
-static bool lineSegmentTriangleIntersection (line *lineSegment, triangle *tri, float *t) {
+static bool lineSegmentTriangleIntersection (line *lineSegment, triangleWithNormals *tri, float *t, vector3 *normal) {
     vector3 pq = lineSegment->b - lineSegment->a;
     vector3 pa = tri->p0 - lineSegment->a;
     vector3 pb = tri->p1 - lineSegment->a;
@@ -28,6 +28,8 @@ static bool lineSegmentTriangleIntersection (line *lineSegment, triangle *tri, f
     vector3 r = u*tri->p0 + v*tri->p1 + w*tri->p2;
     vector3 ab = lineSegment->b - lineSegment->a;
     *t = dotProduct(r - lineSegment->a, ab) / dotProduct(ab, ab);
+
+    *normal = normalize(u * tri->n0 + v * tri->n1 + w * tri->n2);
 
     if (*t >= 0.0f && *t <= 1.0f) { return true; }
     return false;
@@ -374,13 +376,14 @@ static void parseLevelOBJ (void *objData, game_assets *assets, int meshKey, int 
     // we can just loop through these positions and make a triangle for every 9 (3 vertices)
     float_mesh_attribute *positions = &meshAssetData->positions;
     int numPositions = positions->count;
+    float_mesh_attribute *normals = &meshAssetData->normals;
     levelMesh->triangleCount = numPositions / 9;
-    levelMesh->triangles = (triangle *)allocateMemorySize(&assets->assetMemory, sizeof(triangle) * levelMesh->triangleCount);
+    levelMesh->triangles = (triangleWithNormals *)allocateMemorySize(&assets->assetMemory, sizeof(triangleWithNormals) * levelMesh->triangleCount);
     levelMesh->triangleAABBs = (aabb *)allocateMemorySize(&assets->assetMemory, sizeof(aabb) * levelMesh->triangleCount);
     levelMesh->boundingBox = {}; 
     int numTriangles = 0;
     for (int i = 0; i < numPositions; i += 9) {
-        triangle *tri = levelMesh->triangles + numTriangles;
+        triangleWithNormals *tri = levelMesh->triangles + numTriangles;
         tri->p0.x = ((float *)positions->values)[i];
         tri->p0.y = ((float *)positions->values)[i+1];
         tri->p0.z = ((float *)positions->values)[i+2];
@@ -392,6 +395,18 @@ static void parseLevelOBJ (void *objData, game_assets *assets, int meshKey, int 
         tri->p2.x = ((float *)positions->values)[i+6];
         tri->p2.y = ((float *)positions->values)[i+7];
         tri->p2.z = ((float *)positions->values)[i+8];
+
+        tri->n0.x = ((float *)normals->values)[i];
+        tri->n0.y = ((float *)normals->values)[i+1];
+        tri->n0.z = ((float *)normals->values)[i+2];
+
+        tri->n1.x = ((float *)normals->values)[i+3];
+        tri->n1.y = ((float *)normals->values)[i+4];
+        tri->n1.z = ((float *)normals->values)[i+5];
+
+        tri->n2.x = ((float *)normals->values)[i+6];
+        tri->n2.y = ((float *)normals->values)[i+7];
+        tri->n2.z = ((float *)normals->values)[i+8];
 
         // TODO(ebuchholz): probably better just to keep track of the min/max coordinates, but
         // I already have the functions for these so it's easier
@@ -845,12 +860,12 @@ static void processPlayerLevelCollisions (player_state *player, level_chunks *le
         localPlayerBB.max -= levelChunk->position;
 
         if (aabbIntersection(localPlayerBB, levelMeshBB)) {
-            triangle *triangles = levelMesh->triangles;
+            triangleWithNormals *triangles = levelMesh->triangles;
             aabb *triangleAABBs = levelMesh->triangleAABBs;
             for (int j = 0; j < levelMesh->triangleCount; ++j) {
                 // TODO(ebuchholz): check triangle bounding box first?
                 float t = -1.0f;
-                triangle *tri = triangles + j;
+                triangleWithNormals *tri = triangles + j;
                 aabb *triangleAABB = triangleAABBs + j;
                 if (aabbIntersection(localPlayerBB, *triangleAABB)) {
                     for (int k = 0; k < NUM_COLLISION_SENSORS; ++k ) {
@@ -858,7 +873,9 @@ static void processPlayerLevelCollisions (player_state *player, level_chunks *le
                         localPlayerSensor.a -= levelChunk->position;
                         localPlayerSensor.b -= levelChunk->position;
 
-                        if (lineSegmentTriangleIntersection(&localPlayerSensor, tri, &t)) {
+                        vector3 intersectionNormal = Vector3();
+
+                        if (lineSegmentTriangleIntersection(&localPlayerSensor, tri, &t, &intersectionNormal)) {
                             level_chunk_intersection_result *result = 
                                 (level_chunk_intersection_result *)allocateMemorySize(tempMemory, sizeof(level_chunk_intersection_result));
                             numResults++;
@@ -866,7 +883,8 @@ static void processPlayerLevelCollisions (player_state *player, level_chunks *le
                             result->intersectionPoint += levelChunk->position;
                             // add 0.5f to account for feet
                             result->intersectionPoint += player->upDirection;
-                            result->triangleNormal = normalize(crossProduct(tri->p1 - tri->p0, tri->p2 - tri->p0));
+                            result->triangleNormal = intersectionNormal;//normalize(crossProduct(tri->p1 - tri->p0, tri->p2 - tri->p0));
+                            //result->triangleNormal = normalize(crossProduct(tri->p1 - tri->p0, tri->p2 - tri->p0));
                             result->sensorIndex = k;
                         }
                     }
@@ -1021,6 +1039,9 @@ extern "C" void updateGame (game_input *input, game_memory *gameMemory, render_c
         gameState->player.slopeDirection = Vector3(0.0f, 1.0f, 0.0f);
         gameState->player.orientation = identityMatrix4x4();
 
+        debugCamera->lookAtTarget = gameState->player.pos;
+        debugCamera->up = gameState->player.upDirection;
+
         // set up the level
         gameState->levelChunks.numChunks = 0;
         addLevelChunk(&gameState->levelChunks, MESH_KEY_TEST_GROUND, LEVEL_MESH_KEY_TEST_GROUND, Vector3());
@@ -1036,13 +1057,18 @@ extern "C" void updateGame (game_input *input, game_memory *gameMemory, render_c
     gameState->tempMemory.base = (char *)gameMemory->tempMemory;
 
     debugCameraMovement(&gameState->debugCamera, input);
-    gameState->debugCamera.pos = gameState->player.pos + gameState->player.orientation * Vector3(0.0f, 2.0f, 3.0f);
+    vector3 cameraPosTarget = gameState->player.pos + gameState->player.orientation * Vector3(0.0f, 2.0f, 4.0f);
+    gameState->debugCamera.pos = gameState->debugCamera.pos + 0.1f * (cameraPosTarget - gameState->debugCamera.pos);
+
+    vector3 lookAtTarget = gameState->player.pos;
+    gameState->debugCamera.lookAtTarget = gameState->debugCamera.lookAtTarget + 0.1f * (lookAtTarget - gameState->debugCamera.lookAtTarget);
+
+    vector3 upTarget = gameState->player.upDirection;
+    gameState->debugCamera.up = normalize(gameState->debugCamera.up + 0.1f * (upTarget - gameState->debugCamera.up));
 
     matrix4x4 viewMatrix = createLookAtMatrix(gameState->debugCamera.pos.x, gameState->debugCamera.pos.y,gameState->debugCamera.pos.z,
-                                            gameState->player.pos.x,
-                                            gameState->player.pos.y,
-                                            gameState->player.pos.z);
-
+                                              gameState->debugCamera.lookAtTarget.x, gameState->debugCamera.lookAtTarget.y, gameState->debugCamera.lookAtTarget.z,
+                                              gameState->debugCamera.up.x, gameState->debugCamera.up.y, gameState->debugCamera.up.z);
 
     debugPlayerMovement(&gameState->player, input, viewMatrix);
 
@@ -1052,8 +1078,6 @@ extern "C" void updateGame (game_input *input, game_memory *gameMemory, render_c
     //                                        gameState->debugCamera.pos.x,
     //                                        gameState->debugCamera.pos.y,
     //                                        gameState->debugCamera.pos.z);
-
-
 
     render_command_set_camera *setCameraCommand = 
         (render_command_set_camera *)pushRenderCommand(renderCommands,
@@ -1079,31 +1103,31 @@ extern "C" void updateGame (game_input *input, game_memory *gameMemory, render_c
     drawModel(MESH_KEY_CYLINDER, TEXTURE_KEY_BLUE, modelMatrix, renderCommands);
 
     // collision sensors
-    drawAABB(&gameState->player.boundingBox, renderCommands);
-
-    render_command_lines *lineCommand = startLines(renderCommands);
-    for (int i = 0; i < NUM_COLLISION_SENSORS; ++i) {
-        line *sensor = &gameState->player.collisionSensors[i];
-        drawLine(sensor->a.x, sensor->a.y, sensor->a.z, sensor->b.x, sensor->b.y, sensor->b.z, renderCommands, lineCommand);
-    }
-
-    // orientation
-    vector3 forward = Vector3(0.0f, 0.0f, -1.0f);
-    vector3 up = Vector3(0.0f, 1.0f, 0.0f);
-    vector3 side = Vector3(1.0f, 0.0f, 0.0f);
-
-    forward = gameState->player.orientation * forward;
-    up = gameState->player.orientation * up;
-    side = gameState->player.orientation * side;
-
-    lineCommand = startLines(renderCommands);
-    drawLine(gameState->player.pos.x, gameState->player.pos.y, gameState->player.pos.z,
-             gameState->player.pos.x + side.x, gameState->player.pos.y + side.y, gameState->player.pos.z + side.z,
-             renderCommands, lineCommand);
-    drawLine(gameState->player.pos.x, gameState->player.pos.y, gameState->player.pos.z,
-             gameState->player.pos.x + up.x, gameState->player.pos.y + up.y, gameState->player.pos.z + up.z,
-             renderCommands, lineCommand);
-    drawLine(gameState->player.pos.x, gameState->player.pos.y, gameState->player.pos.z,
-             gameState->player.pos.x + forward.x, gameState->player.pos.y + forward.y, gameState->player.pos.z + forward.z,
-             renderCommands, lineCommand);
+//    drawAABB(&gameState->player.boundingBox, renderCommands);
+//
+//    render_command_lines *lineCommand = startLines(renderCommands);
+//    for (int i = 0; i < NUM_COLLISION_SENSORS; ++i) {
+//        line *sensor = &gameState->player.collisionSensors[i];
+//        drawLine(sensor->a.x, sensor->a.y, sensor->a.z, sensor->b.x, sensor->b.y, sensor->b.z, renderCommands, lineCommand);
+//    }
+//
+//    // orientation
+//    vector3 forward = Vector3(0.0f, 0.0f, -1.0f);
+//    vector3 up = Vector3(0.0f, 1.0f, 0.0f);
+//    vector3 side = Vector3(1.0f, 0.0f, 0.0f);
+//
+//    forward = gameState->player.orientation * forward;
+//    up = gameState->player.orientation * up;
+//    side = gameState->player.orientation * side;
+//
+//    lineCommand = startLines(renderCommands);
+//    drawLine(gameState->player.pos.x, gameState->player.pos.y, gameState->player.pos.z,
+//             gameState->player.pos.x + side.x, gameState->player.pos.y + side.y, gameState->player.pos.z + side.z,
+//             renderCommands, lineCommand);
+//    drawLine(gameState->player.pos.x, gameState->player.pos.y, gameState->player.pos.z,
+//             gameState->player.pos.x + up.x, gameState->player.pos.y + up.y, gameState->player.pos.z + up.z,
+//             renderCommands, lineCommand);
+//    drawLine(gameState->player.pos.x, gameState->player.pos.y, gameState->player.pos.z,
+//             gameState->player.pos.x + forward.x, gameState->player.pos.y + forward.y, gameState->player.pos.z + forward.z,
+//             renderCommands, lineCommand);
 }
