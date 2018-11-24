@@ -116,7 +116,7 @@ struct player_state {
     player_surface_mode mode;
     vector3 upDirection;
     vector3 slopeDirection;
-    vector3 facing;
+    matrix4x4 orientation;
 };
 
 #define MAX_NUM_LEVEL_CHUNKS 100

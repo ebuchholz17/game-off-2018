@@ -661,7 +661,7 @@ inline matrix4x4 createLookAtMatrix (float camX, float camY, float camZ,
 {
     matrix4x4 result = identityMatrix4x4();
 
-    vector3 zVector = normalize(Vector3(lookX, lookY, lookZ) - Vector3(camX, camY, camZ));
+    vector3 zVector = normalize(Vector3(camX, camY, camZ) - Vector3(lookX, lookY, lookZ));
     vector3 up = Vector3(0.0f, 1.0f, 0.0f);
     vector3 xVector = crossProduct(up, zVector);
     vector3 yVector = crossProduct(zVector, xVector);
@@ -678,7 +678,7 @@ inline matrix4x4 createLookAtMatrix (float camX, float camY, float camZ,
     result.m[9] = zVector.y;
     result.m[10] = zVector.z;
 
-    result = transpose(result);
+    //result = transpose(result);
 
     float newCamX = dotProduct(Vector3(camX, camY, camZ), Vector3(result.m[0], result.m[1], result.m[2]));
     float newCamY = dotProduct(Vector3(camX, camY, camZ), Vector3(result.m[4], result.m[5], result.m[6]));
@@ -704,7 +704,7 @@ inline quaternion createLookAtQuaternion (float camX, float camY, float camZ,
     //return quaternionFromAxisAngle(axis, angle);
 
     matrix4x4 lookAtMatrix = createLookAtMatrix(camX, camY, camZ, lookX, lookY, lookZ);
-    return quaternionFromRotationMatrix(lookAtMatrix);
+    return quaternionFromRotationMatrix(transpose(lookAtMatrix));
 }
 
 inline matrix4x4 createViewMatrix (quaternion rotation, float x, float y, float z) {

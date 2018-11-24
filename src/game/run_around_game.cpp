@@ -163,7 +163,7 @@ static void parseOBJ (void *objData, game_assets *assets, int key, memory_arena 
     assert(numMeshes < MAX_NUM_MESHES);
 
     mesh_asset *meshAsset = (mesh_asset *)allocateMemorySize(&assets->assetMemory, sizeof(mesh_asset *));
-    assets->meshes[numMeshes] = meshAsset;
+    assets->meshes[key] = meshAsset;
     assets->numMeshes++;
     meshAsset->key = (mesh_key)key;
 
@@ -363,7 +363,7 @@ static void parseLevelOBJ (void *objData, game_assets *assets, int meshKey, int 
     assert(numLevelMeshes < MAX_NUM_LEVEL_MESHES);
 
     level_mesh *levelMesh = (level_mesh *)allocateMemorySize(&assets->assetMemory, sizeof(level_mesh));
-    assets->levelMeshes[numLevelMeshes] = levelMesh;
+    assets->levelMeshes[levelMeshKey] = levelMesh;
     assets->numLevelMeshes++;
 
     levelMesh->key = (level_mesh_key)levelMeshKey;
@@ -408,7 +408,7 @@ static void parseBitmap (void *fileData, game_assets *assets, int key, memory_ar
     assert(numTextures < MAX_NUM_TEXTURES);
 
     texture_asset *textureAsset = (texture_asset *)allocateMemorySize(&assets->assetMemory, sizeof(texture_asset *));
-    assets->textures[numTextures] = textureAsset;
+    assets->textures[key] = textureAsset;
     assets->numTextures++;
 
     loaded_texture_asset *loadedBitmap = (loaded_texture_asset *)allocateMemorySize(workingMemory, sizeof(loaded_texture_asset));
@@ -638,14 +638,25 @@ static void setupCollisionSensors (player_state *player, float playerRadius, flo
     growAABBByLineSensor(player->collisionSensors[8], linesAABB);
 }
 
-static void debugPlayerMovement (player_state *player, game_input *input) {
+static void debugPlayerMovement (player_state *player, game_input *input, matrix4x4 cameraOrientation) {
     const float PLAYER_ACCELERATION = 5.0f;
     const float PLAYER_DECELERATION = 30.0f;
     const float PLAYER_FRICTION = 5.0f;
     const float SLOPE_FACTOR = 7.0f;
-    //vector3 forward = crossProduct(player->upDirection, Vector3(1.0f, 0.0f, 0.0f));
-    vector3 forward = player->facing;
-    vector3 side =crossProduct(forward, player->upDirection);
+    vector3 forward = Vector3(0.0f, 0.0f, -1.0f);
+    vector3 side = Vector3(1.0f, 0.0f, 0.0f);
+
+    matrix4x4 cameraMatrix = cameraOrientation;
+    cameraMatrix.m[3] = 0.0f;
+    cameraMatrix.m[7] = 0.0f;
+    cameraMatrix.m[11] = 0.0f;
+    cameraMatrix = transpose(cameraMatrix);
+    if (player->mode == PLAYER_SURFACE_MODE_WALL) {
+        forward = Vector3(0.0f, 1.0f, 0.0f);
+    }
+    //float forwardAccordingToCamera = dotProduct(cameraMatrix * forward, player->upDirection);
+    //if (forwardAccordingToCamera > 0.5f || forwardAccordingToCamera < -0.5f) {
+    //}
 
     // Position
     vector3 groundSpeedDirection = normalize(player->groundSpeed);
@@ -664,12 +675,20 @@ static void debugPlayerMovement (player_state *player, game_input *input) {
         newGroundSpeedDirection += side;
     }
     if (length(newGroundSpeedDirection) > 0.0f) {
+
+        newGroundSpeedDirection = cameraMatrix * newGroundSpeedDirection;
+        // project direction onto surface plane
+        newGroundSpeedDirection = newGroundSpeedDirection - dotProduct(newGroundSpeedDirection, player->slopeDirection) * player->slopeDirection;
+
+        newGroundSpeedDirection = transpose(player->orientation) * newGroundSpeedDirection;
+        newGroundSpeedDirection.y = 0.0f;
         newGroundSpeedDirection = normalize(newGroundSpeedDirection);
-        vector3 directionDiff = newGroundSpeedDirection - groundSpeedDirection;
+
         vector3 groundSpeedChange = (PLAYER_ACCELERATION * DELTA_TIME) * newGroundSpeedDirection;
         player->groundSpeed += groundSpeedChange;
 
-        if (length(directionDiff) > 0.0f) {
+        vector3 directionDiff = newGroundSpeedDirection - groundSpeedDirection;
+        if (length(groundSpeedDirection) > 0.0f && length(directionDiff) > 0.0f) {
             if ((input->forwardButton || input->backButton || input->leftButton || input->rightButton) &&
                 initialGroundSpeed > 0.0f) 
             {
@@ -703,14 +722,15 @@ static void debugPlayerMovement (player_state *player, game_input *input) {
         player->groundSpeed = MAX_GROUND_SPEED * normalize(player->groundSpeed);
     }
 
-    vector3 slopeDiff = player->slopeDirection - Vector3(0.0f, 1.0f, 0.0f);
-    if (length(slopeDiff) > EPSILON) {
-        //slopeDiff = normalize(slopeDiff);
-        float slopeModifier = dotProduct(slopeDiff, forward);
-        player->groundSpeed += forward * slopeModifier * SLOPE_FACTOR * DELTA_TIME;
-        slopeModifier = dotProduct(slopeDiff, side);
-        player->groundSpeed += side * slopeModifier * SLOPE_FACTOR * DELTA_TIME;
-    }
+    // TODO(ebuchholz): fix
+    //vector3 slopeDiff = player->slopeDirection - Vector3(0.0f, 1.0f, 0.0f);
+    //if (length(slopeDiff) > EPSILON) {
+    //    //slopeDiff = normalize(slopeDiff);
+    //    float slopeModifier = dotProduct(slopeDiff, Vector3(0.0f, 0.0f, -1.0f));
+    //    player->groundSpeed += forward * slopeModifier * SLOPE_FACTOR * DELTA_TIME;
+    //    slopeModifier = dotProduct(slopeDiff, side);
+    //    player->groundSpeed += side * slopeModifier * SLOPE_FACTOR * DELTA_TIME;
+    //}
     //vector3 downhillDirection = crossProduct(player->slopeDirection, Vector3(0.0f, 1.0f, 0.0f));
     //if (length(downhillDirection) > EPSILON) {
     //    downhillDirection = crossProduct(player->slopeDirection, downhillDirection);
@@ -719,22 +739,56 @@ static void debugPlayerMovement (player_state *player, game_input *input) {
 
     // TODO(ebuchholz): better integration?
     if (length(player->groundSpeed) > 0.0f) {
-        vector3 slopeZ = normalize(crossProduct(Vector3(1.0f, 0.0f, 0.0f), player->slopeDirection));
-        vector3 slopeX = normalize(crossProduct(player->slopeDirection, slopeZ));
-        matrix3x3 slopeOrientation = {};
-        slopeOrientation.m[0] = slopeX.x;
-        slopeOrientation.m[1] = slopeX.y;
-        slopeOrientation.m[2] = slopeX.z;
-        slopeOrientation.m[3] = player->slopeDirection.x;
-        slopeOrientation.m[4] = player->slopeDirection.y;
-        slopeOrientation.m[5] = player->slopeDirection.z;
-        slopeOrientation.m[6] = slopeZ.x;
-        slopeOrientation.m[7] = slopeZ.y;
-        slopeOrientation.m[8] = slopeZ.z;
-        vector3 rotatedGroundSpeed = transpose(slopeOrientation) * player->groundSpeed;
+        vector3 normalizedGroundSpeed = normalize(player->groundSpeed);
+        vector3 localSide = normalize(crossProduct(normalizedGroundSpeed, Vector3(0.0f, 1.0f, 0.0)));
+        matrix4x4 localRotation = {};
+        localRotation.m[0] = localSide.x;
+        localRotation.m[1] = localSide.y;
+        localRotation.m[2] = localSide.z;
+        localRotation.m[3] = 0.0f;
+        localRotation.m[4] = 0.0f; 
+        localRotation.m[5] = 1.0f;
+        localRotation.m[6] = 0.0f;
+        localRotation.m[7] = 0.0f;
+        localRotation.m[8] = -normalizedGroundSpeed.x;
+        localRotation.m[9] = -normalizedGroundSpeed.y;
+        localRotation.m[10] = -normalizedGroundSpeed.z;
+        localRotation.m[11] = 0.0f;
+        localRotation.m[12] = 0.0f;
+        localRotation.m[13] = 0.0f;
+        localRotation.m[14] = 0.0f;
+        localRotation.m[15] = 1.0f;
+        // TODO(ebuchholz): better turning
+
+        vector3 localForward = normalize(player->orientation * Vector3(0.0f, 0.0f, -1.0f));
+        vector3 newSide = normalize(crossProduct(localForward, player->slopeDirection));
+        vector3 newBackward = normalize(crossProduct(newSide, player->slopeDirection));
+        matrix4x4 newOrientationMatrix = {};
+        newOrientationMatrix.m[0] = newSide.x;
+        newOrientationMatrix.m[1] = newSide.y;
+        newOrientationMatrix.m[2] = newSide.z;
+        newOrientationMatrix.m[3] = 0.0f;
+        newOrientationMatrix.m[4] = player->slopeDirection.x;
+        newOrientationMatrix.m[5] = player->slopeDirection.y;
+        newOrientationMatrix.m[6] = player->slopeDirection.z;
+        newOrientationMatrix.m[7] = 0.0f;
+        newOrientationMatrix.m[8] = newBackward.x;
+        newOrientationMatrix.m[9] = newBackward.y;
+        newOrientationMatrix.m[10] = newBackward.z;
+        newOrientationMatrix.m[11] = 0.0f;
+        newOrientationMatrix.m[12] = 0.0f;
+        newOrientationMatrix.m[13] = 0.0f;
+        newOrientationMatrix.m[14] = 0.0f;
+        newOrientationMatrix.m[15] = 1.0f;
+
+        player->orientation = transpose(localRotation * newOrientationMatrix);
+        player->groundSpeed = localRotation * player->groundSpeed;
+        
+        vector3 rotatedGroundSpeed = player->orientation * player->groundSpeed;
 
         player->velocity = rotatedGroundSpeed;
         player->pos += player->velocity * DELTA_TIME;
+
     }
 
     // TODO(ebuchholz): remove, add jump
@@ -745,9 +799,6 @@ static void debugPlayerMovement (player_state *player, game_input *input) {
         player->pos.y -= PLAYER_ACCELERATION * DELTA_TIME;
     }
 
-    if (length(player->groundSpeed) > 0.0f) {
-        player->facing = normalize(player->groundSpeed);
-    }
 
     float playerRadius = 0.4f;
     float sensorLength = 1.25f;
@@ -885,6 +936,7 @@ static void processPlayerLevelCollisions (player_state *player, level_chunks *le
         player->mode = PLAYER_SURFACE_MODE_FLOOR;
         player->upDirection = Vector3(0.0f, 1.0f, 0.0f);
         player->slopeDirection = Vector3(0.0f, 1.0f, 0.0f);
+        //player->orientation = identityMatrix4x4();
     }
 }
 
@@ -967,7 +1019,7 @@ extern "C" void updateGame (game_input *input, game_memory *gameMemory, render_c
         gameState->player.mode = PLAYER_SURFACE_MODE_FLOOR;
         gameState->player.upDirection = Vector3(0.0f, 1.0f, 0.0f);
         gameState->player.slopeDirection = Vector3(0.0f, 1.0f, 0.0f);
-        gameState->player.facing = Vector3(0.0f, 0.0f, -1.0f);
+        gameState->player.orientation = identityMatrix4x4();
 
         // set up the level
         gameState->levelChunks.numChunks = 0;
@@ -983,15 +1035,25 @@ extern "C" void updateGame (game_input *input, game_memory *gameMemory, render_c
     gameState->tempMemory.capacity = gameMemory->tempMemoryCapacity;
     gameState->tempMemory.base = (char *)gameMemory->tempMemory;
 
-    debugPlayerMovement(&gameState->player, input);
     debugCameraMovement(&gameState->debugCamera, input);
+    gameState->debugCamera.pos = gameState->player.pos + gameState->player.orientation * Vector3(0.0f, 2.0f, 3.0f);
+
+    matrix4x4 viewMatrix = createLookAtMatrix(gameState->debugCamera.pos.x, gameState->debugCamera.pos.y,gameState->debugCamera.pos.z,
+                                            gameState->player.pos.x,
+                                            gameState->player.pos.y,
+                                            gameState->player.pos.z);
+
+
+    debugPlayerMovement(&gameState->player, input, viewMatrix);
 
     // TODO(ebuchholz): get screen dimensions from render commands? and use them
     matrix4x4 projMatrix = createPerspectiveMatrix(0.1f, 1000.0f, (16.0f / 9.0f), 80.0f);
-    matrix4x4 viewMatrix = createViewMatrix(gameState->debugCamera.rotation, 
-                                            gameState->debugCamera.pos.x,
-                                            gameState->debugCamera.pos.y,
-                                            gameState->debugCamera.pos.z);
+    //matrix4x4 viewMatrix = createViewMatrix(gameState->debugCamera.rotation, 
+    //                                        gameState->debugCamera.pos.x,
+    //                                        gameState->debugCamera.pos.y,
+    //                                        gameState->debugCamera.pos.z);
+
+
 
     render_command_set_camera *setCameraCommand = 
         (render_command_set_camera *)pushRenderCommand(renderCommands,
@@ -1013,9 +1075,10 @@ extern "C" void updateGame (game_input *input, game_memory *gameMemory, render_c
 
     processPlayerLevelCollisions(&gameState->player, &gameState->levelChunks, gameState->assets.levelMeshes, &gameState->tempMemory);
 
-    matrix4x4 modelMatrix = translationMatrix(gameState->player.pos.x, gameState->player.pos.y - 0.5f, gameState->player.pos.z) * scaleMatrix(1.0f);
+    matrix4x4 modelMatrix = translationMatrix(gameState->player.pos.x, gameState->player.pos.y, gameState->player.pos.z) * gameState->player.orientation * translationMatrix(0.0f, -0.5f, 0.0f) * scaleMatrix(1.0f);
     drawModel(MESH_KEY_CYLINDER, TEXTURE_KEY_BLUE, modelMatrix, renderCommands);
 
+    // collision sensors
     drawAABB(&gameState->player.boundingBox, renderCommands);
 
     render_command_lines *lineCommand = startLines(renderCommands);
@@ -1023,4 +1086,24 @@ extern "C" void updateGame (game_input *input, game_memory *gameMemory, render_c
         line *sensor = &gameState->player.collisionSensors[i];
         drawLine(sensor->a.x, sensor->a.y, sensor->a.z, sensor->b.x, sensor->b.y, sensor->b.z, renderCommands, lineCommand);
     }
+
+    // orientation
+    vector3 forward = Vector3(0.0f, 0.0f, -1.0f);
+    vector3 up = Vector3(0.0f, 1.0f, 0.0f);
+    vector3 side = Vector3(1.0f, 0.0f, 0.0f);
+
+    forward = gameState->player.orientation * forward;
+    up = gameState->player.orientation * up;
+    side = gameState->player.orientation * side;
+
+    lineCommand = startLines(renderCommands);
+    drawLine(gameState->player.pos.x, gameState->player.pos.y, gameState->player.pos.z,
+             gameState->player.pos.x + side.x, gameState->player.pos.y + side.y, gameState->player.pos.z + side.z,
+             renderCommands, lineCommand);
+    drawLine(gameState->player.pos.x, gameState->player.pos.y, gameState->player.pos.z,
+             gameState->player.pos.x + up.x, gameState->player.pos.y + up.y, gameState->player.pos.z + up.z,
+             renderCommands, lineCommand);
+    drawLine(gameState->player.pos.x, gameState->player.pos.y, gameState->player.pos.z,
+             gameState->player.pos.x + forward.x, gameState->player.pos.y + forward.y, gameState->player.pos.z + forward.z,
+             renderCommands, lineCommand);
 }
