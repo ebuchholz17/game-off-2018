@@ -655,9 +655,9 @@ static void setupCollisionSensors (player_state *player, float playerRadius, flo
 
 static void debugPlayerMovement (player_state *player, game_input *input, matrix4x4 cameraOrientation) {
     const float PLAYER_ACCELERATION = 5.0f;
-    const float PLAYER_DECELERATION = 30.0f;
+    const float PLAYER_DECELERATION = 20.0f;
     const float PLAYER_FRICTION = 5.0f;
-    const float SLOPE_FACTOR = 7.0f;
+    const float SLOPE_FACTOR = 15.0f;
     vector3 forward = Vector3(0.0f, 0.0f, -1.0f);
     vector3 side = Vector3(1.0f, 0.0f, 0.0f);
 
@@ -738,14 +738,20 @@ static void debugPlayerMovement (player_state *player, game_input *input, matrix
     }
 
     // TODO(ebuchholz): fix
-    //vector3 slopeDiff = player->slopeDirection - Vector3(0.0f, 1.0f, 0.0f);
-    //if (length(slopeDiff) > EPSILON) {
-    //    //slopeDiff = normalize(slopeDiff);
-    //    float slopeModifier = dotProduct(slopeDiff, Vector3(0.0f, 0.0f, -1.0f));
-    //    player->groundSpeed += forward * slopeModifier * SLOPE_FACTOR * DELTA_TIME;
-    //    slopeModifier = dotProduct(slopeDiff, side);
-    //    player->groundSpeed += side * slopeModifier * SLOPE_FACTOR * DELTA_TIME;
-    //}
+    vector3 slopeDiff = player->slopeDirection - Vector3(0.0f, 1.0f, 0.0f);
+    if (length(slopeDiff) > EPSILON) {
+        //slopeDiff = normalize(slopeDiff);
+        float slopeModifier = dotProduct(slopeDiff, Vector3(0.0f, 0.0f, -1.0f));
+        vector3 slopeVector= Vector3(0.0f, 0.0f, -1.0f) * slopeModifier * SLOPE_FACTOR * DELTA_TIME;
+        slopeVector = transpose(player->orientation) * slopeVector;
+        slopeVector.y = 0.0f;
+        player->groundSpeed += slopeVector;
+        slopeModifier = dotProduct(slopeDiff, side);
+        slopeVector= Vector3(1.0f, 0.0f, 0.0f) * slopeModifier * SLOPE_FACTOR * DELTA_TIME;
+        slopeVector = transpose(player->orientation) * slopeVector;
+        slopeVector.y = 0.0f;
+        player->groundSpeed += slopeVector;
+    }
     //vector3 downhillDirection = crossProduct(player->slopeDirection, Vector3(0.0f, 1.0f, 0.0f));
     //if (length(downhillDirection) > EPSILON) {
     //    downhillDirection = crossProduct(player->slopeDirection, downhillDirection);
@@ -999,6 +1005,13 @@ static void debugCameraMovement (debug_camera *debugCamera, game_input *input) {
     moveVector = rotateVectorByQuaternion(moveVector, debugCamera->rotation);
     debugCamera->pos += moveVector;
 }
+
+// TODO(ebuchholz: better virtual keyboard
+//vector3 inputDirectionFromTouch (game_input *input) {
+//    float stickCenterX = 54;
+//    float stickCenterY = 540 - 54;
+//
+//}
 
 static void addLevelChunk (level_chunks *levelChunks, mesh_key meshKey, level_mesh_key levelMeshKey, vector3 position) {
     assert(levelChunks->numChunks < MAX_NUM_LEVEL_CHUNKS);
