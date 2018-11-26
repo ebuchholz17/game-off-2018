@@ -30,7 +30,7 @@ LRESULT CALLBACK windowCallback (HWND window, unsigned int message, WPARAM wPara
     return result;
 }
 
-static void processWindowsMessages (game_input *input) {
+static void processWindowsMessages (HWND window, game_input *input) {
     MSG message;
     while (PeekMessage(&message, 0, 0, 0, PM_REMOVE)) {
         switch (message.message) {
@@ -82,6 +82,7 @@ static void processWindowsMessages (game_input *input) {
             {
                 POINT newMousePos;
                 GetCursorPos(&newMousePos);
+                ScreenToClient(window, &newMousePos);
                 input->pointerX = newMousePos.x;
                 input->pointerY = newMousePos.y;
             } break;
@@ -254,7 +255,7 @@ int WINAPI WinMain (HINSTANCE instance, HINSTANCE prevInstance, LPSTR commandLin
             while (programRunning) {
 
                 input.pointerJustDown = false;
-                processWindowsMessages(&input);
+                processWindowsMessages(window, &input);
 
                 renderCommands.memory.size = 0;
                 memset(renderCommands.memory.base, 0, renderCommands.memory.capacity);

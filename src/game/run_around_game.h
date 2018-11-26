@@ -7,14 +7,14 @@
 #define DELTA_TIME (1.0f / 60.0f)
 
 enum mesh_key {
-    MESH_KEY_PURPLE_MAN,
     MESH_KEY_CUBE,
     MESH_KEY_CYLINDER,
     MESH_KEY_TEST_GROUND,
     MESH_KEY_TEST_LOOP,
     MESH_KEY_TEST_LOOP_ROTATED,
     MESH_KEY_TEST_RAMP,
-    MESH_KEY_SPHERE
+    MESH_KEY_SPHERE,
+    MESH_KEY_THUMBSTICK
 };
 
 struct mesh_asset {
@@ -23,11 +23,9 @@ struct mesh_asset {
 };
 
 enum texture_key {
-    TEXTURE_KEY_UV_TEST,
-    TEXTURE_KEY_PURPLE,
-    TEXTURE_KEY_GROUND,
     TEXTURE_KEY_GREY,
-    TEXTURE_KEY_BLUE
+    TEXTURE_KEY_BLUE,
+    TEXTURE_KEY_BLACK_TEXTURE
 };
 
 struct texture_asset {

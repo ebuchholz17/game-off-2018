@@ -35,12 +35,21 @@ WebPlatform.prototype = {
         this.viewport.style["touch-action"] = "none";
         this.viewport.style["overflow"] = "hidden";
         this.canvas = document.createElement("canvas");
-        this.viewport.insertAdjacentElement("beforeend", this.canvas);
+        this.viewport.insertAdjacentElement("afterbegin", this.canvas);
+        this.viewport.style.display = "block";
 
         this.canvas.width = 960;
         this.canvas.height = 540;
         this.canvas.style["touch-action"] = "none";
+        this.canvas.style["user-select"] = "none";
+        this.canvas.style["-moz-user-select"] = "none";
+        this.canvas.style["-ms-user-select"] = "none";
+        this.canvas.style["-khtml-user-select"] = "none";
+        this.canvas.style["-webkit-user-select"] = "none";
+        this.canvas.style["outline"] = "none";
         this.canvas.style["overflow"] = "hidden";
+        this.canvas.draggable = false;
+        this.viewport.draggable = false;
 
         window.addEventListener("resize", this.resize.bind(this));
         this.updateCallback = this.update.bind(this);
@@ -257,14 +266,14 @@ WebPlatform.prototype = {
 
         var mobileDetect = new MobileDetect(window.navigator.userAgent);
         if (mobileDetect.mobile() || mobileDetect.tablet()) {
-            document.addEventListener("touchstart", this.onTouchStart.bind(this), false);
-            document.addEventListener("touchmove", this.onTouchMove.bind(this), false);
-            document.addEventListener("touchend", this.onTouchEnd.bind(this), false);
+            this.canvas.addEventListener("touchstart", this.onTouchStart.bind(this), false);
+            this.canvas.addEventListener("touchmove", this.onTouchMove.bind(this), false);
+            this.canvas.addEventListener("touchend", this.onTouchEnd.bind(this), false);
         }
         else {
-            document.addEventListener("mousedown", this.onMouseDown.bind(this));
-            document.addEventListener("mouseup", this.onMouseUp.bind(this));
-            document.addEventListener("mousemove", this.onMouseMove.bind(this));
+            this.canvas.addEventListener("mousedown", this.onMouseDown.bind(this));
+            this.canvas.addEventListener("mouseup", this.onMouseUp.bind(this));
+            this.canvas.addEventListener("mousemove", this.onMouseMove.bind(this));
         }
 
         this.resize();
@@ -351,14 +360,17 @@ WebPlatform.prototype = {
         }
         this.input.pointerDown = true;
         this.setMouseXY(e.touches[0].clientX, e.touches[0].clientY);
+        e.preventDefault();
     },
 
     onTouchMove: function (e) {
         this.setMouseXY(e.touches[0].clientX, e.touches[0].clientY);
+        e.preventDefault();
     },
 
     onTouchEnd: function (e) {
         this.input.pointerDown = false;
+        e.preventDefault();
     },
 
     onMouseDown: function (e) {
