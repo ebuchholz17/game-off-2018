@@ -298,6 +298,11 @@ WebPlatform.prototype = {
         this.gameInput.pointerX = this.input.pointerX;
         this.gameInput.pointerY = this.input.pointerY;
 
+        this.gameInput.pointer2Down = this.input.pointer2Down;
+        this.gameInput.pointer2JustDown = this.input.pointer2JustDown;
+        this.gameInput.pointer2X = this.input.pointer2X;
+        this.gameInput.pointer2Y = this.input.pointer2Y;
+
         this.renderCommands.get_memory().set_size(0);
         // zero render command memory
         var uintBuffer = new Uint8Array(this.game.buffer,
@@ -321,6 +326,7 @@ WebPlatform.prototype = {
             }
         }
         this.input.pointerJustDown = false;
+        this.input.pointer2JustDown = false;
 
         window.requestAnimationFrame(this.updateCallback);
     },
@@ -360,16 +366,36 @@ WebPlatform.prototype = {
         }
         this.input.pointerDown = true;
         this.setMouseXY(e.touches[0].clientX, e.touches[0].clientY);
+        if (e.touches.length > 1) {
+            if (!this.input.pointer2Down) {
+                this.input.pointer2JustDown = true;
+            }
+            this.input.pointer2Down = true;
+            this.setMouseXY2(e.touches[1].clientX, e.touches[1].clientY);
+        }
         e.preventDefault();
     },
 
     onTouchMove: function (e) {
         this.setMouseXY(e.touches[0].clientX, e.touches[0].clientY);
+        if (e.touches.length > 1) {
+            this.setMouseXY2(e.touches[1].clientX, e.touches[1].clientY);
+        }
         e.preventDefault();
     },
 
+    // TODO(ebuchholz): make this work correctly, this works well enough for now
     onTouchEnd: function (e) {
-        this.input.pointerDown = false;
+        if (e.changedTouches[0].identifier == 0) {
+            this.input.pointerDown = false;
+        }
+        else {
+            this.input.pointer2Down = false;
+        }
+        if (e.touches.length == 0) {
+            this.input.pointerDown = false;
+            this.input.pointer2Down = false;
+        }
         e.preventDefault();
     },
 
@@ -395,6 +421,15 @@ WebPlatform.prototype = {
         var mouseY = (y - this.canvas.clientTop) * scaleY;
         this.input.pointerX = mouseX;
         this.input.pointerY = mouseY;
+    },
+
+    setMouseXY2: function (x, y) {
+        let scaleX = this.canvas.width / this.canvas.clientWidth;
+        let scaleY = this.canvas.height / this.canvas.clientHeight;
+        var mouseX = (x - this.canvas.clientLeft) * scaleX;
+        var mouseY = (y - this.canvas.clientTop) * scaleY;
+        this.input.pointer2X = mouseX;
+        this.input.pointer2Y = mouseY;
     }
 
 };

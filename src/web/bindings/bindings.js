@@ -833,6 +833,46 @@ Module['game_input'] = game_input;
   _emscripten_bind_game_input_set_pointerY_1(self, arg0);
 };
     Object.defineProperty(game_input.prototype, 'pointerY', { get: game_input.prototype.get_pointerY, set: game_input.prototype.set_pointerY }) 
+  game_input.prototype['get_pointer2Down'] = game_input.prototype.get_pointer2Down = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return !!(_emscripten_bind_game_input_get_pointer2Down_0(self));
+};
+    game_input.prototype['set_pointer2Down'] = game_input.prototype.set_pointer2Down = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_game_input_set_pointer2Down_1(self, arg0);
+};
+    Object.defineProperty(game_input.prototype, 'pointer2Down', { get: game_input.prototype.get_pointer2Down, set: game_input.prototype.set_pointer2Down }) 
+  game_input.prototype['get_pointer2JustDown'] = game_input.prototype.get_pointer2JustDown = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return !!(_emscripten_bind_game_input_get_pointer2JustDown_0(self));
+};
+    game_input.prototype['set_pointer2JustDown'] = game_input.prototype.set_pointer2JustDown = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_game_input_set_pointer2JustDown_1(self, arg0);
+};
+    Object.defineProperty(game_input.prototype, 'pointer2JustDown', { get: game_input.prototype.get_pointer2JustDown, set: game_input.prototype.set_pointer2JustDown }) 
+  game_input.prototype['get_pointer2X'] = game_input.prototype.get_pointer2X = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_game_input_get_pointer2X_0(self);
+};
+    game_input.prototype['set_pointer2X'] = game_input.prototype.set_pointer2X = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_game_input_set_pointer2X_1(self, arg0);
+};
+    Object.defineProperty(game_input.prototype, 'pointer2X', { get: game_input.prototype.get_pointer2X, set: game_input.prototype.set_pointer2X }) 
+  game_input.prototype['get_pointer2Y'] = game_input.prototype.get_pointer2Y = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_game_input_get_pointer2Y_0(self);
+};
+    game_input.prototype['set_pointer2Y'] = game_input.prototype.set_pointer2Y = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  _emscripten_bind_game_input_set_pointer2Y_1(self, arg0);
+};
+    Object.defineProperty(game_input.prototype, 'pointer2Y', { get: game_input.prototype.get_pointer2Y, set: game_input.prototype.set_pointer2Y }) 
   game_input.prototype['__destroy__'] = game_input.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
   var self = this.ptr;
   _emscripten_bind_game_input___destroy___0(self);

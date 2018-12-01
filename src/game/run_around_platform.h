@@ -107,6 +107,11 @@ struct game_input {
     bool pointerJustDown;
     int pointerX;
     int pointerY;
+
+    bool pointer2Down;
+    bool pointer2JustDown;
+    int pointer2X;
+    int pointer2Y;
 };
 
 struct game_memory {

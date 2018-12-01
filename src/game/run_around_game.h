@@ -9,12 +9,16 @@
 enum mesh_key {
     MESH_KEY_CUBE,
     MESH_KEY_CYLINDER,
+    MESH_KEY_FLAG,
+    MESH_KEY_SPIKES,
     MESH_KEY_TEST_GROUND,
     MESH_KEY_TEST_LOOP,
     MESH_KEY_TEST_LOOP_ROTATED,
-    MESH_KEY_TEST_RAMP,
     MESH_KEY_SPHERE,
-    MESH_KEY_THUMBSTICK
+    MESH_KEY_THUMBSTICK,
+    MESH_KEY_BUTTON,
+    MESH_KEY_BUMP,
+    MESH_KEY_YOUWIN
 };
 
 struct mesh_asset {
@@ -23,8 +27,10 @@ struct mesh_asset {
 };
 
 enum texture_key {
-    TEXTURE_KEY_GREY,
     TEXTURE_KEY_BLUE,
+    TEXTURE_KEY_GREEN,
+    TEXTURE_KEY_WHITE,
+    TEXTURE_KEY_FLAG,
     TEXTURE_KEY_BLACK_TEXTURE
 };
 
@@ -39,8 +45,8 @@ enum level_mesh_key {
     LEVEL_MESH_KEY_TEST_GROUND,
     LEVEL_MESH_KEY_TEST_LOOP,
     LEVEL_MESH_KEY_TEST_LOOP_ROTATED,
-    LEVEL_MESH_KEY_TEST_RAMP,
-    LEVEL_MESH_KEY_SPHERE
+    LEVEL_MESH_KEY_SPHERE,
+    LEVEL_MESH_KEY_BUMP
 };
 
 struct level_mesh {
@@ -105,7 +111,9 @@ enum player_surface_mode {
 };
 
 #define NUM_COLLISION_SENSORS 9
+#define NUM_WALL_SENSORS 8
 #define MAX_GROUND_SPEED 20.0f
+#define DEAD_LENGTH 1.5f
 
 struct player_state {
     vector3 pos;
@@ -117,6 +125,12 @@ struct player_state {
     vector3 upDirection;
     vector3 slopeDirection;
     matrix4x4 orientation;
+    line wallSensors[NUM_WALL_SENSORS];
+    bool onGround;
+    bool jumping;
+
+    bool dead;
+    float deadTimer;
 };
 
 #define MAX_NUM_LEVEL_CHUNKS 100
@@ -137,6 +151,20 @@ struct level_chunk_intersection_result {
     vector3 intersectionPoint;
     vector3 triangleNormal;
     int sensorIndex;
+    bool wall;
+};
+
+struct spike {
+    vector3 pos;
+    aabb hitbox;
+};
+
+#define TOTAL_NUM_FLAGS 3
+
+struct flag {
+    vector3 pos;
+    aabb hitbox;
+    bool collected;
 };
 
 struct game_state {
@@ -150,6 +178,13 @@ struct game_state {
 
     player_state player;
     level_chunks levelChunks;
+
+    spike spikes[300];
+    int numSpikes;
+
+    flag flags[300];
+    int numFlags;
+    int numFlagsCollected;
 };
 
 #endif

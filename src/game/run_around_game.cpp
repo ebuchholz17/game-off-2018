@@ -469,16 +469,22 @@ extern "C" void getGameAssetList (asset_list *assetList) {
     pushAsset(assetList, "assets/meshes/cube.obj", ASSET_TYPE_OBJ, MESH_KEY_CUBE);
     pushAsset(assetList, "assets/meshes/cylinder.obj", ASSET_TYPE_OBJ, MESH_KEY_CYLINDER);
     pushAsset(assetList, "assets/meshes/thumbstick.obj", ASSET_TYPE_OBJ, MESH_KEY_THUMBSTICK);
+    pushAsset(assetList, "assets/meshes/button.obj", ASSET_TYPE_OBJ, MESH_KEY_BUTTON);
+    pushAsset(assetList, "assets/meshes/flag.obj", ASSET_TYPE_OBJ, MESH_KEY_FLAG);
+    pushAsset(assetList, "assets/meshes/spikes.obj", ASSET_TYPE_OBJ, MESH_KEY_SPIKES);
+    pushAsset(assetList, "assets/meshes/youwin.obj", ASSET_TYPE_OBJ, MESH_KEY_YOUWIN);
 
-    pushAsset(assetList, "assets/textures/grey.bmp", ASSET_TYPE_BMP, TEXTURE_KEY_GREY);
+    pushAsset(assetList, "assets/textures/green.bmp", ASSET_TYPE_BMP, TEXTURE_KEY_GREEN);
     pushAsset(assetList, "assets/textures/blue.bmp", ASSET_TYPE_BMP, TEXTURE_KEY_BLUE);
+    pushAsset(assetList, "assets/textures/white.bmp", ASSET_TYPE_BMP, TEXTURE_KEY_WHITE);
+    pushAsset(assetList, "assets/textures/flag.bmp", ASSET_TYPE_BMP, TEXTURE_KEY_FLAG);
     pushAsset(assetList, "assets/textures/black_texture.bmp", ASSET_TYPE_BMP, TEXTURE_KEY_BLACK_TEXTURE);
 
     pushAsset(assetList, "assets/meshes/test_ground.obj", ASSET_TYPE_LEVEL_OBJ, MESH_KEY_TEST_GROUND, LEVEL_MESH_KEY_TEST_GROUND);
     pushAsset(assetList, "assets/meshes/loop.obj", ASSET_TYPE_LEVEL_OBJ, MESH_KEY_TEST_LOOP, LEVEL_MESH_KEY_TEST_LOOP);
     pushAsset(assetList, "assets/meshes/loop_rotated.obj", ASSET_TYPE_LEVEL_OBJ, MESH_KEY_TEST_LOOP_ROTATED, LEVEL_MESH_KEY_TEST_LOOP_ROTATED);
-    pushAsset(assetList, "assets/meshes/test_ramp.obj", ASSET_TYPE_LEVEL_OBJ, MESH_KEY_TEST_RAMP, LEVEL_MESH_KEY_TEST_RAMP);
     pushAsset(assetList, "assets/meshes/sphere.obj", ASSET_TYPE_LEVEL_OBJ, MESH_KEY_SPHERE, LEVEL_MESH_KEY_SPHERE);
+    pushAsset(assetList, "assets/meshes/bump.obj", ASSET_TYPE_LEVEL_OBJ, MESH_KEY_BUMP, LEVEL_MESH_KEY_BUMP);
 }
 
 extern "C" void parseGameAsset (void *assetData, asset_type type, int key1, int key2,
@@ -611,6 +617,43 @@ static void growAABBByLineSensor (line sensor, aabb *boundingBox) {
     *boundingBox = unionAABB(*boundingBox, lineBBox);
 }
 
+// TODO(ebuchholz): use up direction instead of orientation?
+static void setupWallSensors (player_state *player, float sensorLength, aabb *linesAABB) {
+    vector3 forward = player->orientation * Vector3(0.0f, 0.0f, -1.0f);
+    vector3 side = player->orientation * Vector3(1.0f, 0.0f, 0.0f);
+    player->wallSensors[0].a = player->pos;
+    player->wallSensors[0].b = player->pos + forward * sensorLength;
+    growAABBByLineSensor(player->wallSensors[0], linesAABB);
+
+    player->wallSensors[1].a = player->pos;
+    player->wallSensors[1].b = player->pos + (normalize(forward + side)) * sensorLength;
+    growAABBByLineSensor(player->wallSensors[1], linesAABB);
+
+    player->wallSensors[2].a = player->pos;
+    player->wallSensors[2].b = player->pos + side * sensorLength;
+    growAABBByLineSensor(player->wallSensors[2], linesAABB);
+
+    player->wallSensors[3].a = player->pos;
+    player->wallSensors[3].b = player->pos + normalize(side - forward) * sensorLength;
+    growAABBByLineSensor(player->wallSensors[3], linesAABB);
+
+    player->wallSensors[4].a = player->pos;
+    player->wallSensors[4].b = player->pos - forward * sensorLength;
+    growAABBByLineSensor(player->wallSensors[4], linesAABB);
+
+    player->wallSensors[5].a = player->pos;
+    player->wallSensors[5].b = player->pos + normalize(-forward - side) * sensorLength;
+    growAABBByLineSensor(player->wallSensors[5], linesAABB);
+
+    player->wallSensors[6].a = player->pos;
+    player->wallSensors[6].b = player->pos - side * sensorLength;
+    growAABBByLineSensor(player->wallSensors[6], linesAABB);
+
+    player->wallSensors[7].a = player->pos;
+    player->wallSensors[7].b = player->pos + normalize(forward - side) * sensorLength;
+    growAABBByLineSensor(player->wallSensors[7], linesAABB);
+}
+
 static void setupCollisionSensors (player_state *player, float playerRadius, float sensorLength, 
                                    vector3 firstDirection, vector3 secondDirection,
                                    aabb *linesAABB) 
@@ -649,6 +692,73 @@ static void setupCollisionSensors (player_state *player, float playerRadius, flo
     player->collisionSensors[8].a = player->pos - otherAngleVector * playerRadius;
     player->collisionSensors[8].b = player->collisionSensors[8].a + (-player->upDirection * sensorLength);
     growAABBByLineSensor(player->collisionSensors[8], linesAABB);
+}
+
+static void startPlayerOnNoGround (player_state *player) {
+    player->onGround = false;
+    vector3 up = Vector3(0.0f, 1.0f, 0.0f);
+
+    vector3 newBackward = -normalize(player->velocity - dotProduct(player->velocity, up) * up);
+    vector3 newSide = normalize(crossProduct(up, newBackward));
+
+    matrix4x4 newOrientationMatrix = {};
+    newOrientationMatrix.m[0] = newSide.x;
+    newOrientationMatrix.m[1] = newSide.y;
+    newOrientationMatrix.m[2] = newSide.z;
+    newOrientationMatrix.m[3] = 0.0f;
+    newOrientationMatrix.m[4] = up.x;
+    newOrientationMatrix.m[5] = up.y;
+    newOrientationMatrix.m[6] = up.z;
+    newOrientationMatrix.m[7] = 0.0f;
+    newOrientationMatrix.m[8] = newBackward.x;
+    newOrientationMatrix.m[9] = newBackward.y;
+    newOrientationMatrix.m[10] = newBackward.z;
+    newOrientationMatrix.m[11] = 0.0f;
+    newOrientationMatrix.m[12] = 0.0f;
+    newOrientationMatrix.m[13] = 0.0f;
+    newOrientationMatrix.m[14] = 0.0f;
+    newOrientationMatrix.m[15] = 1.0f;
+
+    player->orientation = transpose(newOrientationMatrix);
+}
+
+void respawnPlayer (player_state *player) {
+    player->mode = PLAYER_SURFACE_MODE_FLOOR;
+    player->upDirection = Vector3(0.0f, 1.0f, 0.0f);
+    player->slopeDirection = Vector3(0.0f, 1.0f, 0.0f);
+    player->pos = Vector3(0.0f, 3.0f, 0.0f);
+    player->groundSpeed = Vector3(0.0f, 0.0f, 0.0f);
+    player->velocity = Vector3(0.0f, 0.0f, 0.0f);
+    player->onGround = false;
+    player->dead = false;
+    player->deadTimer = 0.0f;
+}
+
+bool getJumpButtonPressed (game_input *input) {
+    bool jumpPressed = false;
+    if (input->upButton) {
+        jumpPressed = true;
+    }
+
+    int virtualButtonBoundsStartX = 960 - 150;
+    int virtualButtonBoundsEndX = 960;
+    int virtualButtonBoundsStartY = 540 - 150;
+    int virtualButtonBoundsEndY = 540;
+    if (input->pointerDown) {
+        if (input->pointerX > virtualButtonBoundsStartX && input->pointerX < virtualButtonBoundsEndX &&
+            input->pointerY > virtualButtonBoundsStartY && input->pointerY < virtualButtonBoundsEndY) 
+        {
+            jumpPressed = true;
+        }
+    }
+    if (input->pointer2Down) {
+        if (input->pointer2X > virtualButtonBoundsStartX && input->pointer2X < virtualButtonBoundsEndX &&
+            input->pointer2Y > virtualButtonBoundsStartY && input->pointer2Y < virtualButtonBoundsEndY) 
+        {
+            jumpPressed = true;
+        }
+    }
+    return jumpPressed;
 }
 
 vector3 getMovementVector (player_state *player, game_input *input, matrix4x4 cameraOrientation, float *newStickX, float *newStickY) {
@@ -716,10 +826,36 @@ vector3 getMovementVector (player_state *player, game_input *input, matrix4x4 ca
         }
     }
 
+    // QQQ consolidate
+    if (input->pointer2Down) {
+        if (input->pointer2X > virtualStickBoundsStartX && input->pointer2X < virtualStickBoundsEndX &&
+            input->pointer2Y > virtualStickBoundsStartY && input->pointer2Y < virtualStickBoundsEndY) 
+        {
+            int stickX = input->pointer2X;
+            int stickY = input->pointer2Y;
+            if (stickX < virtualStickStartX) { stickX = virtualStickStartX; }
+            if (stickX > virtualStickEndX) { stickX = virtualStickEndX; }
+            if (stickY < virtualStickStartY) { stickY = virtualStickStartY; }
+            if (stickY > virtualStickEndY) { stickY = virtualStickEndY; }
+            direction.x = ((float)stickX - (float)virtualStickCenterX) / 54.0f;
+            if (player->mode == PLAYER_SURFACE_MODE_WALL) {
+                direction.y = -((float)stickY - (float)virtualStickCenterY) / 54.0f;
+                direction.z = 0.0f;
+            }
+            else {
+                direction.z = ((float)stickY - (float)virtualStickCenterY) / 54.0f;
+                direction.y = 0.0f;
+            }
+            direction = normalize(direction);
+
+            *newStickX = (float)stickX - (float)virtualStickCenterX;
+            *newStickY = (float)stickY - (float)virtualStickCenterY;
+        }
+    }
+
     return direction;
 }
-
-static void debugPlayerMovement (player_state *player, vector3 inputDirection, matrix4x4 cameraOrientation) {
+static void debugPlayerMovement (player_state *player, vector3 inputDirection, bool upPressed, matrix4x4 cameraOrientation) {
     const float PLAYER_ACCELERATION = 5.0f;
     const float PLAYER_DECELERATION = 20.0f;
     const float PLAYER_FRICTION = 5.0f;
@@ -853,6 +989,15 @@ static void debugPlayerMovement (player_state *player, vector3 inputDirection, m
 
     }
 
+    if (upPressed) {
+        player->velocity += player->slopeDirection * 7.0f;
+        startPlayerOnNoGround(player);
+    }
+    //if (input->downButton) {
+    //    player->pos.y -= PLAYER_ACCELERATION * DELTA_TIME;
+    //}
+
+
     float playerRadius = 0.4f;
     float sensorLength = 1.25f;
     player->collisionSensors[0].a = player->pos;
@@ -878,6 +1023,74 @@ static void debugPlayerMovement (player_state *player, vector3 inputDirection, m
         vector3 sideVector = crossProduct(Vector3(0.0f, 1.0f, 0.0f), player->upDirection);
         setupCollisionSensors(player, playerRadius, sensorLength, yVector, sideVector, &linesAABB);
     }
+    setupWallSensors(player, 0.55f, &linesAABB);
+    player->boundingBox = linesAABB;
+}
+
+
+static void playerAirMovement (player_state *player, 
+                               game_input *input, matrix4x4 cameraOrientation) 
+{
+    const float PLAYER_AIR_ACCELERATION = 10.0f;
+    const float GRAVITY = 10.0f;
+    vector3 forward = Vector3(0.0f, 0.0f, -1.0f);
+    vector3 up = Vector3(0.0f, 1.0f, 0.0f);
+    vector3 side = Vector3(1.0f, 0.0f, 0.0f);
+
+    matrix4x4 cameraMatrix = cameraOrientation;
+    cameraMatrix.m[3] = 0.0f;
+    cameraMatrix.m[7] = 0.0f;
+    cameraMatrix.m[11] = 0.0f;
+    cameraMatrix = transpose(cameraMatrix);
+
+    // Position
+    vector3 newInputDirection = Vector3();
+    if (input->forwardButton) {
+        newInputDirection += forward;
+    }
+    if (input->backButton) {
+        newInputDirection -= forward;
+    }
+    if (input->leftButton) {
+        newInputDirection -= side;
+    }
+    if (input->rightButton) {
+        newInputDirection += side;
+    }
+    if (length(newInputDirection) > 0.0f) {
+        newInputDirection = cameraMatrix * newInputDirection;
+        // project direction onto xz plane
+        newInputDirection = newInputDirection - dotProduct(newInputDirection, up) * up;
+
+        //newInputDirection =player->orientation * newInputDirection;
+        //newInputDirection.y = 0.0f;
+        newInputDirection = normalize(newInputDirection);
+
+        vector3 speedChange = (PLAYER_AIR_ACCELERATION * DELTA_TIME) * newInputDirection;
+        player->velocity += speedChange;
+    }
+    player->velocity += Vector3(0.0f, -1.0f, 0.0f) * GRAVITY * DELTA_TIME; // gravity
+    player->pos += player->velocity * DELTA_TIME;
+
+    float playerRadius = 0.4f;
+    float sensorLength = 0.5f; // shorter length when in the air
+    player->collisionSensors[0].a = player->pos;
+    player->collisionSensors[0].b = player->pos + (-player->upDirection * sensorLength);
+
+    aabb lineABox = {};
+    lineABox.min = player->collisionSensors[0].a;
+    lineABox.max = player->collisionSensors[0].a;
+
+    aabb lineBBox = {};
+    lineBBox.min = player->collisionSensors[0].b;
+    lineBBox.max = player->collisionSensors[0].b;
+
+    aabb linesAABB = unionAABB(lineABox, lineBBox);
+
+    vector3 xVector = Vector3(1.0f, 0.0f, 0.0f);
+    vector3 zVector = Vector3(0.0f, 0.0f, 1.0f);
+    setupCollisionSensors(player, playerRadius, sensorLength, xVector, zVector, &linesAABB);
+    setupWallSensors(player, 0.55f, &linesAABB);
     player->boundingBox = linesAABB;
 }
 
@@ -885,6 +1098,7 @@ static void processPlayerLevelCollisions (player_state *player, level_chunks *le
     // test mesh triangles for intersection
     aabb playerBB = player->boundingBox;
 
+    // TODO(ebuchholz): better separate floor and wall collisions
     level_chunk_intersection_result *results = 
         (level_chunk_intersection_result *)((char *)tempMemory->base + tempMemory->size);
     int numResults = 0;
@@ -901,13 +1115,13 @@ static void processPlayerLevelCollisions (player_state *player, level_chunks *le
             triangleWithNormals *triangles = levelMesh->triangles;
             aabb *triangleAABBs = levelMesh->triangleAABBs;
             for (int j = 0; j < levelMesh->triangleCount; ++j) {
-                // TODO(ebuchholz): check triangle bounding box first?
                 float t = -1.0f;
                 triangleWithNormals *tri = triangles + j;
                 aabb *triangleAABB = triangleAABBs + j;
                 if (aabbIntersection(localPlayerBB, *triangleAABB)) {
-                    for (int k = 0; k < NUM_COLLISION_SENSORS; ++k ) {
-                        line localPlayerSensor = player->collisionSensors[k];
+                    // Wall collision: push player out 
+                    for (int k = 0; k < NUM_WALL_SENSORS; ++k ) {
+                        line localPlayerSensor = player->wallSensors[k];
                         localPlayerSensor.a -= levelChunk->position;
                         localPlayerSensor.b -= levelChunk->position;
 
@@ -919,11 +1133,33 @@ static void processPlayerLevelCollisions (player_state *player, level_chunks *le
                             numResults++;
                             result->intersectionPoint = localPlayerSensor.a + t * (localPlayerSensor.b - localPlayerSensor.a);
                             result->intersectionPoint += levelChunk->position;
-                            // add 0.5f to account for feet
+                            result->triangleNormal = intersectionNormal;//normalize(crossProduct(tri->p1 - tri->p0, tri->p2 - tri->p0));
+                            //result->triangleNormal = normalize(crossProduct(tri->p1 - tri->p0, tri->p2 - tri->p0));
+                            result->sensorIndex = k;
+                            result->wall = true;
+                        }
+                    }
+
+                    // Floor collision: put player at the height + orientation of the triangle
+                    for (int k = 0; k < NUM_COLLISION_SENSORS; ++k ) {
+                        line localPlayerSensor = player->collisionSensors[k];
+                        localPlayerSensor.a -= levelChunk->position;
+                        localPlayerSensor.b -= levelChunk->position;
+
+                        vector3 intersectionNormal = Vector3();
+
+                        if (lineSegmentTriangleIntersection(&localPlayerSensor, tri, &t, &intersectionNormal)) {
+                            if (!player->onGround && dotProduct(player->velocity, intersectionNormal) > 0.0f) { continue; }
+                            level_chunk_intersection_result *result = 
+                                (level_chunk_intersection_result *)allocateMemorySize(tempMemory, sizeof(level_chunk_intersection_result));
+                            numResults++;
+                            result->intersectionPoint = localPlayerSensor.a + t * (localPlayerSensor.b - localPlayerSensor.a);
+                            result->intersectionPoint += levelChunk->position;
                             result->intersectionPoint += player->upDirection;
                             result->triangleNormal = intersectionNormal;//normalize(crossProduct(tri->p1 - tri->p0, tri->p2 - tri->p0));
                             //result->triangleNormal = normalize(crossProduct(tri->p1 - tri->p0, tri->p2 - tri->p0));
                             result->sensorIndex = k;
+                            result->wall = false;
                         }
                     }
                 }
@@ -931,60 +1167,71 @@ static void processPlayerLevelCollisions (player_state *player, level_chunks *le
         }
     }
     if (numResults > 0) {
-        level_chunk_intersection_result *firstResult = results;
-        vector3 triangleNormal = firstResult->triangleNormal;
-        line playerSensor = player->collisionSensors[firstResult->sensorIndex];
-        vector3 bestIntersectionPoint = firstResult->intersectionPoint;
-        float bestDotProduct = dotProduct(firstResult->intersectionPoint - playerSensor.b, player->upDirection);
-        for (int i = 1; i < numResults; ++i) {
+        vector3 triangleNormal = Vector3();
+        vector3 bestIntersectionPoint = Vector3();
+        float bestDotProduct = -1;
+        bool floorIntersection = false;
+        for (int i = 0; i < numResults; ++i) {
             level_chunk_intersection_result *result = results + i;
-            playerSensor = player->collisionSensors[result->sensorIndex];
-            float amountUp = dotProduct(result->intersectionPoint - playerSensor.b, player->upDirection);
-            if (amountUp > bestDotProduct) {
-                bestIntersectionPoint = result->intersectionPoint;
-                triangleNormal = result->triangleNormal;
-                bestDotProduct = amountUp;
+            if (result->wall) {
+                line playerSensor = player->wallSensors[result->sensorIndex];
+                float amountOut = dotProduct(result->intersectionPoint - playerSensor.b, result->triangleNormal);
+                // TODO(ebuchholz): eliminate ground speed in the direction of the wall collision
+                player->pos += amountOut * result->triangleNormal;
+            }
+            else {
+                floorIntersection = true;
+                line playerSensor = player->collisionSensors[result->sensorIndex];
+                float amountUp = dotProduct(result->intersectionPoint - playerSensor.b, player->upDirection);
+                if (amountUp > bestDotProduct) {
+                    bestIntersectionPoint = result->intersectionPoint;
+                    triangleNormal = result->triangleNormal;
+                    bestDotProduct = amountUp;
+                }
             }
         }
-        player->slopeDirection = triangleNormal;
+        if (floorIntersection) {
+            player->onGround = true;
+            player->slopeDirection = triangleNormal;
 
-        vector3 displacementVector = bestIntersectionPoint - player->pos + (0.5f * -player->upDirection);
-        vector3 projectedVector = dotProduct(player->upDirection, displacementVector) * player->upDirection;
-        player->pos += projectedVector;
+            vector3 displacementVector = bestIntersectionPoint - player->pos + (0.5f * -player->upDirection);
+            vector3 projectedVector = dotProduct(player->upDirection, displacementVector) * player->upDirection;
+            player->pos += projectedVector;
 
-        float surfaceAngle = acosf(dotProduct(Vector3(0.0f, 1.0f, 0.0f), triangleNormal)); // should be normalized
-        surfaceAngle *= 180.0f / PI;
+            float surfaceAngle = acosf(dotProduct(Vector3(0.0f, 1.0f, 0.0f), triangleNormal)); // should be normalized
+            surfaceAngle *= 180.0f / PI;
 
-        while (surfaceAngle > 180.0f) {
-            surfaceAngle -= 180.0f;
-        }
+            while (surfaceAngle > 180.0f) {
+                surfaceAngle -= 180.0f;
+            }
 
-        if (surfaceAngle < 45.0f) {
-            player->mode = PLAYER_SURFACE_MODE_FLOOR;
-        }
-        else if (surfaceAngle >= 45.0f && surfaceAngle < 135.0f) {
-            player->mode = PLAYER_SURFACE_MODE_WALL;
-        }
-        else if (surfaceAngle >= 135.0f) {
-            player->mode = PLAYER_SURFACE_MODE_CEILING;
-        }
+            if (surfaceAngle < 45.0f) {
+                player->mode = PLAYER_SURFACE_MODE_FLOOR;
+            }
+            else if (surfaceAngle >= 45.0f && surfaceAngle < 135.0f) {
+                player->mode = PLAYER_SURFACE_MODE_WALL;
+            }
+            else if (surfaceAngle >= 135.0f) {
+                player->mode = PLAYER_SURFACE_MODE_CEILING;
+            }
 
-        switch (player->mode) {
-            case PLAYER_SURFACE_MODE_FLOOR: 
-            {
-                player->upDirection = Vector3(0.0f, 1.0f, 0.0f);
-            } break;
-            case PLAYER_SURFACE_MODE_WALL:
-            {
-                vector3 wallNormal = triangleNormal;
-                wallNormal.y = 0.0f;
-                wallNormal = normalize(wallNormal);
-                player->upDirection = wallNormal;
-            } break;
-            case PLAYER_SURFACE_MODE_CEILING:
-            {
-                player->upDirection = Vector3(0.0f, -1.0f, 0.0f);
-            } break;
+            switch (player->mode) {
+                case PLAYER_SURFACE_MODE_FLOOR: 
+                {
+                    player->upDirection = Vector3(0.0f, 1.0f, 0.0f);
+                } break;
+                case PLAYER_SURFACE_MODE_WALL:
+                {
+                    vector3 wallNormal = triangleNormal;
+                    wallNormal.y = 0.0f;
+                    wallNormal = normalize(wallNormal);
+                    player->upDirection = wallNormal;
+                } break;
+                case PLAYER_SURFACE_MODE_CEILING:
+                {
+                    player->upDirection = Vector3(0.0f, -1.0f, 0.0f);
+                } break;
+            }
         }
     }
     else {
@@ -992,6 +1239,9 @@ static void processPlayerLevelCollisions (player_state *player, level_chunks *le
         player->mode = PLAYER_SURFACE_MODE_FLOOR;
         player->upDirection = Vector3(0.0f, 1.0f, 0.0f);
         player->slopeDirection = Vector3(0.0f, 1.0f, 0.0f);
+        if (player->onGround) {
+            startPlayerOnNoGround(player);
+        }
         //player->orientation = identityMatrix4x4();
     }
 }
@@ -1054,6 +1304,42 @@ static void addLevelChunk (level_chunks *levelChunks, mesh_key meshKey, level_me
     levelChunk->position = position;
 }
 
+void addFlag (game_state *gameState, float x, float y, float z) {
+    assert(gameState->numFlags < 300);
+
+    flag *flag = &gameState->flags[gameState->numFlags];
+    gameState->numFlags++;
+
+    flag->pos.x = x;
+    flag->pos.y = y;
+    flag->pos.z = z;
+
+    float flagHalfWidth = 0.5f;
+    float flagHeight = 2.0f;
+    float flagHalfDepth = 0.15f;
+
+    flag->hitbox.min = flag->pos + Vector3(0.4f + -flagHalfWidth, 0.0f, -flagHalfDepth);
+    flag->hitbox.max = flag->pos + Vector3(0.4f + flagHalfWidth, flagHeight, flagHalfDepth);
+}
+
+void addSpike (game_state *gameState, float x, float y, float z) {
+    assert(gameState->numSpikes < 300);
+
+    spike *spike = &gameState->spikes[gameState->numSpikes];
+    gameState->numSpikes++;
+
+    spike->pos.x = x;
+    spike->pos.y = y;
+    spike->pos.z = z;
+
+    float spikeHalfWidth = 0.4f;
+    float spikeHeight = 0.8f;
+    float spikeHalfDepth = 0.4f;
+
+    spike->hitbox.min = spike->pos + Vector3(-spikeHalfWidth, 0.0f, -spikeHalfDepth);
+    spike->hitbox.max = spike->pos + Vector3(spikeHalfWidth, spikeHeight, spikeHalfDepth);
+}
+
 extern "C" void updateGame (game_input *input, game_memory *gameMemory, render_command_list *renderCommands) { 
     game_state *gameState = (game_state *)gameMemory->memory;
     if (!gameState->gameInitialized) {
@@ -1071,18 +1357,23 @@ extern "C" void updateGame (game_input *input, game_memory *gameMemory, render_c
         debugCamera->lastPointerY = 0;
 
         // probably unecessary
-        gameState->player = {};
-        gameState->player.pos = {};
-        gameState->player.boundingBox = {};
-        gameState->player.collisionSensors[0] = {};
-        gameState->player.collisionSensors[1] = {};
-        gameState->player.collisionSensors[2] = {};
-        gameState->player.collisionSensors[3] = {};
-        gameState->player.collisionSensors[4] = {};
-        gameState->player.mode = PLAYER_SURFACE_MODE_FLOOR;
-        gameState->player.upDirection = Vector3(0.0f, 1.0f, 0.0f);
-        gameState->player.slopeDirection = Vector3(0.0f, 1.0f, 0.0f);
-        gameState->player.orientation = identityMatrix4x4();
+        player_state *player = &gameState->player;
+        player->pos = {};
+        player->boundingBox = {};
+        player->collisionSensors[0] = {};
+        player->collisionSensors[1] = {};
+        player->collisionSensors[2] = {};
+        player->collisionSensors[3] = {};
+        player->collisionSensors[4] = {};
+        player->mode = PLAYER_SURFACE_MODE_FLOOR;
+        player->upDirection = Vector3(0.0f, 1.0f, 0.0f);
+        player->slopeDirection = Vector3(0.0f, 1.0f, 0.0f);
+        player->orientation = identityMatrix4x4();
+        player->onGround = true;
+
+        gameState->numSpikes = 0;
+        gameState->numFlags = 0;
+        gameState->numFlagsCollected = 0;
 
         debugCamera->lookAtTarget = gameState->player.pos;
         debugCamera->up = gameState->player.upDirection;
@@ -1092,8 +1383,16 @@ extern "C" void updateGame (game_input *input, game_memory *gameMemory, render_c
         addLevelChunk(&gameState->levelChunks, MESH_KEY_TEST_GROUND, LEVEL_MESH_KEY_TEST_GROUND, Vector3());
         addLevelChunk(&gameState->levelChunks, MESH_KEY_TEST_LOOP, LEVEL_MESH_KEY_TEST_LOOP, Vector3(-5.0f, 0.0f, -6.0f));
         addLevelChunk(&gameState->levelChunks, MESH_KEY_TEST_LOOP_ROTATED, LEVEL_MESH_KEY_TEST_LOOP_ROTATED, Vector3(-8.0f, 0.0f, 6.0f));
-        addLevelChunk(&gameState->levelChunks, MESH_KEY_SPHERE, LEVEL_MESH_KEY_SPHERE, Vector3(15.0f, 0.0f, 0.0f));
-        addLevelChunk(&gameState->levelChunks, MESH_KEY_TEST_RAMP, LEVEL_MESH_KEY_TEST_RAMP, Vector3(3.0f, 3.0f, -10.0f));
+        addLevelChunk(&gameState->levelChunks, MESH_KEY_SPHERE, LEVEL_MESH_KEY_SPHERE, Vector3(15.0f, 0.0f, -10.0f));
+        addLevelChunk(&gameState->levelChunks, MESH_KEY_BUMP, LEVEL_MESH_KEY_BUMP, Vector3(5.0f, 0.0f, 14.0f));
+
+        addSpike(gameState, 0.0f, 0.0f, -5.0f);
+        addSpike(gameState, 0.0f, 0.0f, -4.0f);
+        addFlag(gameState, 3.0f, 0.0f, -3.0f);
+        addFlag(gameState, 4.0f, 0.0f, -3.0f);
+        addFlag(gameState, 5.0f, 0.0f, -3.0f);
+
+        respawnPlayer(player);
     }
     // general purpose temporary storage
     gameState->tempMemory = {};
@@ -1116,10 +1415,29 @@ extern "C" void updateGame (game_input *input, game_memory *gameMemory, render_c
                                               gameState->debugCamera.lookAtTarget.x, gameState->debugCamera.lookAtTarget.y, gameState->debugCamera.lookAtTarget.z,
                                               gameState->debugCamera.up.x, gameState->debugCamera.up.y, gameState->debugCamera.up.z);
 
+    player_state *player = &gameState->player;
     float stickX = 0.0f; 
     float stickY = 0.0f;
     vector3 inputDirection = getMovementVector(&gameState->player, input, viewMatrix, &stickX, &stickY);
-    debugPlayerMovement(&gameState->player, inputDirection, viewMatrix);
+    bool jumpPressed = getJumpButtonPressed(input);
+    if (gameState->player.dead) {
+        player->deadTimer += DELTA_TIME;
+        if (player->deadTimer >= DEAD_LENGTH) {
+            respawnPlayer(player);
+        }
+    }
+    if (!gameState->player.dead) {
+        if (gameState->player.onGround) {
+            debugPlayerMovement(&gameState->player, inputDirection, jumpPressed, viewMatrix);
+        }
+        else {
+            playerAirMovement(&gameState->player, input, viewMatrix);
+        }
+    }
+
+    if (gameState->player.pos.y < -10.0f) {
+        respawnPlayer(&gameState->player);
+    }
 
     // TODO(ebuchholz): get screen dimensions from render commands? and use them
     matrix4x4 projMatrix = createPerspectiveMatrix(0.1f, 1000.0f, (16.0f / 9.0f), 80.0f);
@@ -1143,13 +1461,46 @@ extern "C" void updateGame (game_input *input, game_memory *gameMemory, render_c
         bb.max += levelChunk->position;
         //drawAABB(&bb, renderCommands);
         matrix4x4 levelPosMatrix = translationMatrix(levelChunk->position.x, levelChunk->position.y, levelChunk->position.z);
-        drawModel(levelChunk->meshKey, TEXTURE_KEY_GREY, levelPosMatrix, renderCommands);
+        drawModel(levelChunk->meshKey, TEXTURE_KEY_GREEN, levelPosMatrix, renderCommands);
     }
 
     processPlayerLevelCollisions(&gameState->player, &gameState->levelChunks, gameState->assets.levelMeshes, &gameState->tempMemory);
 
-    matrix4x4 modelMatrix = translationMatrix(gameState->player.pos.x, gameState->player.pos.y, gameState->player.pos.z) * gameState->player.orientation * translationMatrix(0.0f, -0.5f, 0.0f) * scaleMatrix(1.0f);
+    matrix4x4 modelMatrix = {};
+    if (gameState->player.dead) {
+        modelMatrix = translationMatrix(gameState->player.pos.x, gameState->player.pos.y, gameState->player.pos.z) * rotationMatrixFromAxisAngle(Vector3(1.0f, 0.0f, 0.0f), PI * 0.5f) * translationMatrix(0.0f, -0.5f, 0.0f) * scaleMatrix(1.0f);
+    }
+    else {
+        modelMatrix = translationMatrix(gameState->player.pos.x, gameState->player.pos.y, gameState->player.pos.z) * gameState->player.orientation * translationMatrix(0.0f, -0.5f, 0.0f) * scaleMatrix(1.0f);
+    }
     drawModel(MESH_KEY_CYLINDER, TEXTURE_KEY_BLUE, modelMatrix, renderCommands);
+
+
+    for (int i = 0; i < gameState->numSpikes; ++i) {
+        spike *spike = &gameState->spikes[i];
+        modelMatrix = translationMatrix(spike->pos);
+        // QQQ
+        drawAABB(&spike->hitbox, renderCommands);
+        drawModel(MESH_KEY_SPIKES, TEXTURE_KEY_WHITE, modelMatrix, renderCommands);
+
+        if (aabbIntersection(spike->hitbox, player->boundingBox)) {
+            player->dead = true;
+        }
+    }
+
+    for (int i = 0; i < gameState->numFlags; ++i) {
+        flag *flag = &gameState->flags[i];
+        if (flag->collected) { continue; }
+        modelMatrix = translationMatrix(flag->pos);
+        // QQQ
+        drawAABB(&flag->hitbox, renderCommands);
+        drawModel(MESH_KEY_FLAG, TEXTURE_KEY_FLAG, modelMatrix, renderCommands);
+
+        if (aabbIntersection(flag->hitbox, player->boundingBox)) {
+            flag->collected = true;
+            gameState->numFlagsCollected++;
+        }
+    }
 
     viewMatrix = createLookAtMatrix(0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f);
 
@@ -1180,32 +1531,51 @@ extern "C" void updateGame (game_input *input, game_memory *gameMemory, render_c
     modelMatrix = translationMatrix(21.0f + 54.0f + stickX, -25.0f, -(21.0f + 54.0f) + stickY) * scaleMatrix(50.0f);
     drawModel(MESH_KEY_THUMBSTICK, TEXTURE_KEY_BLACK_TEXTURE, modelMatrix, renderCommands);
 
+    matrix4x4 buttonPressedRotation = {};
+    if (jumpPressed) {
+        buttonPressedRotation = rotationMatrixFromAxisAngle(Vector3(1.0, 0.0f, 0.0f), -0.5f);
+    }
+    else {
+        buttonPressedRotation = identityMatrix4x4();
+    }
+    modelMatrix = translationMatrix(960.0f - 85.0f, -25.0f, -65.0f) * buttonPressedRotation * scaleMatrix(55.0f);
+    drawModel(MESH_KEY_BUTTON, TEXTURE_KEY_BLACK_TEXTURE, modelMatrix, renderCommands);
+
+    if (gameState->numFlagsCollected >= TOTAL_NUM_FLAGS) {
+        modelMatrix = translationMatrix(300.0f, -25.0f, -300.0f) * scaleMatrix(100.0f);
+        drawModel(MESH_KEY_YOUWIN, TEXTURE_KEY_WHITE, modelMatrix, renderCommands);
+    }
+
     // collision sensors
-//    drawAABB(&gameState->player.boundingBox, renderCommands);
-//
-//    render_command_lines *lineCommand = startLines(renderCommands);
-//    for (int i = 0; i < NUM_COLLISION_SENSORS; ++i) {
-//        line *sensor = &gameState->player.collisionSensors[i];
-//        drawLine(sensor->a.x, sensor->a.y, sensor->a.z, sensor->b.x, sensor->b.y, sensor->b.z, renderCommands, lineCommand);
-//    }
-//
-//    // orientation
-//    vector3 forward = Vector3(0.0f, 0.0f, -1.0f);
-//    vector3 up = Vector3(0.0f, 1.0f, 0.0f);
-//    vector3 side = Vector3(1.0f, 0.0f, 0.0f);
-//
-//    forward = gameState->player.orientation * forward;
-//    up = gameState->player.orientation * up;
-//    side = gameState->player.orientation * side;
-//
-//    lineCommand = startLines(renderCommands);
-//    drawLine(gameState->player.pos.x, gameState->player.pos.y, gameState->player.pos.z,
-//             gameState->player.pos.x + side.x, gameState->player.pos.y + side.y, gameState->player.pos.z + side.z,
-//             renderCommands, lineCommand);
-//    drawLine(gameState->player.pos.x, gameState->player.pos.y, gameState->player.pos.z,
-//             gameState->player.pos.x + up.x, gameState->player.pos.y + up.y, gameState->player.pos.z + up.z,
-//             renderCommands, lineCommand);
-//    drawLine(gameState->player.pos.x, gameState->player.pos.y, gameState->player.pos.z,
-//             gameState->player.pos.x + forward.x, gameState->player.pos.y + forward.y, gameState->player.pos.z + forward.z,
-//             renderCommands, lineCommand);
+    //drawAABB(&gameState->player.boundingBox, renderCommands);
+
+    //render_command_lines *lineCommand = startLines(renderCommands);
+    //for (int i = 0; i < NUM_COLLISION_SENSORS; ++i) {
+    //    line *sensor = &gameState->player.collisionSensors[i];
+    //    drawLine(sensor->a.x, sensor->a.y, sensor->a.z, sensor->b.x, sensor->b.y, sensor->b.z, renderCommands, lineCommand);
+    //}
+    //for (int i = 0; i < NUM_WALL_SENSORS; ++i) {
+    //    line *sensor = &gameState->player.wallSensors[i];
+    //    drawLine(sensor->a.x, sensor->a.y, sensor->a.z, sensor->b.x, sensor->b.y, sensor->b.z, renderCommands, lineCommand);
+    //}
+
+    // orientation
+    //vector3 forward = Vector3(0.0f, 0.0f, -1.0f);
+    //vector3 up = Vector3(0.0f, 1.0f, 0.0f);
+    //vector3 side = Vector3(1.0f, 0.0f, 0.0f);
+
+    //forward = gameState->player.orientation * forward;
+    //up = gameState->player.orientation * up;
+    //side = gameState->player.orientation * side;
+
+    //lineCommand = startLines(renderCommands);
+    //drawLine(gameState->player.pos.x, gameState->player.pos.y, gameState->player.pos.z,
+    //         gameState->player.pos.x + side.x, gameState->player.pos.y + side.y, gameState->player.pos.z + side.z,
+    //         renderCommands, lineCommand);
+    //drawLine(gameState->player.pos.x, gameState->player.pos.y, gameState->player.pos.z,
+    //         gameState->player.pos.x + up.x, gameState->player.pos.y + up.y, gameState->player.pos.z + up.z,
+    //         renderCommands, lineCommand);
+    //drawLine(gameState->player.pos.x, gameState->player.pos.y, gameState->player.pos.z,
+    //         gameState->player.pos.x + forward.x, gameState->player.pos.y + forward.y, gameState->player.pos.z + forward.z,
+    //         renderCommands, lineCommand);
 }

@@ -149,6 +149,11 @@ interface game_input {
     attribute boolean pointerJustDown;
     attribute long pointerX;
     attribute long pointerY;
+
+    attribute boolean pointer2Down;
+    attribute boolean pointer2JustDown;
+    attribute long pointer2X;
+    attribute long pointer2Y;
 };
 
 interface game_memory {

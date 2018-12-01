@@ -482,6 +482,38 @@ void EMSCRIPTEN_KEEPALIVE emscripten_bind_game_input_set_pointerY_1(game_input* 
   self->pointerY = arg0;
 }
 
+bool EMSCRIPTEN_KEEPALIVE emscripten_bind_game_input_get_pointer2Down_0(game_input* self) {
+  return self->pointer2Down;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_game_input_set_pointer2Down_1(game_input* self, bool arg0) {
+  self->pointer2Down = arg0;
+}
+
+bool EMSCRIPTEN_KEEPALIVE emscripten_bind_game_input_get_pointer2JustDown_0(game_input* self) {
+  return self->pointer2JustDown;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_game_input_set_pointer2JustDown_1(game_input* self, bool arg0) {
+  self->pointer2JustDown = arg0;
+}
+
+int EMSCRIPTEN_KEEPALIVE emscripten_bind_game_input_get_pointer2X_0(game_input* self) {
+  return self->pointer2X;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_game_input_set_pointer2X_1(game_input* self, int arg0) {
+  self->pointer2X = arg0;
+}
+
+int EMSCRIPTEN_KEEPALIVE emscripten_bind_game_input_get_pointer2Y_0(game_input* self) {
+  return self->pointer2Y;
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_game_input_set_pointer2Y_1(game_input* self, int arg0) {
+  self->pointer2Y = arg0;
+}
+
 void EMSCRIPTEN_KEEPALIVE emscripten_bind_game_input___destroy___0(game_input* self) {
   delete self;
 }
