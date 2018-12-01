@@ -174,7 +174,7 @@ int WINAPI WinMain (HINSTANCE instance, HINSTANCE prevInstance, LPSTR commandLin
 
             // Game memory (game state, etc.)
             game_memory gameMemory = {};
-            gameMemory.memoryCapacity = 10 * 1024 * 1024; // 10MB arbitrarily decided
+            gameMemory.memoryCapacity = 50 * 1024 * 1024; // 10MB arbitrarily decided
             gameMemory.memory = malloc(gameMemory.memoryCapacity);
             gameMemory.tempMemoryCapacity = 10 * 1024 * 1024; // another 10MB arbitrarily decided
             gameMemory.tempMemory = malloc(gameMemory.tempMemoryCapacity);
@@ -193,7 +193,7 @@ int WINAPI WinMain (HINSTANCE instance, HINSTANCE prevInstance, LPSTR commandLin
             getGameAssetList(&assetList);
 
             memory_arena workingAssetMemory = {};
-            workingAssetMemory.capacity = 10 * 1024 * 1024; // 10MB limit for working with asset files?
+            workingAssetMemory.capacity = 30 * 1024 * 1024; // 10MB limit for working with asset files?
             workingAssetMemory.base = malloc(workingAssetMemory.capacity);
 
             for (int i = 0; i < assetList.numAssetsToLoad; ++i) {

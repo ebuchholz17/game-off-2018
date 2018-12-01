@@ -11,14 +11,21 @@ enum mesh_key {
     MESH_KEY_CYLINDER,
     MESH_KEY_FLAG,
     MESH_KEY_SPIKES,
-    MESH_KEY_TEST_GROUND,
-    MESH_KEY_TEST_LOOP,
-    MESH_KEY_TEST_LOOP_ROTATED,
     MESH_KEY_SPHERE,
     MESH_KEY_THUMBSTICK,
     MESH_KEY_BUTTON,
     MESH_KEY_BUMP,
-    MESH_KEY_YOUWIN
+    MESH_KEY_YOUWIN,
+
+    MESH_KEY_HILL,
+    MESH_KEY_LOOP,
+    MESH_KEY_LOOP_RAMP,
+    MESH_KEY_LOOP_RAMP2,
+    MESH_KEY_GROUND,
+    MESH_KEY_TRICKY_AREA,
+    MESH_KEY_CLIFF,
+    MESH_KEY_TOWERS,
+    MESH_KEY_UNDER_LOOP
 };
 
 struct mesh_asset {
@@ -42,11 +49,15 @@ struct texture_asset {
 // TODO(ebuchholz): unify mesh key and level mesh key, maybe use hash tables instead of normal 
 //arrays to make this more convenient
 enum level_mesh_key {
-    LEVEL_MESH_KEY_TEST_GROUND,
-    LEVEL_MESH_KEY_TEST_LOOP,
-    LEVEL_MESH_KEY_TEST_LOOP_ROTATED,
-    LEVEL_MESH_KEY_SPHERE,
-    LEVEL_MESH_KEY_BUMP
+    LEVEL_MESH_KEY_HILL,
+    LEVEL_MESH_KEY_LOOP,
+    LEVEL_MESH_KEY_LOOP_RAMP,
+    LEVEL_MESH_KEY_LOOP_RAMP2,
+    LEVEL_MESH_KEY_GROUND,
+    LEVEL_MESH_KEY_TRICKY_AREA,
+    LEVEL_MESH_KEY_CLIFF,
+    LEVEL_MESH_KEY_TOWERS,
+    LEVEL_MESH_KEY_UNDER_LOOP
 };
 
 struct level_mesh {
@@ -159,7 +170,7 @@ struct spike {
     aabb hitbox;
 };
 
-#define TOTAL_NUM_FLAGS 3
+#define TOTAL_NUM_FLAGS 6
 
 struct flag {
     vector3 pos;

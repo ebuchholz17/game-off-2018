@@ -480,11 +480,15 @@ extern "C" void getGameAssetList (asset_list *assetList) {
     pushAsset(assetList, "assets/textures/flag.bmp", ASSET_TYPE_BMP, TEXTURE_KEY_FLAG);
     pushAsset(assetList, "assets/textures/black_texture.bmp", ASSET_TYPE_BMP, TEXTURE_KEY_BLACK_TEXTURE);
 
-    pushAsset(assetList, "assets/meshes/test_ground.obj", ASSET_TYPE_LEVEL_OBJ, MESH_KEY_TEST_GROUND, LEVEL_MESH_KEY_TEST_GROUND);
-    pushAsset(assetList, "assets/meshes/loop.obj", ASSET_TYPE_LEVEL_OBJ, MESH_KEY_TEST_LOOP, LEVEL_MESH_KEY_TEST_LOOP);
-    pushAsset(assetList, "assets/meshes/loop_rotated.obj", ASSET_TYPE_LEVEL_OBJ, MESH_KEY_TEST_LOOP_ROTATED, LEVEL_MESH_KEY_TEST_LOOP_ROTATED);
-    pushAsset(assetList, "assets/meshes/sphere.obj", ASSET_TYPE_LEVEL_OBJ, MESH_KEY_SPHERE, LEVEL_MESH_KEY_SPHERE);
-    pushAsset(assetList, "assets/meshes/bump.obj", ASSET_TYPE_LEVEL_OBJ, MESH_KEY_BUMP, LEVEL_MESH_KEY_BUMP);
+    pushAsset(assetList, "assets/meshes/ground.obj", ASSET_TYPE_LEVEL_OBJ, MESH_KEY_GROUND, LEVEL_MESH_KEY_GROUND);
+    pushAsset(assetList, "assets/meshes/hill.obj", ASSET_TYPE_LEVEL_OBJ, MESH_KEY_HILL, LEVEL_MESH_KEY_HILL);
+    pushAsset(assetList, "assets/meshes/loop.obj", ASSET_TYPE_LEVEL_OBJ, MESH_KEY_LOOP, LEVEL_MESH_KEY_LOOP);
+    pushAsset(assetList, "assets/meshes/loop_ramp.obj", ASSET_TYPE_LEVEL_OBJ, MESH_KEY_LOOP_RAMP, LEVEL_MESH_KEY_LOOP_RAMP);
+    pushAsset(assetList, "assets/meshes/loop_ramp2.obj", ASSET_TYPE_LEVEL_OBJ, MESH_KEY_LOOP_RAMP2, LEVEL_MESH_KEY_LOOP_RAMP2);
+    pushAsset(assetList, "assets/meshes/tricky_area.obj", ASSET_TYPE_LEVEL_OBJ, MESH_KEY_TRICKY_AREA, LEVEL_MESH_KEY_TRICKY_AREA);
+    pushAsset(assetList, "assets/meshes/cliff.obj", ASSET_TYPE_LEVEL_OBJ, MESH_KEY_CLIFF, LEVEL_MESH_KEY_CLIFF);
+    pushAsset(assetList, "assets/meshes/towers.obj", ASSET_TYPE_LEVEL_OBJ, MESH_KEY_TOWERS, LEVEL_MESH_KEY_TOWERS);
+    pushAsset(assetList, "assets/meshes/under_loop.obj", ASSET_TYPE_LEVEL_OBJ, MESH_KEY_UNDER_LOOP, LEVEL_MESH_KEY_UNDER_LOOP);
 }
 
 extern "C" void parseGameAsset (void *assetData, asset_type type, int key1, int key2,
@@ -503,7 +507,7 @@ extern "C" void parseGameAsset (void *assetData, asset_type type, int key1, int 
         game_assets *assets = &gameState->assets;
         assets->assetMemory = {};
         assets->assetMemory.size = 0;
-        assets->assetMemory.capacity = 1 * 1024 * 1024; // 1MB of asset data???
+        assets->assetMemory.capacity = 10 * 1024 * 1024; // 1MB of asset data???
         assets->assetMemory.base = allocateMemorySize(&gameState->memory, assets->assetMemory.capacity); 
         assets->numMeshes = 0;
     } 
@@ -726,7 +730,7 @@ void respawnPlayer (player_state *player) {
     player->mode = PLAYER_SURFACE_MODE_FLOOR;
     player->upDirection = Vector3(0.0f, 1.0f, 0.0f);
     player->slopeDirection = Vector3(0.0f, 1.0f, 0.0f);
-    player->pos = Vector3(0.0f, 3.0f, 0.0f);
+    player->pos = Vector3(0.0f, 10.0f, 0.0f);
     player->groundSpeed = Vector3(0.0f, 0.0f, 0.0f);
     player->velocity = Vector3(0.0f, 0.0f, 0.0f);
     player->onGround = false;
@@ -1178,6 +1182,16 @@ static void processPlayerLevelCollisions (player_state *player, level_chunks *le
                 float amountOut = dotProduct(result->intersectionPoint - playerSensor.b, result->triangleNormal);
                 // TODO(ebuchholz): eliminate ground speed in the direction of the wall collision
                 player->pos += amountOut * result->triangleNormal;
+
+                if (player->onGround) {
+                    vector3 localNormal = player->orientation * result->triangleNormal;
+                    vector3 correctionVector = localNormal * dotProduct(player->groundSpeed, localNormal);
+                    correctionVector.z = -correctionVector.z;
+                    player->groundSpeed += correctionVector;
+                }
+                else {
+
+                }
             }
             else {
                 floorIntersection = true;
@@ -1380,17 +1394,31 @@ extern "C" void updateGame (game_input *input, game_memory *gameMemory, render_c
 
         // set up the level
         gameState->levelChunks.numChunks = 0;
-        addLevelChunk(&gameState->levelChunks, MESH_KEY_TEST_GROUND, LEVEL_MESH_KEY_TEST_GROUND, Vector3());
-        addLevelChunk(&gameState->levelChunks, MESH_KEY_TEST_LOOP, LEVEL_MESH_KEY_TEST_LOOP, Vector3(-5.0f, 0.0f, -6.0f));
-        addLevelChunk(&gameState->levelChunks, MESH_KEY_TEST_LOOP_ROTATED, LEVEL_MESH_KEY_TEST_LOOP_ROTATED, Vector3(-8.0f, 0.0f, 6.0f));
-        addLevelChunk(&gameState->levelChunks, MESH_KEY_SPHERE, LEVEL_MESH_KEY_SPHERE, Vector3(15.0f, 0.0f, -10.0f));
-        addLevelChunk(&gameState->levelChunks, MESH_KEY_BUMP, LEVEL_MESH_KEY_BUMP, Vector3(5.0f, 0.0f, 14.0f));
+        addLevelChunk(&gameState->levelChunks, MESH_KEY_GROUND, LEVEL_MESH_KEY_GROUND, Vector3());
+        addLevelChunk(&gameState->levelChunks, MESH_KEY_LOOP, LEVEL_MESH_KEY_LOOP, Vector3());
+        addLevelChunk(&gameState->levelChunks, MESH_KEY_LOOP_RAMP, LEVEL_MESH_KEY_LOOP_RAMP, Vector3());
+        addLevelChunk(&gameState->levelChunks, MESH_KEY_LOOP_RAMP2, LEVEL_MESH_KEY_LOOP_RAMP2, Vector3());
+        addLevelChunk(&gameState->levelChunks, MESH_KEY_HILL, LEVEL_MESH_KEY_HILL, Vector3());
+        addLevelChunk(&gameState->levelChunks, MESH_KEY_TRICKY_AREA, LEVEL_MESH_KEY_TRICKY_AREA, Vector3());
+        addLevelChunk(&gameState->levelChunks, MESH_KEY_CLIFF, LEVEL_MESH_KEY_CLIFF, Vector3());
+        addLevelChunk(&gameState->levelChunks, MESH_KEY_TOWERS, LEVEL_MESH_KEY_TOWERS, Vector3());
+        addLevelChunk(&gameState->levelChunks, MESH_KEY_UNDER_LOOP, LEVEL_MESH_KEY_UNDER_LOOP, Vector3());
 
-        addSpike(gameState, 0.0f, 0.0f, -5.0f);
-        addSpike(gameState, 0.0f, 0.0f, -4.0f);
-        addFlag(gameState, 3.0f, 0.0f, -3.0f);
-        addFlag(gameState, 4.0f, 0.0f, -3.0f);
-        addFlag(gameState, 5.0f, 0.0f, -3.0f);
+        addSpike(gameState, -37.62f, 15.34f, 24.05f);
+        addSpike(gameState, -37.75f, 15.34f, 34.21f);
+        addSpike(gameState, -41.83f, 15.341f, 35.80f);
+        addSpike(gameState, -39.041f, 15.34f, 38.17f);
+        addSpike(gameState, -36.106f, 15.34f, 38.17f);
+        addSpike(gameState, -37.75f, 15.34f, 45.33f);
+        addSpike(gameState, -39.96f, 15.34f, 46.84f);
+        addSpike(gameState, -33.37f, 15.289f, 48.84f);
+
+        addFlag(gameState, -21.366f, -30.964f, 15.248f);
+        addFlag(gameState, 8.8649f, 5.53f, -50.875f);
+        addFlag(gameState, -1.07f, -2.059f, -58.21f);
+        addFlag(gameState, -32.75f, 41.264f, -20.321f);
+        addFlag(gameState, -38.836f, 15.263f, 48.421f);
+        addFlag(gameState, -16.621f, 52.106f, 39.056f);
 
         respawnPlayer(player);
     }
@@ -1435,7 +1463,7 @@ extern "C" void updateGame (game_input *input, game_memory *gameMemory, render_c
         }
     }
 
-    if (gameState->player.pos.y < -10.0f) {
+    if (gameState->player.pos.y < -30.0f) {
         respawnPlayer(&gameState->player);
     }
 
@@ -1480,7 +1508,7 @@ extern "C" void updateGame (game_input *input, game_memory *gameMemory, render_c
         spike *spike = &gameState->spikes[i];
         modelMatrix = translationMatrix(spike->pos);
         // QQQ
-        drawAABB(&spike->hitbox, renderCommands);
+        //drawAABB(&spike->hitbox, renderCommands);
         drawModel(MESH_KEY_SPIKES, TEXTURE_KEY_WHITE, modelMatrix, renderCommands);
 
         if (aabbIntersection(spike->hitbox, player->boundingBox)) {
@@ -1493,7 +1521,7 @@ extern "C" void updateGame (game_input *input, game_memory *gameMemory, render_c
         if (flag->collected) { continue; }
         modelMatrix = translationMatrix(flag->pos);
         // QQQ
-        drawAABB(&flag->hitbox, renderCommands);
+        //drawAABB(&flag->hitbox, renderCommands);
         drawModel(MESH_KEY_FLAG, TEXTURE_KEY_FLAG, modelMatrix, renderCommands);
 
         if (aabbIntersection(flag->hitbox, player->boundingBox)) {
@@ -1542,7 +1570,7 @@ extern "C" void updateGame (game_input *input, game_memory *gameMemory, render_c
     drawModel(MESH_KEY_BUTTON, TEXTURE_KEY_BLACK_TEXTURE, modelMatrix, renderCommands);
 
     if (gameState->numFlagsCollected >= TOTAL_NUM_FLAGS) {
-        modelMatrix = translationMatrix(300.0f, -25.0f, -300.0f) * scaleMatrix(100.0f);
+        modelMatrix = translationMatrix(300.0f, -25.0f, -300.0f) * scaleMatrix(55.0f);
         drawModel(MESH_KEY_YOUWIN, TEXTURE_KEY_WHITE, modelMatrix, renderCommands);
     }
 

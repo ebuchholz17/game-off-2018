@@ -59,7 +59,7 @@ WebPlatform.prototype = {
 
         this.gameMemory = this.game.wrapPointer(this.game._malloc(this.game.sizeof_game_memory()), 
                                                 this.game.game_memory);
-        this.gameMemory.memoryCapacity = 10 * 1024 * 1024;
+        this.gameMemory.memoryCapacity = 50 * 1024 * 1024;
         this.gameMemory.memory = this.game._malloc(this.gameMemory.memoryCapacity);
         this.gameMemory.tempMemoryCapacity = 10 * 1024 * 1024;
         this.gameMemory.tempMemory = this.game._malloc(this.gameMemory.tempMemoryCapacity);
@@ -79,7 +79,7 @@ WebPlatform.prototype = {
 
         this.workingAssetMemory = this.game.wrapPointer(this.game._malloc(this.game.sizeof_memory_arena()), 
                                                        this.game.memory_arena);
-        this.workingAssetMemory.capacity = 10 * 1024 * 1024;
+        this.workingAssetMemory.capacity = 30 * 1024 * 1024;
         this.workingAssetMemory.base = this.game._malloc(this.workingAssetMemory.capacity);
 
         var assetsToLoadPointer = this.game.getPointer(this.assetList.assetsToLoad);
